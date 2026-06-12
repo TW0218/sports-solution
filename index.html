@@ -695,11 +695,40 @@ function loadVoices(){
 }
 loadVoices(); if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=loadVoices;
 let rate=1.0;
-function speak(text,r){
+const AUDIO_MAP={
+  "Squeaky bum time":"audio/file021.mp3",
+  "Park the bus":"audio/file022.mp3",
+  "A game of two halves":"audio/file023.mp3",
+  "On me 'ead, son!":"audio/file024.mp3",
+  "Who are ya?":"audio/file025.mp3",
+  "Get in!":"audio/file026.mp3",
+  "Proper":"audio/file027.mp3",
+  "He's one of our own":"audio/file028.mp3",
+  "Plates":"audio/file029.mp3",
+  "Sorted":"audio/file030.mp3"
+};
+let audioPlayer=null;
+function playMp3(src){
+  if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
+  audioPlayer=new Audio(src);
+  audioPlayer.play().catch(()=>{});
+}
+function speak(text,r,cat){
   try{
+    const mp3=Object.entries(AUDIO_MAP).find(([k])=>text.includes(k));
+    if(mp3){playMp3(mp3[1]);return;}
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    if(gbVoice)u.voice=gbVoice; u.lang="en-GB"; u.rate=r||rate; u.pitch=.95;
+    if(gbVoice)u.voice=gbVoice;
+    u.lang="en-GB";
+    const c=cat||(curItem&&curItem.c)||"";
+    if(c==="pitch"){
+      u.rate=(r||rate)*1.12; u.pitch=1.3; u.volume=1.0;
+    }else if(c==="locker"||c==="fan"){
+      u.rate=(r||rate)*1.05; u.pitch=1.18; u.volume=0.95;
+    }else{
+      u.rate=r||rate; u.pitch=0.95;
+    }
     speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -958,10 +987,10 @@ function renderCard(){
   document.getElementById("fc-ja").textContent=c.ja;
   document.getElementById("fc-exja").textContent=c.exJa+(c.note?"〔"+c.note+"〕":"");
   document.getElementById("card-count").textContent=(ci+1)+" / "+cardDeck.length+"　習得度: "+"⭐".repeat(S.box[c.en]||0)+"☆".repeat(3-(S.box[c.en]||0));
-  setTimeout(()=>speak(c.en),300);
+  setTimeout(()=>speak(c.en,null,c.c),300);
 }
 function flipCard(){document.getElementById("fcard").classList.toggle("flip")}
-function playCurrentCard(){speak(cardDeck[ci].en+". "+cardDeck[ci].ex)}
+function playCurrentCard(){speak(cardDeck[ci].en+". "+cardDeck[ci].ex,null,cardDeck[ci].c)}
 function gradeCard(known){
   const c=cardDeck[ci];
   S.box[c.en]=known?Math.min(3,(S.box[c.en]||0)+1):0;
@@ -989,9 +1018,9 @@ function renderSpeak(){
   document.getElementById("sp-heard").textContent="";
   document.getElementById("sp-score").textContent="";
   document.getElementById("sp-next").style.display="none";
-  setTimeout(()=>speak(c.ex),300);
+  setTimeout(()=>speak(c.ex,null,c.c),300);
 }
-function playSpeak(){speak(spDeck[si].ex)}
+function playSpeak(){speak(spDeck[si].ex,null,spDeck[si].c)}
 function toggleRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){
@@ -1133,11 +1162,11 @@ function searchCoach(){
     res.innerHTML=callCard(hit.en,hit.ja,hit.note,"📖 内蔵コール辞書",false)
       +hit.alt.map(a=>callCard(a,"別の言い方","","ALTERNATIVE",true)).join("")
       +`<button class="ai-ask-btn" onclick="askAI('${raw.replace(/'/g,"")}')">🤖 AIコーチに別案・ニュアンスを聞く</button>`;
-    speak(hit.en);
+    speak(hit.en,null,"pitch");
   }else if(dbHit){
     res.innerHTML=callCard(dbHit.en,dbHit.ja,(dbHit.note||"")+"　例: "+dbHit.ex,"📖 単語帳から",false)
       +`<button class="ai-ask-btn" onclick="askAI('${raw.replace(/'/g,"")}')">🤖 AIコーチに別案を聞く</button>`;
-    speak(dbHit.en);
+    speak(dbHit.en,null,"pitch");
   }else{
     askAI(raw);
   }
@@ -1180,7 +1209,7 @@ async function askAI(situation){
     const parsed=JSON.parse(text.replace(/```json|```/g,"").trim());
     if(!parsed.calls||!parsed.calls.length)throw new Error("empty");
     res.innerHTML=parsed.calls.map((c,i)=>callCard(c.en,c.ja,c.note,i===0?"🤖 AIコーチ (Claude)":"ALTERNATIVE",i>0)).join("");
-    speak(parsed.calls[0].en);
+    speak(parsed.calls[0].en,null,"pitch");
   }catch(e){
     res.innerHTML=`<div class="call-card" style="border-left-color:var(--red)">
       <div class="src">⚠️ AIに接続できなかった</div>
