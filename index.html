@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0F1A14">
 <title>TOP BINS — イングランド現場英語</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --green:#12A150; --green-dk:#0B7A3C; --green-lt:#E2F4E9;
@@ -187,6 +188,22 @@ nav button .nic{font-size:21px}
 nav button.sel{color:var(--green-dk)}
 .hide-nav nav{display:none}
 
+/* ---------- login ---------- */
+#scr-login{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:200}
+#scr-login.hidden{display:none}
+.login-logo{font-weight:900;font-style:italic;font-size:36px;color:#fff;letter-spacing:-.5px;margin-bottom:6px}
+.login-logo span{color:var(--green)}
+.login-sub{font-size:13px;color:#9DB3A8;font-weight:800;margin-bottom:40px}
+.login-box{width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px}
+.login-input{border:2px solid #2A3B30;border-radius:16px;padding:16px 18px;font-size:16px;font-family:inherit;font-weight:700;background:#1A2B22;color:#fff;outline:none;-webkit-user-select:text;user-select:text}
+.login-input::placeholder{color:#4A6B56}
+.login-input:focus{border-color:var(--green)}
+.login-btn{background:var(--green);color:#fff;border:none;border-radius:16px;padding:18px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
+.login-btn:active{transform:translateY(2px);box-shadow:none}
+.login-btn:disabled{opacity:.5;box-shadow:none}
+.login-err{color:var(--red);font-size:13px;font-weight:800;text-align:center;min-height:20px}
+.login-user{position:fixed;top:calc(12px + var(--safe-t));right:16px;background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;z-index:50;backdrop-filter:blur(8px)}
+
 /* toast */
 #toast{position:fixed;top:calc(14px + var(--safe-t));left:50%;transform:translateX(-50%) translateY(-80px);background:var(--ink);color:#fff;font-size:13px;font-weight:800;padding:11px 20px;border-radius:999px;transition:transform .3s;z-index:99;white-space:nowrap}
 #toast.show{transform:translateX(-50%) translateY(0)}
@@ -251,6 +268,19 @@ nav button.sel{color:var(--green-dk)}
 </style>
 </head>
 <body>
+<!-- ============ LOGIN ============ -->
+<div id="scr-login">
+  <div class="login-logo">TOP <span>BINS</span></div>
+  <div class="login-sub">イングランド現場英語</div>
+  <div class="login-box">
+    <input class="login-input" id="login-email" type="email" inputmode="email" placeholder="メールアドレス" autocomplete="email">
+    <input class="login-input" id="login-pass" type="password" placeholder="パスワード" autocomplete="current-password"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-err" id="login-err"></div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">ログイン ⚽</button>
+  </div>
+</div>
+
 <div id="app">
 
 <!-- ============ HOME ============ -->
@@ -454,6 +484,7 @@ nav button.sel{color:var(--green-dk)}
   <button id="nav-home" class="sel" onclick="go('home');renderHome()"><span class="nic">🏟️</span>ホーム</button>
   <button id="nav-cards" onclick="openCatPicker('cards')"><span class="nic">🃏</span>カード</button>
   <button id="nav-career" onclick="go('career');renderCareer()"><span class="nic">🏆</span>キャリア</button>
+  <button onclick="doLogout()"><span class="nic">🚪</span>ログアウト</button>
 </nav>
 <div id="toast"></div>
 </div>
@@ -576,6 +607,60 @@ const DB = [
 {c:"fan",en:"Top four",ja:"トップ4（CL出場圏）",ex:"Top four is the minimum this season.",exJa:"今季はトップ4が最低ライン。",lv:1},
 {c:"fan",en:"Sing your hearts out",ja:"声の限り歌え",ex:"Sing your hearts out for the lads!",exJa:"選手のために声を枯らして歌え！",lv:2}
 ];
+/* ================= SUPABASE ================= */
+const SUPA_URL="https://gsfqozfambpaufijhktf.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZnFvemZhbWJwYXVmaWpoa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMzgxNTksImV4cCI6MjA5NjgxNDE1OX0.D4UDeENQh9zpaNKv7nhZJx92pZm9aFjxkPjrcWadrGk";
+const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+let currentUser=null;
+
+async function doLogin(){
+  const email=document.getElementById("login-email").value.trim();
+  const pass=document.getElementById("login-pass").value;
+  const err=document.getElementById("login-err");
+  const btn=document.getElementById("login-btn");
+  if(!email||!pass){err.textContent="メールアドレスとパスワードを入力してください";return;}
+  btn.disabled=true;btn.textContent="ログイン中…";err.textContent="";
+  const{data,error}=await supa.auth.signInWithPassword({email,password:pass});
+  btn.disabled=false;btn.textContent="ログイン ⚽";
+  if(error){err.textContent="メールアドレスまたはパスワードが違います";return;}
+  currentUser=data.user;
+  await loadFromSupabase();
+  document.getElementById("scr-login").classList.add("hidden");
+  renderHome();
+}
+
+async function doLogout(){
+  await supa.auth.signOut();
+  currentUser=null;
+  document.getElementById("scr-login").classList.remove("hidden");
+  document.getElementById("login-pass").value="";
+  document.getElementById("login-err").textContent="";
+}
+
+async function loadFromSupabase(){
+  if(!currentUser)return;
+  const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
+  if(data&&data.progress){
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[]},data.progress);
+  }
+}
+
+async function saveToSupabase(){
+  if(!currentUser)return;
+  await supa.from("user_progress").upsert({user_id:currentUser.id,progress:S,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+}
+
+/* セッション復元（リロード時） */
+(async()=>{
+  const{data:{session}}=await supa.auth.getSession();
+  if(session){
+    currentUser=session.user;
+    await loadFromSupabase();
+    document.getElementById("scr-login").classList.add("hidden");
+    renderHome();
+  }
+})();
+
 /* ================= STATE ================= */
 const TIERS=[
  {name:"SUNDAY LEAGUE",ja:"日曜リーグの挑戦者",min:0},
@@ -597,13 +682,8 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S=load();
-function load(){
-  try{const d=JSON.parse(localStorage.getItem("topbins")||"{}");
-    return Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:""},d);
-  }catch(e){return {min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:""}}
-}
-function save(){localStorage.setItem("topbins",JSON.stringify(S))}
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[]};
+function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
 /* ================= AUDIO (en-GB TTS + SFX) ================= */
@@ -1300,8 +1380,7 @@ async function askAICase(){
   }
 }
 
-/* init */
-renderHome();
+/* init — renderHome() はログイン後に呼ばれる */
 </script>
 </body>
 </html>
