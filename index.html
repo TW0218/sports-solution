@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0F1A14">
+<title>TOP BINS — イングランド現場英語</title>
+<style>
+:root{
+  --green:#12A150; --green-dk:#0B7A3C; --green-lt:#E2F4E9;
+  --ink:#0F1A14; --bg:#F3F7F4; --white:#FFFFFF;
+  --yellow:#FFC400; --red:#E2493B; --grey:#8AA095;
+  --radius:18px; --shadow:0 4px 14px rgba(15,26,20,.10);
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:ui-rounded,"Hiragino Maru Gothic ProN","BIZ UDGothic",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg); color:var(--ink); overscroll-behavior:none;
+  -webkit-user-select:none; user-select:none; touch-action:manipulation;
+}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative;background:var(--bg)}
+@media(min-width:560px){ body{background:#0F1A14 repeating-linear-gradient(90deg,#12241A 0 60px,#0F1F16 60px 120px)} #app{box-shadow:0 0 60px rgba(0,0,0,.5)} }
+
+/* ---------- screens ---------- */
+.screen{display:none;flex:1;flex-direction:column;padding:calc(16px + var(--safe-t)) 18px calc(86px + var(--safe-b));animation:fadein .25s ease}
+.screen.active{display:flex}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- header ---------- */
+.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.logo{font-weight:900;font-style:italic;font-size:22px;letter-spacing:-.5px}
+.logo span{color:var(--green)}
+.streak-pill{display:flex;align-items:center;gap:6px;background:var(--ink);color:#fff;border-radius:999px;padding:7px 14px;font-weight:800;font-size:14px}
+.streak-pill .fire{font-style:normal}
+
+/* ---------- hero / today's match ---------- */
+.hero{background:linear-gradient(160deg,var(--green) 0%,var(--green-dk) 100%);border-radius:24px;padding:22px 20px;color:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden;margin-bottom:18px}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border:3px solid rgba(255,255,255,.18);border-radius:50%}
+.hero::before{content:"";position:absolute;right:20px;top:36px;width:40px;height:160px;border:3px solid rgba(255,255,255,.12);transform:rotate(20deg)}
+.hero .label{font-size:12px;font-weight:800;letter-spacing:.16em;opacity:.85;margin-bottom:6px}
+.hero h1{font-size:26px;font-weight:900;line-height:1.25;margin-bottom:4px}
+.hero p{font-size:13px;opacity:.9;margin-bottom:16px}
+.kickoff{display:block;width:100%;background:#fff;color:var(--green-dk);border:none;border-radius:16px;padding:16px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.kickoff:active{transform:translateY(2px);box-shadow:none}
+.kickoff.done{background:rgba(255,255,255,.25);color:#fff;box-shadow:none}
+
+/* ---------- mode cards ---------- */
+.section-title{font-size:13px;font-weight:900;letter-spacing:.12em;color:var(--grey);margin:6px 2px 10px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.mode-card{background:var(--white);border-radius:var(--radius);padding:16px 14px;box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent;transition:transform .12s}
+.mode-card:active{transform:scale(.96)}
+.mode-card .ic{font-size:26px;margin-bottom:8px;display:block}
+.mode-card h3{font-size:15px;font-weight:900;margin-bottom:3px}
+.mode-card p{font-size:11px;color:var(--grey);line-height:1.45}
+
+/* ---------- category chips ---------- */
+.cat-row{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.cat-row::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;background:var(--white);border:2px solid #E2EAE5;border-radius:999px;padding:9px 16px;font-size:13px;font-weight:800;cursor:pointer;color:var(--ink)}
+.chip.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ---------- quiz ---------- */
+.quiz-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.btn-x{width:38px;height:38px;border-radius:50%;border:none;background:#E2EAE5;font-size:16px;font-weight:900;cursor:pointer;color:var(--ink);font-family:inherit}
+.clockwrap{flex:1}
+.clockbar{height:14px;background:#E2EAE5;border-radius:999px;overflow:hidden;position:relative}
+.clockbar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#3DC878);width:0%;transition:width .4s ease;border-radius:999px}
+.clocklabel{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--grey);margin-top:4px}
+.minute{font-style:italic;font-weight:900;font-size:20px;color:var(--ink);min-width:52px;text-align:right}
+.q-tag{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.1em;background:var(--green-lt);color:var(--green-dk);border-radius:999px;padding:5px 12px;margin-bottom:10px}
+.q-text{font-size:21px;font-weight:900;line-height:1.4;margin-bottom:6px}
+.q-sub{font-size:13px;color:var(--grey);margin-bottom:16px}
+.play-big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--ink);color:#fff;border:none;border-radius:20px;padding:22px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;margin-bottom:10px}
+.play-big:active{opacity:.85}
+.speed-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.speed-btn{border:2px solid #E2EAE5;background:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--ink)}
+.speed-btn.sel{background:var(--yellow);border-color:var(--yellow)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{background:var(--white);border:2px solid #E2EAE5;border-radius:16px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);transition:transform .1s}
+.opt:active{transform:scale(.98)}
+.opt.correct{background:var(--green-lt);border-color:var(--green);color:var(--green-dk)}
+.opt.wrong{background:#FBE9E7;border-color:var(--red);color:var(--red)}
+.opt.dim{opacity:.45;pointer-events:none}
+
+/* sentence builder */
+.build-zone{min-height:64px;background:var(--white);border:2px dashed #C9D8CF;border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-content:flex-start}
+.word-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.wchip{background:var(--white);border:2px solid #E2EAE5;border-radius:12px;padding:10px 14px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--ink);box-shadow:0 2px 0 #E2EAE5}
+.wchip:active{transform:translateY(1px)}
+.build-zone .wchip{background:var(--green-lt);border-color:var(--green);color:var(--green-dk)}
+.wchip.used{visibility:hidden}
+.check-btn{display:block;width:100%;margin-top:16px;background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
+.check-btn:disabled{opacity:.4;box-shadow:none}
+.check-btn:active{transform:translateY(2px);box-shadow:none}
+
+/* feedback banner */
+.feedback{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;padding:18px 18px calc(18px + var(--safe-b));border-radius:24px 24px 0 0;transform:translateY(110%);transition:transform .25s ease;z-index:50}
+.feedback.show{transform:none}
+.feedback.good{background:var(--green-lt);border-top:3px solid var(--green)}
+.feedback.bad{background:#FBE9E7;border-top:3px solid var(--red)}
+.feedback h4{font-size:18px;font-weight:900;margin-bottom:4px}
+.feedback.good h4{color:var(--green-dk)} .feedback.bad h4{color:var(--red)}
+.feedback .fb-en{font-size:15px;font-weight:800;margin-bottom:2px}
+.feedback .fb-ja{font-size:13px;color:#445;margin-bottom:4px}
+.feedback .fb-note{font-size:12px;color:var(--grey);margin-bottom:10px}
+.feedback .next-btn{width:100%;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:900;font-family:inherit;color:#fff;cursor:pointer}
+.feedback.good .next-btn{background:var(--green)} .feedback.bad .next-btn{background:var(--red)}
+.fb-audio{background:none;border:none;font-size:20px;cursor:pointer;padding:4px;vertical-align:middle}
+
+/* ---------- result ---------- */
+.result-card{background:var(--white);border-radius:24px;padding:26px 20px;box-shadow:var(--shadow);text-align:center;margin-bottom:16px}
+.result-card .ft{font-size:12px;font-weight:900;letter-spacing:.2em;color:var(--grey);margin-bottom:8px}
+.scoreline{font-size:44px;font-weight:900;font-style:italic;margin-bottom:4px}
+.scoreline .g{color:var(--green)} .scoreline .r{color:var(--red)}
+.result-card .vs{font-size:12px;font-weight:800;color:var(--grey);margin-bottom:18px}
+.stat-row{display:flex;justify-content:space-around;border-top:2px solid #EEF3EF;padding-top:16px}
+.stat .num{font-size:22px;font-weight:900;font-style:italic}
+.stat .lbl{font-size:11px;color:var(--grey);font-weight:800}
+.motm{background:var(--yellow);border-radius:18px;padding:14px;font-weight:900;font-size:14px;margin-bottom:16px;display:none}
+.badge-pop{background:var(--ink);color:#fff;border-radius:18px;padding:14px;font-weight:800;font-size:14px;margin-bottom:10px;display:flex;gap:10px;align-items:center}
+
+/* ---------- flashcards ---------- */
+.card-stage{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:340px;perspective:1000px}
+.fcard{position:relative;width:100%;height:300px;transform-style:preserve-3d;transition:transform .45s;cursor:pointer}
+.fcard.flip{transform:rotateY(180deg)}
+.fface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--white);border-radius:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.fface.back{transform:rotateY(180deg);background:var(--ink);color:#fff}
+.fface .cat-mini{font-size:11px;font-weight:900;letter-spacing:.14em;color:var(--green);margin-bottom:12px}
+.fface .big{font-size:30px;font-weight:900;margin-bottom:10px;line-height:1.3}
+.fface .ex{font-size:14px;color:var(--grey);line-height:1.6}
+.fface.back .ex{color:#B9CDC2}
+.fface .tap-hint{position:absolute;bottom:14px;font-size:11px;color:var(--grey);font-weight:700}
+.card-actions{display:flex;gap:12px;margin-top:18px}
+.card-actions button{flex:1;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;color:#fff}
+.btn-again{background:var(--red);box-shadow:0 3px 0 #B33529}
+.btn-got{background:var(--green);box-shadow:0 3px 0 var(--green-dk)}
+.card-actions button:active{transform:translateY(2px);box-shadow:none}
+.card-count{text-align:center;font-size:12px;font-weight:800;color:var(--grey);margin-top:12px}
+
+/* ---------- speaking ---------- */
+.speak-phrase{background:var(--white);border-radius:24px;padding:26px 20px;box-shadow:var(--shadow);text-align:center;margin-bottom:16px}
+.speak-phrase .big{font-size:26px;font-weight:900;margin-bottom:6px}
+.speak-phrase .ja{font-size:14px;color:var(--grey)}
+.mic-btn{width:92px;height:92px;border-radius:50%;border:none;background:var(--red);color:#fff;font-size:36px;cursor:pointer;margin:14px auto;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #B33529;transition:transform .1s}
+.mic-btn:active{transform:translateY(3px);box-shadow:none}
+.mic-btn.rec{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(226,73,59,.5)}50%{box-shadow:0 0 0 18px rgba(226,73,59,0)}}
+.speak-result{text-align:center;min-height:70px}
+.speak-result .heard{font-size:14px;color:var(--grey);margin-bottom:6px}
+.speak-score{font-size:34px;font-weight:900;font-style:italic}
+.center{display:flex;flex-direction:column;align-items:center}
+
+/* ---------- career ---------- */
+.career-head{background:var(--ink);color:#fff;border-radius:24px;padding:22px 20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.career-head .club{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--yellow);margin-bottom:4px}
+.career-head h2{font-size:24px;font-weight:900;margin-bottom:14px}
+.career-stats{display:flex;justify-content:space-between}
+.career-stats .num{font-size:24px;font-weight:900;font-style:italic}
+.career-stats .lbl{font-size:10px;color:#9DB3A8;font-weight:800;letter-spacing:.06em}
+.pyramid{background:var(--white);border-radius:24px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.tier{display:flex;align-items:center;gap:12px;padding:11px 8px;border-radius:14px}
+.tier.now{background:var(--green-lt)}
+.tier .dot{width:14px;height:14px;border-radius:50%;background:#E2EAE5;flex:0 0 auto}
+.tier.cleared .dot{background:var(--green)}
+.tier.now .dot{background:var(--yellow);box-shadow:0 0 0 4px rgba(255,196,0,.3)}
+.tier .tname{flex:1;font-weight:800;font-size:14px}
+.tier.locked .tname{color:var(--grey)}
+.tier .treq{font-size:11px;color:var(--grey);font-weight:700}
+.tier-progress{height:8px;background:#E2EAE5;border-radius:99px;overflow:hidden;margin:4px 8px 10px 34px}
+.tier-progress i{display:block;height:100%;background:var(--yellow);border-radius:99px}
+.trophy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.trophy{background:var(--white);border-radius:16px;padding:14px 8px;text-align:center;box-shadow:var(--shadow)}
+.trophy .tic{font-size:26px;margin-bottom:6px;filter:grayscale(1);opacity:.35}
+.trophy.won .tic{filter:none;opacity:1}
+.trophy .tn{font-size:10px;font-weight:800;color:var(--grey);line-height:1.4}
+.trophy.won .tn{color:var(--ink)}
+
+/* ---------- bottom nav ---------- */
+nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:2px solid #E8EFEA;display:flex;padding:8px 8px calc(8px + var(--safe-b));z-index:40}
+nav button{flex:1;border:none;background:none;font-family:inherit;font-size:10px;font-weight:800;color:var(--grey);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px}
+nav button .nic{font-size:21px}
+nav button.sel{color:var(--green-dk)}
+.hide-nav nav{display:none}
+
+/* toast */
+#toast{position:fixed;top:calc(14px + var(--safe-t));left:50%;transform:translateX(-50%) translateY(-80px);background:var(--ink);color:#fff;font-size:13px;font-weight:800;padding:11px 20px;border-radius:999px;transition:transform .3s;z-index:99;white-space:nowrap}
+#toast.show{transform:translateX(-50%) translateY(0)}
+.note-banner{background:#FFF7DF;border:2px solid var(--yellow);border-radius:14px;padding:10px 14px;font-size:12px;line-height:1.6;color:#6B5500;margin-bottom:14px}
+
+/* ---------- coach's call (ピッチ翻訳) ---------- */
+.coach-feature{background:var(--ink);color:#fff;border-radius:24px;padding:20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);cursor:pointer;margin-bottom:18px;position:relative;overflow:hidden;border:2px solid var(--yellow)}
+.coach-feature::after{content:"📢";position:absolute;right:-10px;bottom:-18px;font-size:80px;opacity:.12;transform:rotate(-12deg)}
+.coach-feature:active{transform:scale(.985)}
+.cf-left{flex:1}
+.cf-tag{display:inline-block;background:var(--yellow);color:var(--ink);font-size:10px;font-weight:900;letter-spacing:.14em;border-radius:999px;padding:4px 10px;margin-bottom:8px}
+.coach-feature h2{font-size:21px;font-weight:900;margin-bottom:6px}
+.coach-feature p{font-size:12px;color:#B9CDC2;line-height:1.6}
+.coach-feature p b{color:var(--yellow)}
+.cf-arrow{font-size:22px;font-weight:900;color:var(--yellow)}
+.coach-inputwrap{display:flex;gap:8px;margin-bottom:12px}
+.coach-input{flex:1;border:2px solid #E2EAE5;border-radius:16px;padding:15px 16px;font-size:16px;font-family:inherit;font-weight:700;background:#fff;color:var(--ink);outline:none;-webkit-user-select:text;user-select:text}
+.coach-input:focus{border-color:var(--green)}
+.coach-go{border:none;border-radius:16px;background:var(--green);color:#fff;font-family:inherit;font-weight:900;font-size:15px;padding:0 20px;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
+.coach-go:active{transform:translateY(2px);box-shadow:none}
+.call-card{background:var(--white);border-radius:20px;padding:18px;box-shadow:var(--shadow);margin-bottom:12px;border-left:5px solid var(--green)}
+.call-card.alt{border-left-color:#C9D8CF}
+.call-card .src{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--grey);margin-bottom:6px}
+.call-card .call-en{font-size:22px;font-weight:900;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.call-card .call-ja{font-size:13px;color:#445;margin-bottom:4px}
+.call-card .call-note{font-size:12px;color:var(--grey);line-height:1.6}
+.ai-ask-btn{display:block;width:100%;border:2px dashed var(--grey);background:none;border-radius:16px;padding:15px;font-family:inherit;font-size:14px;font-weight:900;color:var(--ink);cursor:pointer;margin-top:4px}
+.ai-ask-btn:active{opacity:.7}
+.loading-pitch{text-align:center;padding:30px 0;font-weight:800;color:var(--grey);font-size:14px}
+.loading-pitch .ball{display:inline-block;font-size:30px;animation:roll 1s linear infinite}
+@keyframes roll{to{transform:rotate(360deg)}}
+
+/* ---------- case studies ---------- */
+.mode-card.wide{display:flex;gap:14px;align-items:center;margin-bottom:12px;border:2px solid var(--green)}
+.mode-card.wide .ic{font-size:34px;margin:0}
+.new-pill{background:var(--red);color:#fff;font-size:9px;font-weight:900;border-radius:999px;padding:3px 8px;vertical-align:middle;letter-spacing:.08em}
+.scene-card{background:var(--white);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:12px;cursor:pointer;display:flex;gap:12px;align-items:center}
+.scene-card:active{transform:scale(.98)}
+.scene-card .sic{font-size:28px}
+.scene-card h3{font-size:15px;font-weight:900;margin-bottom:3px}
+.scene-card p{font-size:11px;color:var(--grey);line-height:1.5}
+.scene-head{background:var(--ink);color:#fff;border-radius:20px;padding:18px;margin-bottom:14px}
+.scene-head .sh-cat{font-size:10px;font-weight:900;letter-spacing:.14em;color:var(--yellow);margin-bottom:6px}
+.scene-head h2{font-size:18px;font-weight:900;margin-bottom:8px;line-height:1.4}
+.scene-head p{font-size:13px;color:#B9CDC2;line-height:1.7}
+.lv-filter{display:flex;gap:8px;margin-bottom:12px}
+.lv-filter .chip{flex:1;text-align:center}
+.phrase-row{background:var(--white);border-radius:16px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px}
+.phrase-row .pr-top{display:flex;align-items:flex-start;gap:8px}
+.lv-badge{flex:0 0 auto;font-size:10px;font-weight:900;border-radius:8px;padding:4px 7px;margin-top:2px}
+.lv1{background:var(--green-lt);color:var(--green-dk)} .lv2{background:#FFF3CC;color:#8A6D00} .lv3{background:#FDE2DE;color:var(--red)}
+.phrase-row .pr-en{flex:1;font-size:16px;font-weight:900;line-height:1.4}
+.phrase-row .pr-ja{font-size:12px;color:#445;margin:6px 0 2px;padding-left:2px}
+.phrase-row .pr-note{font-size:11px;color:var(--grey);line-height:1.6;padding-left:2px}
+.pr-btns{display:flex;gap:6px;flex:0 0 auto}
+.pr-btns button{border:none;background:#EEF3EF;border-radius:10px;width:34px;height:34px;font-size:15px;cursor:pointer}
+.pr-btns button.faved{background:var(--yellow)}
+.ng-card{background:#FDE2DE;border-radius:16px;padding:14px;margin:4px 0 12px;border-left:5px solid var(--red)}
+.ng-card .ng-tag{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--red);margin-bottom:6px}
+.ng-card .ng-en{font-size:15px;font-weight:900;text-decoration:line-through;color:#8a2a20;margin-bottom:4px}
+.ng-card .ng-why{font-size:12px;color:#6b2018;line-height:1.6}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ============ HOME ============ -->
+<section class="screen active" id="scr-home">
+  <div class="brand">
+    <div class="logo">TOP <span>BINS</span><span style="font-size:11px;color:var(--grey);font-style:normal;font-weight:800;margin-left:8px">イングランド現場英語</span></div>
+    <div class="streak-pill"><span class="fire">🔥</span><span id="streak-num">0</span></div>
+  </div>
+
+  <div class="hero">
+    <div class="label">TODAY'S MATCH — 1日5分</div>
+    <h1 id="hero-title">キックオフの時間だ。</h1>
+    <p id="hero-sub">10問＝90分。ピッチからゴシップ誌まで、今日のミックス戦。</p>
+    <button class="kickoff" id="btn-kickoff" onclick="startSession('mix',true)">⚽ KICK OFF</button>
+  </div>
+
+  <div class="coach-feature" onclick="openCoach()">
+    <div class="cf-left">
+      <div class="cf-tag">FLAGSHIP — 目玉機能</div>
+      <h2>📢 ピッチ翻訳</h2>
+      <p>日本語で状況を打ち込むと、現場で本当に叫ぶ英語コールを即返す。<br>例：「中を切れ」→ <b>Show him outside!</b></p>
+    </div>
+    <div class="cf-arrow">→</div>
+  </div>
+
+  <div class="section-title">TRAINING GROUND — モード別練習</div>
+  <div class="mode-card wide" onclick="openCases()">
+    <span class="ic">🎬</span>
+    <div><h3>ケーススタディ <span class="new-pill">NEW</span></h3>
+    <p>「こういう時、何て言う？」をレベル別の選択肢で学ぶ。初合流の挨拶からbanterの返しまで。</p></div>
+  </div>
+  <div class="mode-grid">
+    <div class="mode-card" onclick="openCatPicker('quiz')">
+      <span class="ic">🎯</span><h3>クイズ</h3><p>聞いて選ぶ・並べ替えて文をつくる</p>
+    </div>
+    <div class="mode-card" onclick="openCatPicker('ear')">
+      <span class="ic">🎧</span><h3>イヤーテスト</h3><p>音だけで勝負。文字なしリスニング</p>
+    </div>
+    <div class="mode-card" onclick="openCatPicker('speak')">
+      <span class="ic">🎙️</span><h3>シャドーイング</h3><p>マイクに向かって声に出す</p>
+    </div>
+    <div class="mode-card" onclick="openCatPicker('cards')">
+      <span class="ic">🃏</span><h3>単語カード</h3><p>スワイプ感覚でめくって覚える</p>
+    </div>
+  </div>
+
+  <div class="section-title">FIXTURES — カテゴリー</div>
+  <div class="cat-row" id="home-cats"></div>
+  <div class="note-banner">🔊 音声は英国英語(en-GB)。本物のCockney音声はアプリ版でネイティブ録音を実装予定。スラング表記には <b>[Cockney]</b> マークつき。</div>
+</section>
+
+<!-- ============ COACH'S CALL (ピッチ翻訳) ============ -->
+<section class="screen" id="scr-coach">
+  <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
+    <div style="font-weight:900;font-size:17px">📢 ピッチ翻訳 <span style="color:var(--grey);font-size:12px">COACH'S CALL</span></div></div>
+  <div class="coach-inputwrap">
+    <input class="coach-input" id="coach-input" type="text" inputmode="text" enterkeyhint="search"
+      placeholder="例：中を切れ／寄せろ／裏を狙え" onkeydown="if(event.key==='Enter')searchCoach()">
+    <button class="coach-go" onclick="searchCoach()">訳す</button>
+  </div>
+  <div class="cat-row" id="coach-examples"></div>
+  <div id="coach-result"></div>
+  <div class="note-banner" style="margin-top:14px">⚡ よく使うコールは内蔵辞書から即答。辞書にない状況は <b>AIコーチ（Claude）</b>に問い合わせる。AI問い合わせはこのプレビュー環境内で動作（Vercel公開時はagent-crmと同じAPIプロキシ構成が必要）。</div>
+</section>
+
+<!-- ============ CASE STUDIES ============ -->
+<section class="screen" id="scr-cases">
+  <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
+    <div style="font-weight:900;font-size:17px">🎬 ケーススタディ</div></div>
+  <div class="cat-row" id="cases-cats"></div>
+  <div id="cases-list"></div>
+  <button class="ai-ask-btn" onclick="askAICase()">🤖 自分のシチュエーションをAIに作らせる</button>
+</section>
+
+<section class="screen" id="scr-case">
+  <div class="quiz-top"><button class="btn-x" onclick="go('cases')">✕</button>
+    <div style="font-weight:900;font-size:17px">この場面、何て言う？</div></div>
+  <div id="case-body"></div>
+</section>
+
+<!-- ============ CATEGORY PICKER ============ -->
+<section class="screen" id="scr-pick">
+  <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
+    <div style="font-weight:900;font-size:17px" id="pick-title">カテゴリーを選ぶ</div></div>
+  <div class="opts" id="pick-list"></div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="screen" id="scr-quiz">
+  <div class="quiz-top">
+    <button class="btn-x" onclick="quitSession()">✕</button>
+    <div class="clockwrap">
+      <div class="clockbar"><i id="clock-fill"></i></div>
+      <div class="clocklabel"><span>KICK OFF</span><span>HT</span><span>FT</span></div>
+    </div>
+    <div class="minute" id="clock-min">0'</div>
+  </div>
+  <div id="q-body"></div>
+</section>
+
+<!-- ============ RESULT ============ -->
+<section class="screen" id="scr-result">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+  <div class="result-card">
+    <div class="ft">FULL TIME — MATCH REPORT</div>
+    <div class="scoreline"><span class="g" id="res-goals">0</span> – <span class="r" id="res-miss">0</span></div>
+    <div class="vs">YOU vs MISTAKES</div>
+    <div class="stat-row">
+      <div class="stat"><div class="num" id="res-min">90'</div><div class="lbl">出場時間</div></div>
+      <div class="stat"><div class="num" id="res-acc">0%</div><div class="lbl">パス成功率</div></div>
+      <div class="stat"><div class="num" id="res-xp">+0</div><div class="lbl">通算分数</div></div>
+    </div>
+  </div>
+  <div class="motm" id="res-motm">⭐ MAN OF THE MATCH — 全問正解！</div>
+  <div id="res-badges"></div>
+  <button class="check-btn" onclick="go('home');renderHome()">ロッカールームに戻る</button>
+  <button class="check-btn" style="background:var(--ink);box-shadow:0 3px 0 #000;margin-top:10px" onclick="startSession(lastCat,lastDaily)">もう1試合</button>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="screen" id="scr-cards">
+  <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
+    <div style="font-weight:900;font-size:17px">単語カード <span id="cards-cat" style="color:var(--grey);font-size:13px"></span></div></div>
+  <div class="card-stage">
+    <div class="fcard" id="fcard" onclick="flipCard()">
+      <div class="fface front">
+        <div class="cat-mini" id="fc-cat"></div>
+        <div class="big" id="fc-en"></div>
+        <div class="ex" id="fc-ex"></div>
+        <button class="fb-audio" style="margin-top:10px;font-size:26px" onclick="event.stopPropagation();playCurrentCard()">🔊</button>
+        <div class="tap-hint">タップで意味をみる</div>
+      </div>
+      <div class="fface back">
+        <div class="cat-mini">意味</div>
+        <div class="big" id="fc-ja"></div>
+        <div class="ex" id="fc-exja"></div>
+        <div class="tap-hint" style="color:#8AA095">タップで戻る</div>
+      </div>
+    </div>
+    <div class="card-actions">
+      <button class="btn-again" onclick="gradeCard(false)">まだ 😬</button>
+      <button class="btn-got" onclick="gradeCard(true)">知ってる ✅</button>
+    </div>
+    <div class="card-count" id="card-count"></div>
+  </div>
+</section>
+
+<!-- ============ SPEAKING ============ -->
+<section class="screen" id="scr-speak">
+  <div class="quiz-top"><button class="btn-x" onclick="stopRec();go('home')">✕</button>
+    <div style="font-weight:900;font-size:17px">シャドーイング</div>
+    <div class="minute" id="speak-count">1/5</div></div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="speak-phrase">
+      <div class="big" id="sp-en"></div>
+      <div class="ja" id="sp-ja"></div>
+      <button class="play-big" style="margin-top:16px;padding:14px" onclick="playSpeak()">🔊 お手本を聞く</button>
+    </div>
+    <div class="center">
+      <button class="mic-btn" id="mic-btn" onclick="toggleRec()">🎙️</button>
+      <div class="speak-result">
+        <div class="heard" id="sp-heard"></div>
+        <div class="speak-score" id="sp-score"></div>
+      </div>
+      <button class="check-btn" id="sp-next" style="display:none" onclick="nextSpeak()">次のフレーズ →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAREER ============ -->
+<section class="screen" id="scr-career">
+  <div class="brand"><div class="logo">MY <span>CAREER</span></div>
+    <div class="streak-pill"><span class="fire">🔥</span><span id="streak-num2">0</span></div></div>
+  <div class="career-head">
+    <div class="club" id="career-club">SUNDAY LEAGUE</div>
+    <h2 id="career-name">無名の挑戦者</h2>
+    <div class="career-stats">
+      <div><div class="num" id="cs-min">0'</div><div class="lbl">通算出場分数</div></div>
+      <div><div class="num" id="cs-caps">0</div><div class="lbl">出場試合数</div></div>
+      <div><div class="num" id="cs-goals">0</div><div class="lbl">通算ゴール</div></div>
+      <div><div class="num" id="cs-words">0</div><div class="lbl">マスター語数</div></div>
+    </div>
+  </div>
+  <div class="section-title">THE PYRAMID — 昇格への道</div>
+  <div class="pyramid" id="pyramid"></div>
+  <div class="section-title">TROPHY CABINET — トロフィー</div>
+  <div class="trophy-grid" id="trophies"></div>
+</section>
+
+<!-- feedback / nav / toast -->
+<div class="feedback" id="feedback">
+  <h4 id="fb-title"></h4>
+  <div class="fb-en"><span id="fb-en"></span> <button class="fb-audio" onclick="playFb()">🔊</button></div>
+  <div class="fb-ja" id="fb-ja"></div>
+  <div class="fb-note" id="fb-note"></div>
+  <button class="next-btn" id="fb-next" onclick="nextQuestion()">次へ →</button>
+</div>
+
+<nav>
+  <button id="nav-home" class="sel" onclick="go('home');renderHome()"><span class="nic">🏟️</span>ホーム</button>
+  <button id="nav-cards" onclick="openCatPicker('cards')"><span class="nic">🃏</span>カード</button>
+  <button id="nav-career" onclick="go('career');renderCareer()"><span class="nic">🏆</span>キャリア</button>
+</nav>
+<div id="toast"></div>
+</div>
+<script>
+/* ================= DATA =================
+   ※すべてオリジナルの例文・訳。市販辞典からの転載なし */
+const CATS = {
+  pitch:  {name:"ピッチ英語",   ic:"⚽", desc:"試合中のコーチング・コール"},
+  locker: {name:"ロッカールーム英語", ic:"🧦", desc:"チームメイトとの会話・スラング"},
+  comm:   {name:"実況解説英語", ic:"🎙️", desc:"中継で飛び交う定番表現"},
+  paper:  {name:"新聞・ゴシップ誌英語", ic:"📰", desc:"タブロイド紙の移籍報道語彙"},
+  fan:    {name:"サポーター英語", ic:"📣", desc:"スタンドのチャント・煽り文化"},
+  mix:    {name:"ミックス", ic:"🔀", desc:"全カテゴリーから出題"}
+};
+
+const DB = [
+/* ---- pitch ---- */
+{c:"pitch",en:"Man on!",ja:"後ろから来てるぞ！",ex:"Man on! Play it back!",exJa:"来てるぞ！後ろに戻せ！",lv:1},
+{c:"pitch",en:"Time!",ja:"フリーだ、余裕あるぞ",ex:"Time, time! Take a touch.",exJa:"時間ある！一回トラップしろ。",lv:1},
+{c:"pitch",en:"Turn!",ja:"前を向け！",ex:"Turn! No one's on you.",exJa:"ターンしろ！誰も付いてない。",lv:1},
+{c:"pitch",en:"Switch it!",ja:"サイドを変えろ",ex:"Switch it! The left is free.",exJa:"展開しろ！左が空いてる。",lv:1},
+{c:"pitch",en:"Square!",ja:"横パスをくれ",ex:"Square it! I'm with you.",exJa:"横に出せ！並走してる。",lv:1},
+{c:"pitch",en:"Down the line!",ja:"ライン際に出せ",ex:"Knock it down the line!",exJa:"縦に蹴り出せ！",lv:1},
+{c:"pitch",en:"Cut it back!",ja:"マイナスに折り返せ",ex:"Get to the byline and cut it back!",exJa:"ゴールラインまで行ってマイナスだ！",lv:1},
+{c:"pitch",en:"Second ball!",ja:"こぼれ球を拾え",ex:"React! Second ball, lads!",exJa:"反応しろ！セカンド拾うぞ！",lv:1},
+{c:"pitch",en:"Keeper's!",ja:"キーパーのボールだ！",ex:"Keeper's! Leave it!",exJa:"キーパー！触るな！",lv:1},
+{c:"pitch",en:"Away!",ja:"クリアしろ！",ex:"No risks! Get it away!",exJa:"リスク取るな！蹴り出せ！",lv:1},
+{c:"pitch",en:"Stay big!",ja:"（GKへ）体を大きく見せろ",ex:"One-on-one — stay big, keeper!",exJa:"1対1だ、キーパー、大きく構えろ！",lv:1},
+{c:"pitch",en:"Show him inside!",ja:"内側へ追い込め",ex:"Show him inside, we've got cover.",exJa:"中に誘導しろ、カバーはいる。",lv:1},
+{c:"pitch",en:"Track your runner!",ja:"走る相手に付いていけ",ex:"Track your runner! Don't ball-watch.",exJa:"マークに付け！ボールばかり見るな。",lv:1},
+{c:"pitch",en:"Overlap",ja:"オーバーラップ",ex:"Hold it — the overlap is coming.",exJa:"キープしろ、オーバーラップが来る。",lv:1},
+{c:"pitch",en:"One-two",ja:"ワンツー",ex:"Give me a one-two on the edge.",exJa:"エリア手前でワンツーだ。",lv:1},
+{c:"pitch",en:"Put a shift in",ja:"全力で走り切る",ex:"Last ten minutes — put a shift in!",exJa:"ラスト10分、走り切れ！",lv:1},
+{c:"pitch",en:"Win your header!",ja:"ヘディングで競り勝て",ex:"Big lad's on you — win your header!",exJa:"デカいのが来るぞ、競り勝て！",lv:1},
+{c:"pitch",en:"Drop!",ja:"下がれ！",ex:"Drop! Hold the line at the box.",exJa:"下がれ！エリアでラインを保て。",lv:1},
+{c:"pitch",en:"Squeeze!",ja:"ラインを押し上げろ",ex:"Squeeze up! Make it compact.",exJa:"押し上げろ！コンパクトにするぞ。",lv:1},
+{c:"pitch",en:"Hold it up!",ja:"前線でキープしろ",ex:"Hold it up and wait for support.",exJa:"収めて味方を待て。",lv:1},
+/* ---- locker ---- */
+{c:"locker",en:"Gaffer",ja:"監督（ボス）",ex:"The gaffer wants us in at nine.",exJa:"監督が9時集合だってさ。",note:"英国の現場では manager より gaffer が普通",lv:1},
+{c:"locker",en:"Skipper",ja:"キャプテン",ex:"Skipper's doing the team talk today.",exJa:"今日はキャプテンが檄を飛ばす。",lv:1},
+{c:"locker",en:"Banter",ja:"からかい合い・軽口",ex:"It's just banter, don't take it personal.",exJa:"ただのイジりだよ、本気にすんな。",lv:2},
+{c:"locker",en:"Sound",ja:"いいヤツ／「了解」",ex:"The new lad? He's sound.",exJa:"新加入の彼？いいヤツだよ。",lv:1},
+{c:"locker",en:"Knackered",ja:"くたくたに疲れた",ex:"Double session today — I'm knackered.",exJa:"今日は2部練。もうボロボロだ。",lv:1},
+{c:"locker",en:"Gutted",ja:"超悔しい・ガッカリ",ex:"Gutted we lost that one, to be fair.",exJa:"正直、あれ落としたのはマジで悔しい。",lv:1},
+{c:"locker",en:"Buzzing",ja:"最高の気分",ex:"First goal for the club — buzzing!",exJa:"クラブ初ゴール、テンション爆上がり！",lv:1},
+{c:"locker",en:"Hairdryer treatment",ja:"監督の大目玉",ex:"We got the hairdryer treatment at half-time.",exJa:"ハーフタイムに監督にブチギレられた。",note:"ファーガソン監督の怒号が由来",lv:3},
+{c:"locker",en:"Fuming",ja:"ブチギレている",ex:"The gaffer was fuming after that red card.",exJa:"あの退場で監督は激怒してた。",lv:2},
+{c:"locker",en:"Kickabout",ja:"軽い球蹴り・ミニゲーム",ex:"Fancy a kickabout after lunch?",exJa:"昼メシのあと軽く蹴る？",lv:1},
+{c:"locker",en:"Megs / Nutmeg",ja:"股抜き",ex:"Megs! That's a coffee you owe me.",exJa:"股抜き！コーヒー1杯おごりな。",note:"股抜きされたら罰ゲームが現場の定番",lv:2},
+{c:"locker",en:"Top bins",ja:"ゴール上隅（に決める）",ex:"He smashed it top bins in training.",exJa:"練習で上隅にブチ込んでた。",lv:2},
+{c:"locker",en:"Worldie",ja:"世界レベルのスーパーゴール",ex:"Did you see his worldie yesterday?",exJa:"昨日のあいつのスーパーゴール見た？",lv:2},
+{c:"locker",en:"Howler",ja:"大チョンボ",ex:"The keeper had an absolute howler.",exJa:"キーパーがとんでもないやらかし。",lv:2},
+{c:"locker",en:"Sitter",ja:"絶対決めるべき決定機",ex:"I can't believe he missed that sitter.",exJa:"あの決定機を外すとかありえない。",lv:2},
+{c:"locker",en:"Rondo",ja:"ロンド（鳥かご）",ex:"Warm-up starts with a rondo, lads.",exJa:"アップはロンドからだぞ。",lv:2},
+{c:"locker",en:"Dead leg",ja:"モモカン（太腿の打撲）",ex:"I've got a dead leg, give me a minute.",exJa:"モモカン食らった、ちょい待って。",lv:1},
+{c:"locker",en:"Plates",ja:"足（Cockneyスラング）",ex:"Use your plates, son!",exJa:"足を使え、坊主！",note:"[Cockney] plates of meat = feet の押韻スラング",lv:3},
+{c:"locker",en:"Have a word with yourself",ja:"しっかりしろよ（自分を見つめ直せ）",ex:"Late again? Have a word with yourself.",exJa:"また遅刻？いい加減にしろよ。",lv:3},
+{c:"locker",en:"Sorted",ja:"解決済み・準備OK",ex:"Boots, kit, contract — all sorted.",exJa:"スパイクも用具も契約も全部OK。",note:"[Cockney/London] 万能の「片付いた」",lv:3},
+/* ---- comm ---- */
+{c:"comm",en:"Clean sheet",ja:"無失点",ex:"The keeper keeps another clean sheet.",exJa:"キーパーがまたも無失点に抑えた。",lv:1},
+{c:"comm",en:"Park the bus",ja:"超守備的に引きこもる",ex:"They parked the bus for ninety minutes.",exJa:"彼らは90分間バスを停めた（ドン引きした）。",lv:2},
+{c:"comm",en:"Route one",ja:"ロングボール一辺倒の戦術",ex:"It's route one football from the hosts.",exJa:"ホームチームはロングボール一辺倒だ。",lv:2},
+{c:"comm",en:"Against the run of play",ja:"試合の流れに反して",ex:"They scored against the run of play.",exJa:"流れに反する形で彼らが先制した。",lv:3},
+{c:"comm",en:"Squeaky bum time",ja:"終盤の胃が痛い時間帯",ex:"Ten minutes left — squeaky bum time.",exJa:"残り10分、しびれる時間帯だ。",note:"ファーガソン監督の造語",lv:3},
+{c:"comm",en:"Early doors",ja:"試合の序盤に",ex:"They pressed high early doors.",exJa:"序盤からハイプレスを仕掛けた。",lv:2},
+{c:"comm",en:"On a plate",ja:"お膳立てされた（決定機）",ex:"The cross put it on a plate for him.",exJa:"クロスが完璧なお膳立てになった。",lv:2},
+{c:"comm",en:"Hollywood ball",ja:"狙いすぎの派手なロングパス",ex:"That's a Hollywood ball — easily cut out.",exJa:"狙いすぎのパスだ、簡単にカットされた。",lv:3},
+{c:"comm",en:"A game of two halves",ja:"前半と後半で別物の試合",ex:"Football is a game of two halves.",exJa:"サッカーは前後半で別の顔を見せる。",lv:2},
+{c:"comm",en:"Clinical",ja:"決定力がある",ex:"He's so clinical in front of goal.",exJa:"ゴール前での決定力が抜群だ。",lv:1},
+{c:"comm",en:"Off the woodwork",ja:"ポスト・バー直撃",ex:"Inches away — off the woodwork again!",exJa:"あと数センチ、またもバー直撃！",lv:2},
+{c:"comm",en:"Stoppage time",ja:"アディショナルタイム",ex:"Five minutes of stoppage time to play.",exJa:"アディショナルタイムは5分。",lv:1},
+{c:"comm",en:"Six-pointer",ja:"直接対決（勝ち点6の価値）",ex:"This relegation six-pointer is huge.",exJa:"この残留を懸けた直接対決は超重要だ。",lv:2},
+{c:"comm",en:"Relegation dogfight",ja:"残留争い",ex:"Both clubs are in a relegation dogfight.",exJa:"両クラブとも残留争いの渦中だ。",lv:3},
+{c:"comm",en:"Down to ten men",ja:"退場で10人に",ex:"They're down to ten men after the red.",exJa:"レッドカードで10人になった。",lv:1},
+{c:"comm",en:"Spot kick",ja:"PK",ex:"The referee points to the spot — spot kick!",exJa:"主審がスポットを指した、PKだ！",lv:1},
+{c:"comm",en:"Set piece",ja:"セットプレー",ex:"They're dangerous from set pieces.",exJa:"彼らはセットプレーが脅威だ。",lv:1},
+{c:"comm",en:"Pull one back",ja:"1点を返す",ex:"Can they pull one back before half-time?",exJa:"前半のうちに1点返せるか？",lv:1},
+{c:"comm",en:"See out the game",ja:"試合を締めて逃げ切る",ex:"Now they just need to see out the game.",exJa:"あとは試合を締めるだけだ。",lv:2},
+{c:"comm",en:"Aplomb",ja:"落ち着き払って（決める）",ex:"He finished with real aplomb.",exJa:"彼は実に落ち着いて決め切った。",lv:3},
+/* ---- paper ---- */
+{c:"paper",en:"Swoop",ja:"電撃獲得（急襲）",ex:"United plot a January swoop for the striker.",exJa:"ユナイテッドが1月の電撃獲得を画策。",lv:2},
+{c:"paper",en:"Snub",ja:"袖にする・移籍を拒否",ex:"Star snubs mega offer from rivals.",exJa:"スター選手、ライバルの大型オファーを一蹴。",lv:2},
+{c:"paper",en:"Axed",ja:"解任された・外された",ex:"Boss axed after five straight defeats.",exJa:"5連敗で指揮官解任。",lv:1},
+{c:"paper",en:"Wantaway",ja:"移籍を望んでいる（選手）",ex:"The wantaway winger skipped training.",exJa:"移籍希望のウインガーが練習を欠席。",lv:2},
+{c:"paper",en:"Hitman",ja:"点取り屋",ex:"Italian hitman tops the scoring charts.",exJa:"イタリア人ストライカーが得点ランク首位。",lv:1},
+{c:"paper",en:"War chest",ja:"移籍資金",ex:"The new owner promises a £200m war chest.",exJa:"新オーナーが2億ポンドの移籍資金を約束。",lv:2},
+{c:"paper",en:"Tug-of-war",ja:"獲得を巡る争奪戦",ex:"A tug-of-war over the teenage prodigy.",exJa:"10代の天才を巡る争奪戦。",lv:3},
+{c:"paper",en:"Shock exit",ja:"電撃退団",ex:"Captain's shock exit stuns the dressing room.",exJa:"キャプテンの電撃退団にロッカーが騒然。",lv:2},
+{c:"paper",en:"Transfer saga",ja:"長引く移籍劇",ex:"The transfer saga finally ends after months.",exJa:"数ヶ月に及ぶ移籍劇がついに決着。",lv:2},
+{c:"paper",en:"Deadline day",ja:"移籍市場最終日",ex:"Deadline day drama as the fax fails.",exJa:"最終日、書類トラブルでドタバタ劇。",lv:1},
+{c:"paper",en:"Medical",ja:"メディカルチェック",ex:"He flies in tonight to undergo a medical.",exJa:"今夜到着しメディカルを受ける。",lv:1},
+{c:"paper",en:"Put pen to paper",ja:"契約にサインする",ex:"The defender puts pen to paper on a new deal.",exJa:"DFが新契約にサイン。",lv:2},
+{c:"paper",en:"On the chopping block",ja:"解任・放出秒読み",ex:"The boss is on the chopping block again.",exJa:"指揮官はまたも解任秒読みだ。",lv:3},
+{c:"paper",en:"Silly season",ja:"移籍の噂が乱れ飛ぶ時期",ex:"Silly season rumours link him to ten clubs.",exJa:"噂の季節、10クラブと結び付けられる。",lv:3},
+{c:"paper",en:"Flop",ja:"期待外れの選手",ex:"£80m flop set for a cut-price exit.",exJa:"8000万ポンドの期待外れ、投げ売りへ。",lv:1},
+{c:"paper",en:"Journeyman",ja:"クラブを渡り歩く選手",ex:"The journeyman joins his eleventh club.",exJa:"渡り鳥の彼が11クラブ目に加入。",lv:3},
+{c:"paper",en:"Caretaker boss",ja:"暫定監督",ex:"The caretaker boss takes charge on Saturday.",exJa:"暫定指揮官が土曜の試合で采配。",lv:2},
+{c:"paper",en:"Loan spell",ja:"レンタル移籍期間",ex:"A loan spell could revive his career.",exJa:"レンタルがキャリア再生の鍵になりそうだ。",lv:1},
+{c:"paper",en:"Release clause",ja:"契約解除金（リリース条項）",ex:"His release clause is set at £60m.",exJa:"解除金は6000万ポンドに設定。",lv:2},
+{c:"paper",en:"Gardening leave",ja:"（解任後の）自宅待機",ex:"The sacked boss is on gardening leave.",exJa:"解任された監督は契約満了まで自宅待機。",lv:3},
+/* ---- fan ---- */
+{c:"fan",en:"Who are ya?",ja:"お前ら誰だよ？（挑発チャント）",ex:"The away end sings 'Who are ya?'",exJa:"アウェイ席から「お前ら誰だ」の大合唱。",note:"[Cockney] 'you'→'ya' の下町発音",lv:1},
+{c:"fan",en:"Get in!",ja:"よっしゃー！",ex:"Last-minute winner — get in!",exJa:"土壇場の決勝点、よっしゃー！",lv:1},
+{c:"fan",en:"He's one of our own",ja:"生え抜きを讃えるチャント",ex:"The academy kid scores — he's one of our own!",exJa:"下部組織育ちが決めた、「俺らの息子」だ！",lv:2},
+{c:"fan",en:"You're not singing anymore",ja:"黙ったな（逆転時の煽り）",ex:"2-1 up: 'You're not singing anymore!'",exJa:"逆転して「もう歌わないのか？」の煽り。",lv:2},
+{c:"fan",en:"On me 'ead, son!",ja:"俺の頭に合わせろ！",ex:"The terrace shouts 'On me 'ead, son!'",exJa:"ゴール裏が「俺の頭に！」と叫ぶ。",note:"[Cockney] head の h が落ちる典型例",lv:3},
+{c:"fan",en:"What a waste of money",ja:"カネの無駄遣い（高額選手への煽り）",ex:"He misses again — 'what a waste of money!'",exJa:"また外した、「カネの無駄」コール。",lv:3},
+{c:"fan",en:"Terrace",ja:"ゴール裏（立見席文化）",ex:"He grew up on the terraces at Selhurst.",exJa:"彼はセルハーストのゴール裏で育った。",lv:2},
+{c:"fan",en:"Away day",ja:"アウェイ遠征",ex:"Early train, full pub — proper away day.",exJa:"早朝の電車に満員のパブ、これぞ遠征。",lv:1},
+{c:"fan",en:"Pitch invasion",ja:"ピッチ乱入",ex:"Promotion sparked a pitch invasion.",exJa:"昇格決定でファンがピッチに乱入。",lv:2},
+{c:"fan",en:"Derby day",ja:"ダービーの日",ex:"The whole city stops on derby day.",exJa:"ダービーの日は街全体が止まる。",lv:1},
+{c:"fan",en:"Sacked in the morning",ja:"「朝には解任だ」チャント",ex:"Fans chant 'sacked in the morning' at the boss.",exJa:"敵将に「明日の朝クビだ」の合唱。",lv:2},
+{c:"fan",en:"Glory hunter",ja:"強いチームにだけ乗っかるにわか",ex:"He swapped clubs again — total glory hunter.",exJa:"また鞍替えかよ、完全ににわかだな。",lv:2},
+{c:"fan",en:"Season ticket",ja:"シーズンチケット",ex:"Third generation with a season ticket here.",exJa:"うちは3世代シーチケ持ちだ。",lv:1},
+{c:"fan",en:"Tinpot",ja:"しょぼい・三流の",ex:"They called our cup run tinpot. Rude.",exJa:"うちのカップ快進撃を三流呼ばわり。失礼な。",lv:3},
+{c:"fan",en:"Prawn sandwich brigade",ja:"試合に興味のない法人席の客",ex:"The prawn sandwich brigade left at sixty minutes.",exJa:"接待席の連中は60分で帰った。",note:"ロイ・キーンの名言が由来",lv:3},
+{c:"fan",en:"We want our club back",ja:"クラブを取り戻せ（オーナー抗議）",ex:"Banners read 'We want our club back'.",exJa:"「クラブを返せ」の横断幕が並んだ。",lv:3},
+{c:"fan",en:"Proper",ja:"本物の・ガチの",ex:"Standing terrace, floodlights — proper football.",exJa:"立ち見にナイター照明、これぞ本物のサッカー。",note:"[London] 強調の万能スラング",lv:3},
+{c:"fan",en:"Gutted for the lads",ja:"選手たちが気の毒だ",ex:"Lost on pens — gutted for the lads.",exJa:"PK負けか…選手が気の毒すぎる。",lv:2},
+{c:"fan",en:"Top four",ja:"トップ4（CL出場圏）",ex:"Top four is the minimum this season.",exJa:"今季はトップ4が最低ライン。",lv:1},
+{c:"fan",en:"Sing your hearts out",ja:"声の限り歌え",ex:"Sing your hearts out for the lads!",exJa:"選手のために声を枯らして歌え！",lv:2}
+];
+/* ================= STATE ================= */
+const TIERS=[
+ {name:"SUNDAY LEAGUE",ja:"日曜リーグの挑戦者",min:0},
+ {name:"NON-LEAGUE",ja:"ノンリーグの注目株",min:270},
+ {name:"LEAGUE TWO",ja:"4部のプロ契約選手",min:900},
+ {name:"LEAGUE ONE",ja:"3部の主力",min:1800},
+ {name:"CHAMPIONSHIP",ja:"2部のスター",min:3600},
+ {name:"PREMIER LEAGUE",ja:"プレミアの常連",min:7200},
+ {name:"ENGLAND CALL-UP",ja:"代表クラスの語学力",min:14400}
+];
+const TROPHIES=[
+ {id:"first",ic:"⚽",n:"初ゴール",d:"初めて正解する"},
+ {id:"hat",ic:"🎩",n:"ハットトリック",d:"3問連続正解"},
+ {id:"motm",ic:"⭐",n:"MOTM",d:"1試合全問正解"},
+ {id:"week",ic:"📅",n:"週間MVP",d:"7日連続出場"},
+ {id:"month",ic:"🏅",n:"月間MVP",d:"30日連続出場"},
+ {id:"fifty",ic:"📖",n:"50語マスター",d:"カード50語を習得"},
+ {id:"cap",ic:"🦁",n:"スリーライオンズ",d:"通算14400分到達"},
+ {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
+ {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
+];
+let S=load();
+function load(){
+  try{const d=JSON.parse(localStorage.getItem("topbins")||"{}");
+    return Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:""},d);
+  }catch(e){return {min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:""}}
+}
+function save(){localStorage.setItem("topbins",JSON.stringify(S))}
+function today(){return new Date().toISOString().slice(0,10)}
+
+/* ================= AUDIO (en-GB TTS + SFX) ================= */
+let voices=[],gbVoice=null;
+function loadVoices(){
+  voices=speechSynthesis.getVoices();
+  gbVoice=voices.find(v=>/en[-_]GB/i.test(v.lang)&&/male|Daniel|Arthur/i.test(v.name))
+        ||voices.find(v=>/en[-_]GB/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||null;
+}
+loadVoices(); if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=loadVoices;
+let rate=1.0;
+function speak(text,r){
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    if(gbVoice)u.voice=gbVoice; u.lang="en-GB"; u.rate=r||rate; u.pitch=.95;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+let AC=null;
+function sfx(type){
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();
+    o.connect(g);g.connect(AC.destination);
+    if(type==="good"){o.frequency.setValueAtTime(660,t);o.frequency.setValueAtTime(880,t+.09);g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}
+    else if(type==="bad"){o.type="sawtooth";o.frequency.setValueAtTime(180,t);o.frequency.exponentialRampToValueAtTime(90,t+.25);g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}
+    else if(type==="whistle"){o.frequency.setValueAtTime(2400,t);g.gain.setValueAtTime(.08,t);g.gain.setValueAtTime(0,t+.12);g.gain.setValueAtTime(.08,t+.2);g.gain.exponentialRampToValueAtTime(.001,t+.55);o.start(t);o.stop(t+.6);}
+  }catch(e){}
+}
+
+/* ================= NAV ================= */
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("scr-"+id).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
+  const nv={home:"nav-home",cards:"nav-cards",career:"nav-career"}[id];
+  if(nv)document.getElementById(nv).classList.add("sel");
+  document.getElementById("feedback").classList.remove("show");
+  window.scrollTo(0,0);
+}
+function toast(msg){
+  const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200);
+}
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+const pick=(a,n)=>shuffle(a).slice(0,n);
+
+/* ================= HOME ================= */
+function renderHome(){
+  document.getElementById("streak-num").textContent=S.streak;
+  document.getElementById("streak-num2").textContent=S.streak;
+  const done=S.doneToday===today();
+  const kb=document.getElementById("btn-kickoff");
+  kb.classList.toggle("done",done);
+  kb.innerHTML=done?"✅ 本日フル出場済み — もう1試合やる？":"⚽ KICK OFF";
+  document.getElementById("hero-title").textContent=done?"ナイスゲーム。":"キックオフの時間だ。";
+  document.querySelector(".hero .label").textContent="TODAY'S MATCH — 1日5分・語彙 "+LV_NAMES[unlockedLv()];
+  const hc=document.getElementById("home-cats");hc.innerHTML="";
+  Object.keys(CATS).forEach(k=>{
+    if(k==="mix")return;
+    const unlocked=poolFor(k);
+    const n=unlocked.length,total=DB.filter(d=>d.c===k).length;
+    const mastered=unlocked.filter(d=>(S.box[d.en]||0)>=2).length;
+    const div=document.createElement("div");
+    div.className="mode-card";div.style.flex="0 0 150px";
+    div.innerHTML=`<span class="ic">${CATS[k].ic}</span><h3 style="font-size:13px">${CATS[k].name}</h3><p>${mastered}/${n} 語マスター${n<total?`<br><span style="color:var(--yellow)">🔒 +${total-n}語は昇格で解放</span>`:""}</p>`;
+    div.onclick=()=>startSession(k,false);
+    hc.appendChild(div);
+  });
+}
+
+/* ================= CATEGORY PICKER ================= */
+let pickMode="quiz";
+function openCatPicker(mode){
+  pickMode=mode;
+  document.getElementById("pick-title").textContent={quiz:"クイズ",ear:"イヤーテスト",speak:"シャドーイング",cards:"単語カード"}[mode]+" — カテゴリー";
+  const list=document.getElementById("pick-list");list.innerHTML="";
+  if(mode==="cards"&&(S.myPhrases||[]).length){
+    const b=document.createElement("button");b.className="opt";b.style.borderColor="var(--yellow)";
+    b.innerHTML=`⭐ <b>マイフレーズ</b><br><span style="font-size:12px;color:var(--grey)">ケーススタディで保存した ${S.myPhrases.length} フレーズ</span>`;
+    b.onclick=()=>startCards("my");
+    list.appendChild(b);
+  }
+  Object.keys(CATS).forEach(k=>{
+    const b=document.createElement("button");b.className="opt";
+    b.innerHTML=`${CATS[k].ic} <b>${CATS[k].name}</b><br><span style="font-size:12px;color:var(--grey)">${CATS[k].desc}</span>`;
+    b.onclick=()=>{
+      if(mode==="cards")startCards(k);
+      else if(mode==="speak")startSpeak(k);
+      else if(mode==="ear")startSession(k,false,true);
+      else startSession(k,false);
+    };
+    list.appendChild(b);
+  });
+  go("pick");
+}
+
+/* ================= QUIZ SESSION ================= */
+let Q=[],qi=0,goalsNow=0,missNow=0,lastCat="mix",lastDaily=false,earOnly=false,curItem=null,sessionBadges=[];
+const LV_NAMES={1:"★ 基礎（中1〜）",2:"★★ 標準",3:"★★★ 上級"};
+function unlockedLv(){return S.min<900?1:S.min<3600?2:3}
+function poolFor(cat){
+  if(cat==="my")return (S.myPhrases||[]).slice();
+  const lv=unlockedLv();
+  const ok=d=>d.c==="pitch"||(d.lv||2)<=lv; /* ピッチ英語は最初から全開放 */
+  if(cat==="mix")return DB.filter(ok);
+  if(cat==="pitch")return DB.filter(d=>d.c==="pitch");
+  return DB.filter(d=>d.c===cat&&ok(d));
+}
+function startSession(cat,daily,ear){
+  lastCat=cat;lastDaily=!!daily;earOnly=!!ear;
+  rate=unlockedLv()===1?0.7:1.0; /* 基礎レベルはゆっくり再生がデフォルト */
+  const pool=poolFor(cat);
+  const wc=it=>it.ex.replace(/[.!?]+$/,"").split(" ").length;
+  Q=pick(pool,10).map(item=>{
+    let types=ear?["ear","listen"]:["listen","ja2en","builder","ear"];
+    if(unlockedLv()===1&&wc(item)>5)types=types.filter(t=>t!=="builder"); /* 基礎は5語以下のみ並べ替え */
+    return {item,type:types[Math.floor(Math.random()*types.length)]};
+  });
+  qi=0;goalsNow=0;missNow=0;sessionBadges=[];S.combo=0;
+  sfx("whistle");
+  go("quiz");renderQuestion();
+}
+function quitSession(){speechSynthesis.cancel();go("home");renderHome();}
+function renderQuestion(){
+  const q=Q[qi];curItem=q.item;
+  document.getElementById("clock-fill").style.width=(qi/Q.length*100)+"%";
+  document.getElementById("clock-min").textContent=Math.round(qi/Q.length*90)+"'";
+  const body=document.getElementById("q-body");
+  const others=pick(poolFor("mix").filter(d=>d.en!==q.item.en),3);
+  if(q.type==="listen"){
+    body.innerHTML=`<div class="q-tag">🎧 LISTEN — 意味を選べ</div>
+      <button class="play-big" onclick="speak(curItem.en)">🔊 もう一度聞く</button>
+      <div class="speed-row">${speedBtns()}</div><div class="opts" id="opts"></div>`;
+    mcOptions([q.item,...others],"ja",q.item.ja);
+    setTimeout(()=>speak(q.item.en),350);
+  }else if(q.type==="ja2en"){
+    body.innerHTML=`<div class="q-tag">⚽ TRANSLATE — 英語で何と言う？</div>
+      <div class="q-text">「${q.item.ja}」</div><div class="q-sub">現場で叫ぶならどれ？</div>
+      <div class="opts" id="opts"></div>`;
+    mcOptions([q.item,...others],"en",q.item.en);
+  }else if(q.type==="ear"){
+    body.innerHTML=`<div class="q-tag">👂 EAR TEST — 文字なし。音だけで意味を当てろ</div>
+      <button class="play-big" onclick="speak(curItem.ex)">🔊 再生する</button>
+      <div class="speed-row">${speedBtns()}</div><div class="opts" id="opts"></div>`;
+    mcOptions([q.item,...others],"exJa",q.item.exJa);
+    setTimeout(()=>speak(q.item.ex),350);
+  }else{ // builder
+    const words=q.item.ex.replace(/[.!?]+$/,"").split(" ");
+    body.innerHTML=`<div class="q-tag">🧩 BUILD — 並べ替えて文をつくれ</div>
+      <div class="q-text" style="font-size:16px">「${q.item.exJa}」</div>
+      <button class="play-big" style="padding:13px" onclick="speak(curItem.ex)">🔊 ヒント（音声）</button>
+      <div class="build-zone" id="bzone"></div>
+      <div class="word-pool" id="wpool"></div>
+      <button class="check-btn" id="bcheck" disabled onclick="checkBuild()">シュート！</button>`;
+    const pool=document.getElementById("wpool");
+    shuffle(words.map((w,i)=>({w,i}))).forEach(o=>{
+      const b=document.createElement("button");b.className="wchip";b.textContent=o.w;b.dataset.w=o.w;
+      b.onclick=()=>{ if(b.classList.contains("used"))return;
+        b.classList.add("used");
+        const c=document.createElement("button");c.className="wchip";c.textContent=o.w;
+        c.onclick=()=>{c.remove();b.classList.remove("used");updateCheck();};
+        document.getElementById("bzone").appendChild(c);updateCheck();
+      };
+      pool.appendChild(b);
+    });
+    window.buildTarget=words.join(" ");
+  }
+}
+function speedBtns(){
+  return [0.7,1.0,1.25].map(r=>`<button class="speed-btn ${r===rate?'sel':''}" onclick="rate=${r};document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel')">${r===0.7?'🐢 ゆっくり':r===1.0?'⚽ 普通':'🔥 速い'}</button>`).join("");
+}
+function mcOptions(items,field,answer){
+  const wrap=document.getElementById("opts");
+  shuffle(items).forEach(it=>{
+    const b=document.createElement("button");b.className="opt";b.textContent=it[field];
+    b.onclick=()=>{
+      const ok=it[field]===answer;
+      document.querySelectorAll(".opt").forEach(o=>{
+        if(o.textContent===answer)o.classList.add("correct");
+        else if(o===b&&!ok)o.classList.add("wrong");
+        else o.classList.add("dim");
+      });
+      answerResult(ok);
+    };
+    wrap.appendChild(b);
+  });
+}
+function updateCheck(){
+  const built=[...document.querySelectorAll("#bzone .wchip")].map(c=>c.textContent);
+  document.getElementById("bcheck").disabled=built.length===0;
+}
+function checkBuild(){
+  const built=[...document.querySelectorAll("#bzone .wchip")].map(c=>c.textContent).join(" ");
+  answerResult(built===window.buildTarget);
+}
+function answerResult(ok){
+  if(ok){goalsNow++;S.goals++;S.combo++;sfx("good");
+    awardOnce("first","⚽ 初ゴール！");
+    if(S.combo>=3)awardOnce("hat","🎩 ハットトリック！");
+  }else{missNow++;S.combo=0;sfx("bad");}
+  const f=document.getElementById("feedback");
+  f.className="feedback show "+(ok?"good":"bad");
+  document.getElementById("fb-title").textContent=ok?pick(["GOAL!! 🥅","What a finish!","Top bins! 🎯","Get in!"],1)[0]:pick(["Off target…","Saved by the keeper","ポスト直撃！"],1)[0];
+  document.getElementById("fb-en").textContent=curItem.en+" — "+curItem.ex;
+  document.getElementById("fb-ja").textContent=curItem.ja+"／"+curItem.exJa;
+  document.getElementById("fb-note").textContent=curItem.note||"";
+  document.getElementById("fb-next").textContent=qi===Q.length-1?"試合終了 →":"次へ →";
+  if(!ok)speak(curItem.ex,0.9);
+}
+function playFb(){speak(curItem.ex)}
+function awardOnce(id,msg){
+  if(!S.trophies.includes(id)){S.trophies.push(id);sessionBadges.push(id);toast(msg);save();}
+}
+function nextQuestion(){
+  document.getElementById("feedback").classList.remove("show");
+  qi++;
+  if(qi>=Q.length)return finishSession();
+  renderQuestion();
+}
+function finishSession(){
+  sfx("whistle");
+  const prevLv=unlockedLv();
+  S.min+=90;S.caps++;
+  const t=today();
+  if(S.doneToday!==t){
+    const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
+    S.streak=(S.last===y||S.last===t)?S.streak+1:1;
+    S.last=t;S.doneToday=t;
+  }
+  if(S.streak>=7)awardOnce("week","📅 週間MVP！7日連続出場");
+  if(S.streak>=30)awardOnce("month","🏅 月間MVP！30日連続");
+  if(S.caps>=10)awardOnce("ten","🔟 通算10試合出場！");
+  if(S.min>=14400)awardOnce("cap","🦁 イングランド代表招集！");
+  if(goalsNow===Q.length)awardOnce("motm","⭐ MAN OF THE MATCH");
+  save();
+  document.getElementById("res-goals").textContent=goalsNow;
+  document.getElementById("res-miss").textContent=missNow;
+  document.getElementById("res-acc").textContent=Math.round(goalsNow/Q.length*100)+"%";
+  document.getElementById("res-min").textContent="90'";
+  document.getElementById("res-xp").textContent="+90'";
+  document.getElementById("res-motm").style.display=goalsNow===Q.length?"block":"none";
+  const rb=document.getElementById("res-badges");rb.innerHTML="";
+  if(unlockedLv()>prevLv){
+    rb.innerHTML+=`<div class="badge-pop" style="background:var(--green)"><span style="font-size:24px">📚</span><span>昇格ボーナス！新しい語彙レベル「${LV_NAMES[unlockedLv()]}」が解放された</span></div>`;
+  }
+  sessionBadges.forEach(id=>{
+    const tr=TROPHIES.find(x=>x.id===id);
+    rb.innerHTML+=`<div class="badge-pop"><span style="font-size:24px">${tr.ic}</span><span>新トロフィー獲得：${tr.n}</span></div>`;
+  });
+  go("result");
+}
+
+/* ================= FLASHCARDS ================= */
+let cardDeck=[],ci=0,cardCat="mix";
+function startCards(cat){
+  rate=unlockedLv()===1?0.7:1.0;
+  cardCat=cat;
+  const pool=poolFor(cat);
+  cardDeck=shuffle(pool).sort((a,b)=>(S.box[a.en]||0)-(S.box[b.en]||0)).slice(0,12);
+  ci=0;
+  document.getElementById("cards-cat").textContent=cat==="my"?"⭐ マイフレーズ":CATS[cat].name;
+  go("cards");renderCard();
+}
+function renderCard(){
+  const c=cardDeck[ci];
+  document.getElementById("fcard").classList.remove("flip");
+  document.getElementById("fc-cat").textContent=CATS[c.c].ic+" "+CATS[c.c].name+(c.note?"　"+c.note.split(" ")[0]:"");
+  document.getElementById("fc-en").textContent=c.en;
+  document.getElementById("fc-ex").textContent=c.ex;
+  document.getElementById("fc-ja").textContent=c.ja;
+  document.getElementById("fc-exja").textContent=c.exJa+(c.note?"〔"+c.note+"〕":"");
+  document.getElementById("card-count").textContent=(ci+1)+" / "+cardDeck.length+"　習得度: "+"⭐".repeat(S.box[c.en]||0)+"☆".repeat(3-(S.box[c.en]||0));
+  setTimeout(()=>speak(c.en),300);
+}
+function flipCard(){document.getElementById("fcard").classList.toggle("flip")}
+function playCurrentCard(){speak(cardDeck[ci].en+". "+cardDeck[ci].ex)}
+function gradeCard(known){
+  const c=cardDeck[ci];
+  S.box[c.en]=known?Math.min(3,(S.box[c.en]||0)+1):0;
+  const mastered=Object.values(S.box).filter(v=>v>=2).length;
+  if(mastered>=50)awardOnce("fifty","📖 50語マスター達成！");
+  save();
+  sfx(known?"good":"bad");
+  ci++;
+  if(ci>=cardDeck.length){toast("デッキ完了！💪 "+mastered+"語マスター中");go("home");renderHome();return;}
+  renderCard();
+}
+
+/* ================= SPEAKING ================= */
+let spDeck=[],si=0,recog=null,recording=false;
+function startSpeak(cat){
+  rate=unlockedLv()===1?0.7:1.0;
+  spDeck=pick(poolFor(cat),5);si=0;
+  go("speak");renderSpeak();
+}
+function renderSpeak(){
+  const c=spDeck[si];
+  document.getElementById("speak-count").textContent=(si+1)+"/5";
+  document.getElementById("sp-en").textContent=c.ex;
+  document.getElementById("sp-ja").textContent=c.exJa;
+  document.getElementById("sp-heard").textContent="";
+  document.getElementById("sp-score").textContent="";
+  document.getElementById("sp-next").style.display="none";
+  setTimeout(()=>speak(c.ex),300);
+}
+function playSpeak(){speak(spDeck[si].ex)}
+function toggleRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    document.getElementById("sp-heard").textContent="このブラウザは音声認識非対応。お手本のあとに声に出して自己チェック→";
+    document.getElementById("sp-next").style.display="block";return;
+  }
+  if(recording){stopRec();return;}
+  recog=new SR();recog.lang="en-GB";recog.interimResults=false;
+  recording=true;document.getElementById("mic-btn").classList.add("rec");
+  document.getElementById("sp-heard").textContent="🎙️ 聞き取り中… 話してみて";
+  recog.onresult=e=>{
+    const heard=e.results[0][0].transcript;
+    const target=spDeck[si].ex.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
+    const got=heard.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
+    const hit=target.filter(w=>got.includes(w)).length;
+    const score=Math.round(hit/target.length*100);
+    document.getElementById("sp-heard").textContent="あなた:『"+heard+"』";
+    const sc=document.getElementById("sp-score");
+    sc.textContent=score+"%";sc.style.color=score>=80?"var(--green)":score>=50?"var(--yellow)":"var(--red)";
+    sfx(score>=80?"good":"bad");
+    if(score>=80){S.speakCount++;if(S.speakCount>=20)awardOnce("poly","🗣️ 声出し職人！");save();}
+    document.getElementById("sp-next").style.display="block";
+    stopRec();
+  };
+  recog.onerror=()=>{document.getElementById("sp-heard").textContent="うまく聞き取れず。もう一度🎙️をタップ";stopRec();};
+  recog.onend=()=>stopRec();
+  recog.start();
+}
+function stopRec(){recording=false;document.getElementById("mic-btn").classList.remove("rec");try{recog&&recog.stop()}catch(e){}}
+function nextSpeak(){
+  si++;
+  if(si>=spDeck.length){toast("シャドーイング完了！🎙️");go("home");renderHome();return;}
+  renderSpeak();
+}
+
+/* ================= CAREER ================= */
+function tierFor(min){let t=TIERS[0];TIERS.forEach(x=>{if(min>=x.min)t=x});return t}
+function renderCareer(){
+  document.getElementById("streak-num2").textContent=S.streak;
+  const t=tierFor(S.min);
+  document.getElementById("career-club").textContent=t.name;
+  document.getElementById("career-name").textContent=t.ja;
+  document.getElementById("cs-min").textContent=S.min+"'";
+  document.getElementById("cs-caps").textContent=S.caps;
+  document.getElementById("cs-goals").textContent=S.goals;
+  document.getElementById("cs-words").textContent=Object.values(S.box).filter(v=>v>=2).length;
+  let lvInfo=document.getElementById("lv-info");
+  if(!lvInfo){lvInfo=document.createElement("div");lvInfo.id="lv-info";
+    lvInfo.style.cssText="margin-top:14px;padding-top:12px;border-top:1px solid #2A3B30;font-size:12px;font-weight:800;color:#B9CDC2";
+    document.querySelector(".career-head").appendChild(lvInfo);}
+  const ul=unlockedLv();
+  lvInfo.innerHTML="📚 語彙レベル: <span style='color:var(--yellow)'>"+LV_NAMES[ul]+"</span>"
+    +(ul===1?"<br>League Two昇格(900')で ★★標準 を解放":ul===2?"<br>Championship昇格(3600')で ★★★上級 を解放":"<br>全語彙解放済み — ピッチで見せろ");
+  const py=document.getElementById("pyramid");py.innerHTML="";
+  [...TIERS].reverse().forEach(x=>{
+    const cleared=S.min>=x.min&&x.min<=tierFor(S.min).min;
+    const isNow=x.name===t.name;
+    const row=document.createElement("div");
+    row.className="tier "+(isNow?"now":S.min>=x.min?"cleared":"locked");
+    row.innerHTML=`<div class="dot"></div><div class="tname">${x.name}<br><span style="font-size:11px;color:var(--grey);font-weight:700">${x.ja}</span></div><div class="treq">${x.min}'〜</div>`;
+    py.appendChild(row);
+    if(isNow){
+      const next=TIERS[TIERS.indexOf(x)+1];
+      if(next){
+        const p=document.createElement("div");p.className="tier-progress";
+        p.innerHTML=`<i style="width:${Math.min(100,(S.min-x.min)/(next.min-x.min)*100)}%"></i>`;
+        py.appendChild(p);
+      }
+    }
+  });
+  const tg=document.getElementById("trophies");tg.innerHTML="";
+  TROPHIES.forEach(tr=>{
+    tg.innerHTML+=`<div class="trophy ${S.trophies.includes(tr.id)?'won':''}"><div class="tic">${tr.ic}</div><div class="tn">${tr.n}<br>${tr.d}</div></div>`;
+  });
+}
+
+/* ================= COACH'S CALL (ピッチ翻訳) ================= */
+/* 内蔵コール辞書：日本語の状況 → 現場英語（オリジナル編纂） */
+const COACH_DB=[
+{k:["中を切れ","中切れ","インサイドを切れ","中に行かせるな"],en:"Show him outside!",alt:["Force him wide!","No inside!"],ja:"外に追い出せ（中のコースを消せ）",note:"守備の誘導。outside=タッチライン側へ"},
+{k:["外を切れ","縦を切れ","縦切れ","ライン際を切れ"],en:"Show him inside!",alt:["No line!","Don't let him down the line!"],ja:"中に追い込め（縦のコースを消せ）",note:"カバーがいる時に内側へ誘導"},
+{k:["寄せろ","プレスに行け","距離を詰めろ","アプローチ"],en:"Close him down!",alt:["Get tight!","Press!"],ja:"距離を詰めろ",note:"get tight はマーク密着のニュアンス"},
+{k:["戻れ","帰陣しろ","リトリート"],en:"Get back!",alt:["Recover!","Track back!"],ja:"自陣に戻れ",note:"track back は攻→守の切り替えで戻る"},
+{k:["前を向け","ターンしろ","反転しろ"],en:"Turn!",alt:["Turn him!","You can turn!"],ja:"前を向け",note:"敵が背後にいない時のコール"},
+{k:["フリーだ","時間ある","余裕ある","持てる"],en:"Time!",alt:["You've got time!","Take a touch!"],ja:"フリーだ、慌てるな",note:""},
+{k:["来てるぞ","後ろから来てる","背後","敵が来てる"],en:"Man on!",alt:["Behind you!"],ja:"敵が来てるぞ",note:"イングランドの現場で最頻出のコール"},
+{k:["押し上げろ","ラインを上げろ","コンパクトに"],en:"Squeeze up!",alt:["Step up!","Push out!"],ja:"ラインを押し上げろ",note:"step up はオフサイドを取る上げ方"},
+{k:["下がれ","ラインを下げろ","引け"],en:"Drop off!",alt:["Drop!","Sit in!"],ja:"ラインを下げろ",note:"sit in はブロックを組んで構える"},
+{k:["クリアしろ","蹴り出せ","はっきりプレー"],en:"Get it away!",alt:["Away!","No risks!","Clear it!"],ja:"クリアしろ、リスクを冒すな",note:""},
+{k:["落ち着け","慌てるな","ボールを落ち着かせろ"],en:"Calm it down!",alt:["Settle!","Slow it down!"],ja:"落ち着け、テンポを落とせ",note:""},
+{k:["切り替えろ","トランジション","切り替え速く"],en:"React!",alt:["Transition!","Win it back!"],ja:"切り替えろ",note:"失った直後は win it back（即時奪回）"},
+{k:["マークにつけ","マークを掴め","誰か見ろ"],en:"Pick up your man!",alt:["Mark up!","Who's got him?"],ja:"マークにつけ",note:"セットプレー前の定番は mark up"},
+{k:["競り勝て","ヘディングで勝て","空中戦"],en:"Win your header!",alt:["Attack the ball!"],ja:"ヘディングで競り勝て",note:""},
+{k:["打て","シュート打て","狙え"],en:"Have a go!",alt:["Hit it!","Shoot!"],ja:"思い切って打て",note:"have a go は「狙ってみろ」の現場表現"},
+{k:["ニアを消せ","ニアポスト","ニアに立て"],en:"Cover the near post!",alt:["Near post!"],ja:"ニアポストを消せ",note:""},
+{k:["ファーに気をつけろ","ファーポスト","ファーケア"],en:"Watch the back post!",alt:["Back stick!"],ja:"ファーサイドを警戒しろ",note:"back stick はポストの現場スラング"},
+{k:["間で受けろ","ライン間","ポケット"],en:"Find the pocket!",alt:["Between the lines!"],ja:"ライン間で受けろ",note:""},
+{k:["広がれ","幅を取れ","ワイドに"],en:"Stay wide!",alt:["Stretch it!","Spread out!"],ja:"幅を取れ",note:"stretch it はピッチを広く使え"},
+{k:["顔を出せ","パスコースを作れ","受けに来い"],en:"Show for it!",alt:["Make an angle!","Come short!"],ja:"パスコースに顔を出せ",note:""},
+{k:["声を出せ","コミュニケーション","喋れ"],en:"Talk to each other!",alt:["Communicate!","Keep talking!"],ja:"声を掛け合え",note:""},
+{k:["集中しろ","気を抜くな","スイッチ入れろ"],en:"Switch on!",alt:["Stay focused!","Heads in!"],ja:"集中しろ",note:"switch on は「スイッチを入れろ」"},
+{k:["走れ","走り切れ","ハードワーク","サボるな"],en:"Put a shift in!",alt:["Run for each other!","Work!"],ja:"走り切れ、ハードワークしろ",note:""},
+{k:["はたけ","ワンタッチ","早く離せ","テンポ良く"],en:"Move it!",alt:["One touch!","Quicker!"],ja:"早くボールを動かせ",note:""},
+{k:["キープしろ","収めろ","ポストプレー","時間を作れ"],en:"Hold it up!",alt:["Keep it!","Shield it!"],ja:"前線でキープしろ",note:"shield it は体を入れて守る"},
+{k:["時間を使え","コーナーで時間","逃げ切れ"],en:"See it out!",alt:["Take it to the corner!","Game management, lads!"],ja:"試合を締めろ、時間を使え",note:""},
+{k:["セカンド拾え","こぼれ球","セカンドボール"],en:"Second ball!",alt:["React first!"],ja:"こぼれ球を拾え",note:""},
+{k:["裏を狙え","裏に抜けろ","背後を取れ","抜け出せ"],en:"In behind!",alt:["Run in behind!","Spin!"],ja:"裏のスペースを狙え",note:"spin は背後へ反転して抜ける動き"},
+{k:["足元に出せ","足元","つなげ"],en:"To feet!",alt:["Play to feet!"],ja:"足元にパスを出せ",note:""},
+{k:["スペースへ","スペースに出せ","走らせろ"],en:"Into space!",alt:["Play him in!"],ja:"スペースへ出せ",note:"play him in は走らせるスルーパス"},
+{k:["サイドを変えろ","逆サイド","展開しろ"],en:"Switch it!",alt:["Switch the play!","Open it up!"],ja:"サイドを変えろ",note:""},
+{k:["横に出せ","横パス","スクエア"],en:"Square it!",alt:["Square ball!"],ja:"横パスをくれ",note:""},
+{k:["マイナスに折り返せ","マイナス","折り返せ"],en:"Cut it back!",alt:["Pull it back!"],ja:"マイナスに折り返せ",note:""},
+{k:["キーパー","キーパーのボール","任せろ"],en:"Keeper's!",alt:["Mine!","Leave it!"],ja:"キーパーのボールだ／俺のだ",note:"mine! はフィールドプレーヤーも使う"},
+{k:["体を張れ","ブロックしろ","顔面でも止めろ"],en:"Get a block in!",alt:["Bodies on the line!"],ja:"体を張ってブロックしろ",note:""},
+{k:["ファウルで止めろ","戦術的ファウル","止めとけ"],en:"Take one for the team!",alt:["Bring him down!"],ja:"チームのためにファウルで止めろ",note:"⚠️ カード覚悟の現場表現。公式の推奨ではない"}
+];
+function openCoach(){
+  go("coach");
+  const ex=document.getElementById("coach-examples");ex.innerHTML="";
+  pick(COACH_DB,6).forEach(e=>{
+    const b=document.createElement("button");b.className="chip";b.textContent=e.k[0];
+    b.onclick=()=>{document.getElementById("coach-input").value=e.k[0];searchCoach();};
+    ex.appendChild(b);
+  });
+  setTimeout(()=>document.getElementById("coach-input").focus(),300);
+}
+const normJa=s=>s.replace(/[！!。．\s、,]/g,"").replace(/[ぁ-ん]/g,m=>m); // 記号除去
+function searchCoach(){
+  const raw=document.getElementById("coach-input").value.trim();
+  if(!raw)return;
+  const q=normJa(raw);
+  const res=document.getElementById("coach-result");
+  // 1) 内蔵辞書：完全一致→部分一致
+  let hit=COACH_DB.find(e=>e.k.some(k=>normJa(k)===q))
+        ||COACH_DB.find(e=>e.k.some(k=>q.includes(normJa(k))||normJa(k).includes(q)));
+  // 2) 学習DBのja/exJaからも検索
+  let dbHit=!hit&&DB.find(d=>normJa(d.ja).includes(q)||q.includes(normJa(d.ja).slice(0,4)));
+  if(hit){
+    res.innerHTML=callCard(hit.en,hit.ja,hit.note,"📖 内蔵コール辞書",false)
+      +hit.alt.map(a=>callCard(a,"別の言い方","","ALTERNATIVE",true)).join("")
+      +`<button class="ai-ask-btn" onclick="askAI('${raw.replace(/'/g,"")}')">🤖 AIコーチに別案・ニュアンスを聞く</button>`;
+    speak(hit.en);
+  }else if(dbHit){
+    res.innerHTML=callCard(dbHit.en,dbHit.ja,(dbHit.note||"")+"　例: "+dbHit.ex,"📖 単語帳から",false)
+      +`<button class="ai-ask-btn" onclick="askAI('${raw.replace(/'/g,"")}')">🤖 AIコーチに別案を聞く</button>`;
+    speak(dbHit.en);
+  }else{
+    askAI(raw);
+  }
+}
+function callCard(en,ja,note,src,isAlt){
+  const safeEn=en.replace(/'/g,"\\'");
+  return `<div class="call-card${isAlt?' alt':''}">
+    <div class="src">${src}</div>
+    <div class="call-en">${en} <button class="fb-audio" onclick="speak('${safeEn}')">🔊</button></div>
+    <div class="call-ja">${ja||""}</div>
+    ${note?`<div class="call-note">${note}</div>`:""}
+  </div>`;
+}
+/* AI呼び出し: Claudeプレビューでは直接API、Vercel公開時は/api/coachプロキシに自動切替 */
+async function aiCall(body){
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const d=await r.json();
+    if(!r.ok||!d.content)throw new Error("direct failed");
+    return d;
+  }catch(e){
+    const r=await fetch("/api/coach",{
+      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error("proxy failed");
+    return r.json();
+  }
+}
+async function askAI(situation){
+  const res=document.getElementById("coach-result");
+  res.innerHTML=`<div class="loading-pitch"><span class="ball">⚽</span><br>AIコーチが考え中… "${situation}"</div>`;
+  try{
+    const data=await aiCall({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:
+`あなたはロンドン出身のサッカーコーチ。日本人選手から試合中の状況を日本語で伝えられたら、イングランドの現場（試合・練習）で実際に叫ばれる英語コールを返す。
+状況:「${situation}」
+ルール: 実際にピッチで使われる短い表現のみ。教科書英語は禁止。イギリス英語。最大3案。
+次のJSONのみを返す。前置き・コードブロック記号は一切禁止:
+{"calls":[{"en":"英語コール","ja":"日本語の意味","note":"使い方・ニュアンスの短い補足"}]}`}]});
+    const text=(data.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("");
+    const parsed=JSON.parse(text.replace(/```json|```/g,"").trim());
+    if(!parsed.calls||!parsed.calls.length)throw new Error("empty");
+    res.innerHTML=parsed.calls.map((c,i)=>callCard(c.en,c.ja,c.note,i===0?"🤖 AIコーチ (Claude)":"ALTERNATIVE",i>0)).join("");
+    speak(parsed.calls[0].en);
+  }catch(e){
+    res.innerHTML=`<div class="call-card" style="border-left-color:var(--red)">
+      <div class="src">⚠️ AIに接続できなかった</div>
+      <div class="call-ja" style="font-size:14px;line-height:1.7">内蔵辞書にもヒットなし。AI問い合わせに失敗した。公開サイトの場合はVercelの環境変数 ANTHROPIC_API_KEY が設定されているか確認。<br><br>別の言い方で試す：「寄せろ」「裏を狙え」「中を切れ」など短い動詞形が当たりやすい。</div></div>`;
+  }
+}
+
+/* ================= CASE STUDIES (ケーススタディ) =================
+   ★1=まず通じる ★2=自然な定番 ★3=ネイティブ級。全てオリジナル編纂 */
+const SCENARIOS=[
+{id:"s1",c:"locker",ic:"🚪",t:"初合流。ロッカールームで初対面の挨拶",scene:"移籍初日。ロッカールームに入ると選手たちがこっちを見ている。第一声で空気が決まる。",
+ ops:[
+ {lv:1,en:"Alright? I'm Taku.",ja:"よう。タクだ。",note:"Alright? は「元気？」と聞いていない万能挨拶。返しも Alright が正解"},
+ {lv:1,en:"Good to be here, lads.",ja:"ここに来られて嬉しいよ。",note:"lads（みんな）を付けるだけで現場っぽくなる"},
+ {lv:2,en:"Alright lads? Taku. Buzzing to be here.",ja:"よう、みんな。タクだ。最高の気分だよ。",note:"buzzing はロッカールーム頻出のポジティブ語"},
+ {lv:2,en:"So... what's the gaffer like, then?",ja:"で…監督ってどんな人？",note:"質問で会話を始めると輪に入りやすい"},
+ {lv:3,en:"Alright boys? Taku. Go easy on me in the rondo, yeah?",ja:"よう。タクだ。ロンドでは手加減してくれよ？",note:"自虐の軽口で笑いを取る。初日に一番強いカード"}],
+ ng:{en:"Hello everyone. My name is Taku. Please take care of me.",why:"「よろしくお願いします」の直訳は存在しない。丁寧すぎる自己紹介は逆に距離を作る"}},
+{id:"s2",c:"locker",ic:"🍝",t:"練習後、チームメイトに食事に誘われた",scene:"「このあと飯行くけど来る？」と誘われた。受けるか、角を立てずに断るか。",
+ ops:[
+ {lv:1,en:"Yeah, sounds good.",ja:"いいね、行くよ。",note:"これだけで十分"},
+ {lv:2,en:"Yeah, I'm in. Where we going?",ja:"乗った。どこ行くの？",note:"I'm in（乗った）は誘いへの定番の返し"},
+ {lv:2,en:"I'll give it a miss tonight, mate. Next time, yeah?",ja:"今夜はやめとくよ。また今度な？",note:"give it a miss は角の立たない断り方の決定版"},
+ {lv:3,en:"Go on then. As long as you're paying.",ja:"しゃーねえな、行くか。お前のおごりならな。",note:"Go on then＝「まあ付き合うか」。冗談を添えるのが流儀"},
+ {lv:3,en:"Can't tonight — got a call home. Save me a seat next time.",ja:"今夜は無理だ、家に電話する約束でね。次は席取っといてくれ。",note:"理由＋次への意思で関係を切らない断り方"}],
+ ng:{en:"I'm sorry. I cannot come because I have a personal reason.",why:"謝罪から入る断りは重すぎる。軽く断り、次につなげるのが文化"}},
+{id:"s3",c:"locker",ic:"🤝",t:"ミスして落ち込んでいる味方に声をかける",scene:"決定機を外した味方がロッカーでうなだれている。チームメイトとしての一言。",
+ ops:[
+ {lv:1,en:"Forget it. Next one.",ja:"忘れろ。次だ。",note:"短いほど効く場面"},
+ {lv:2,en:"Chin up, mate. We go again.",ja:"顔上げろよ。また次がある。",note:"we go again はリヴァプール文化からの定番"},
+ {lv:2,en:"You'll bury the next one, no doubt.",ja:"次は絶対決める。間違いない。",note:"bury＝沈める（確実に決める）"},
+ {lv:3,en:"Happens to the best of us. Even Kane's missed sitters.",ja:"誰にでもある。ケインだって決定機を外す。",note:"具体名を出した励ましはネイティブの常套手段"}],
+ ng:{en:"Why did you miss that easy chance?",why:"原因の追及は監督の仕事。仲間の仕事は前を向かせること"}},
+{id:"s4",c:"locker",ic:"👔",t:"監督に呼ばれ「調子はどうだ」と聞かれた",scene:"オフィスに呼ばれた。ここでの受け答えが起用に直結する。",
+ ops:[
+ {lv:1,en:"Feeling good. Getting sharper.",ja:"いい感じです。キレも上がってます。",note:"sharp（キレがある）はコンディション報告の必須語"},
+ {lv:2,en:"Feeling sharp. Still adapting to the tempo, but I'm getting there.",ja:"キレてます。テンポにはまだ適応中ですが、掴めてきました。",note:"正直さ＋前進を1文に入れる"},
+ {lv:3,en:"Honestly, gaffer? Best I've felt in years. Just give me the minutes.",ja:"正直言って、ここ数年で最高です。出場時間さえもらえれば。",note:"give me the minutes＝出番をくれ。自己主張は文化として必須"}],
+ ng:{en:"I will do my best if you give me a chance, sir.",why:"sir は軍隊。監督は gaffer か boss。謙遜しすぎは「自信がない」と読まれる"}},
+{id:"s5",c:"locker",ic:"😏",t:"banterでイジられた時の返し",scene:"練習でミスしたら「お前の足は飾りか？」と笑われた。ここで返せるかが試されている。",
+ ops:[
+ {lv:1,en:"Yeah, yeah. Very funny.",ja:"はいはい、面白い面白い。",note:"流す返し。まずはこれで十分"},
+ {lv:2,en:"Keep talking. I'll megs you next drill.",ja:"言ってろ。次のメニューで股抜きしてやる。",note:"宣言型の返し。実行できれば伝説になる"},
+ {lv:3,en:"Big words from a man who couldn't hit a barn door.",ja:"納屋のドアにも当てられない男がよく言うよ。",note:"couldn't hit a barn door＝シュートが下手の定番表現"},
+ {lv:3,en:"Leave it out, mate.",ja:"いい加減にしとけよ。",note:"[Cockney] 本気で嫌な時の一言。banterと一線を引く時はこれ"}],
+ ng:{en:"Why do you say that? It hurts my feelings.",why:"banterは返すのが文化。真顔の抗議は輪の外に出る。本気で不快なら Leave it out で線を引く"}},
+{id:"s6",c:"pitch",ic:"❓",t:"戦術指示が聞き取れなかった。聞き返す",scene:"ミーティングで監督の指示が速すぎて分からなかった。分かったフリが一番危険。",
+ ops:[
+ {lv:1,en:"Sorry, say that again?",ja:"すみません、もう一度？",note:"短く即座に。タイミングが命"},
+ {lv:2,en:"Run that by me again, gaffer?",ja:"監督、もう一回お願いできますか？",note:"run that by me again は自然な聞き返しの定番"},
+ {lv:2,en:"So I'm pressing the six, not the centre-half — right?",ja:"つまり俺がプレスに行くのはボランチで、CBじゃない、で合ってます？",note:"自分の理解を言い直して確認する。最も信頼される聞き方"},
+ {lv:3,en:"Didn't catch a word of that, boss. One more time for the foreign lad?",ja:"全然聞き取れませんでした。外国人枠にもう一回お願いします？",note:"自虐で笑いに変える。チームに愛されるタイプの返し"}],
+ ng:{en:"Yes, I understand.",why:"分かっていないのに understand と言うのが最悪手。ピッチ上のミスで信頼ごと失う"}},
+{id:"s7",c:"pitch",ic:"🙏",t:"自分のミスを謝る／味方の好プレーを称える",scene:"パスミスでカウンターを食らった直後。あるいは味方が決めた直後。即座の一言。",
+ ops:[
+ {lv:1,en:"My fault! My fault!",ja:"俺のミスだ！",note:"即座に大声で。隠すのが一番嫌われる"},
+ {lv:2,en:"My bad, lads. Won't happen again.",ja:"悪い。もうやらない。",note:""},
+ {lv:1,en:"Well in!",ja:"ナイス！（球際・守備に）",note:"タックルやデュエル勝利への称賛は well in"},
+ {lv:2,en:"Great shift today, lads.",ja:"今日はみんなよく走った。",note:"shift＝運動量。労いの定番"},
+ {lv:3,en:"You were different gravy today, mate.",ja:"今日のお前は別格だったよ。",note:"different gravy＝「別次元」。ロンドン色の強い最上級の褒め言葉"}],
+ ng:{en:"I apologize for my mistake.",why:"apologize は事務的すぎる。ピッチでは My fault! の即時性がすべて"}},
+{id:"s8",c:"pitch",ic:"🟨",t:"審判に抗議する（カードをもらわずに）",scene:"毎回ユニフォームを引っ張られているのに笛が鳴らない。伝え方を間違えると黄紙。",
+ ops:[
+ {lv:1,en:"Ref! Come on!",ja:"レフェリー！おいおい！",note:"これ以上強い言葉はリスクしかない"},
+ {lv:2,en:"Ref, he's pulling me every single time!",ja:"レフ、毎回引っ張られてるんですよ！",note:"事実を伝える形なら聞いてもらえる"},
+ {lv:3,en:"How's that not a foul, ref? You're better than that.",ja:"今のがファウルじゃないって？あなたほどの審判が。",note:"皮肉込みの上級表現。言い方次第で笑いも取れるが自己責任"}],
+ ng:{en:"(罵倒語を使った抗議)",why:"abusive language は一発警告対象。FA規律規定でも累積処分の対象になる"}},
+{id:"s9",c:"locker",ic:"🩹",t:"フィジオに違和感を正確に伝える",scene:"スプリントでハムに違和感。「大丈夫です」で隠すのはキャリアを縮める。",
+ ops:[
+ {lv:1,en:"My hamstring's tight.",ja:"ハムが張ってます。",note:"tight（張り）は痛みの手前を表す重要語"},
+ {lv:2,en:"I felt my hamstring grab on that last sprint.",ja:"最後のスプリントでハムがピキッときました。",note:"grab＝瞬間的に掴まれる感覚。発生状況とセットで伝える"},
+ {lv:3,en:"It's not a pull — more of a niggle. But I don't want to risk it.",ja:"肉離れじゃなく違和感レベル。でもリスクは冒したくない。",note:"niggle（軽い違和感）と pull（肉離れ）の使い分けはプロ必須"}],
+ ng:{en:"I'm fine. No problem.",why:"違和感を隠して悪化させるのが最悪のシナリオ。正確な申告は自己管理能力として評価される"}},
+{id:"s10",c:"locker",ic:"📋",t:"トライアル初日、コーチへの自己紹介",scene:"練習参加の初日。コーチに名前とポジションを聞かれた。売り込みのチャンスは一瞬。",
+ ops:[
+ {lv:1,en:"Taku. Midfielder. Thanks for having me.",ja:"タクです。MFです。機会をありがとうございます。",note:"最低限はこの3点"},
+ {lv:2,en:"Taku — box-to-box midfielder. Played my football in Japan. Where do you want me?",ja:"タク、ボックストゥボックスのMFです。日本でプレーしてました。どこに入りますか？",note:"Where do you want me? で即戦力感を出す"},
+ {lv:3,en:"Taku. I'll do my talking on the pitch — but I'm an eight, and I'll run all day for you.",ja:"タクです。実力はピッチで見せますが、8番タイプで、90分走り続けます。",note:"do my talking on the pitch は決まり文句。数字でポジションを言えると通"}],
+ ng:{en:"I am not confident but I will try hard.",why:"謙遜は美徳ではなくセールスポイントの欠如と見なされる。トライアルでは特に致命的"}},
+{id:"s11",c:"pitch",ic:"🤜",t:"試合後、対戦相手と握手・交流",scene:"激しくやり合った相手と試合後にすれ違う。敵への敬意もフットボールの言語。",
+ ops:[
+ {lv:1,en:"Good game, mate.",ja:"いい試合だったよ。",note:""},
+ {lv:2,en:"Well played. Tough game, that.",ja:"ナイスプレー。タフな試合だったな。",note:"文末の that は英国口語の癖。真似すると一気にそれっぽい"},
+ {lv:3,en:"You gave me a proper battle out there. All the best for the season, yeah?",ja:"ガチのバトルだったよ。今シーズンの健闘を祈る。",note:"proper battle＝本物の闘い。敵を讃える最上級"}],
+ ng:{en:"You are a very good player. I respect you.",why:"間違いではないが直球すぎて教科書的。mate と短さが敬意の表現"}},
+{id:"s12",c:"fan",ic:"✍️",t:"ファンにサイン・写真を求められた",scene:"スタジアムの外で子どもがユニフォームを差し出してきた。ファン対応も仕事のうち。",
+ ops:[
+ {lv:1,en:"Course. Who's it for?",ja:"もちろん。誰宛てにする？",note:"Of course の of は落ちる"},
+ {lv:2,en:"Cheers for coming today. What's your name, mate?",ja:"今日は来てくれてありがとう。名前は？",note:"子どもにも mate を使ってOK"},
+ {lv:3,en:"Appreciate you, mate. See you next week, yeah?",ja:"応援ありがとな。また来週な？",note:"appreciate you はファンへの感謝の現代的表現"}],
+ ng:{en:"(無言でサインだけして去る)",why:"地元コミュニティとの関係はクラブが選手を評価する項目の一つ。一言が資産になる"}},
+{id:"s13",c:"comm",ic:"🎤",t:"試合後のフラッシュインタビュー",scene:"勝利後、ピッチサイドでマイクを向けられた。30秒で印象が決まる。",
+ ops:[
+ {lv:1,en:"Great win. Happy for the lads.",ja:"大きな勝利です。チームのために嬉しい。",note:"困ったら lads を主語にすれば外さない"},
+ {lv:2,en:"Credit to the boys — we stuck to the plan and got what we deserved.",ja:"チームのおかげです。プランを貫いて、当然の結果を手にしました。",note:"credit to 〜／stick to the plan はインタビュー頻出セット"},
+ {lv:3,en:"It's a massive three points. The gaffer asked for a reaction, and I think we showed real character.",ja:"非常に大きな勝ち点3です。監督に反発力を求められて、本物の人間力を見せられたと思います。",note:"massive／reaction／character はプレミア選手インタビューの三種の神器"}],
+ ng:{en:"I think my performance was very good today.",why:"自分のパフォーマンス自慢から入るのはNG。チーム→自分の順序が鉄則"}},
+{id:"s14",c:"locker",ic:"🔥",t:"ハーフタイム、ビハインドのロッカールームで声を出す",scene:"0-1で折り返した。沈黙のロッカールーム。ここで声を出せる外国人は信頼される。",
+ ops:[
+ {lv:1,en:"Heads up, lads. Plenty of time.",ja:"顔を上げろ。時間はたっぷりある。",note:""},
+ {lv:2,en:"We're still in this. Win the second balls and we're fine.",ja:"まだ終わってない。セカンドボールを制せば問題ない。",note:"具体的な修正点を入れると言葉に重みが出る"},
+ {lv:3,en:"Forget the first half. Forty-five minutes to put it right — who's with me?",ja:"前半は忘れろ。立て直す45分がある——付いてくるか？",note:"put it right（取り返す）＋問いかけで締めるのはキャプテンの話法"}],
+ ng:{en:"Don't worry. Maybe we can win.",why:"maybe が全てを台無しにする。確信のない言葉なら黙っている方がまし"}}
+];
+let curScn=null,lvFilter=0;
+function openCases(filterCat){
+  go("cases");
+  const cc=document.getElementById("cases-cats");cc.innerHTML="";
+  ["all","locker","pitch","fan","comm"].forEach(k=>{
+    const b=document.createElement("button");
+    b.className="chip"+((filterCat||"all")===k?" sel":"");
+    b.textContent=k==="all"?"ぜんぶ":CATS[k].ic+" "+CATS[k].name;
+    b.onclick=()=>openCases(k);
+    cc.appendChild(b);
+  });
+  const list=document.getElementById("cases-list");list.innerHTML="";
+  SCENARIOS.filter(s=>!filterCat||filterCat==="all"||s.c===filterCat).forEach(s=>{
+    const d=document.createElement("div");d.className="scene-card";
+    d.innerHTML=`<div class="sic">${s.ic}</div><div><h3>${s.t}</h3><p>${CATS[s.c].name}・${s.ops.length}フレーズ</p></div>`;
+    d.onclick=()=>openCase(s);
+    list.appendChild(d);
+  });
+}
+function openCase(s){
+  curScn=s;lvFilter=0;
+  go("case");renderCase();
+}
+function renderCase(){
+  const s=curScn;
+  const myp=S.myPhrases||[];
+  const body=document.getElementById("case-body");
+  const ops=s.ops.filter(o=>!lvFilter||o.lv===lvFilter);
+  body.innerHTML=`
+  <div class="scene-head"><div class="sh-cat">${CATS[s.c].ic} ${CATS[s.c].name} — SITUATION</div>
+    <h2>${s.t}</h2><p>${s.scene}</p></div>
+  <div class="lv-filter">
+    ${[0,1,2,3].map(l=>`<button class="chip ${lvFilter===l?'sel':''}" onclick="lvFilter=${l};renderCase()">${l===0?"全部":"★".repeat(l)}</button>`).join("")}
+  </div>
+  ${ops.map((o,i)=>{
+    const faved=myp.some(p=>p.en===o.en);
+    return `<div class="phrase-row">
+      <div class="pr-top">
+        <span class="lv-badge lv${o.lv}">${"★".repeat(o.lv)}</span>
+        <div class="pr-en">${o.en}</div>
+        <div class="pr-btns">
+          <button onclick="speakScn(${i})">🔊</button>
+          <button class="${faved?'faved':''}" onclick="toggleMyPhrase(${i});renderCase()">${faved?"⭐":"☆"}</button>
+        </div>
+      </div>
+      <div class="pr-ja">${o.ja}</div>
+      ${o.note?`<div class="pr-note">💡 ${o.note}</div>`:""}
+    </div>`;
+  }).join("")}
+  <div class="ng-card"><div class="ng-tag">🟥 これは言うな — 教科書英語</div>
+    <div class="ng-en">${s.ng.en}</div><div class="ng-why">${s.ng.why}</div></div>
+  <button class="check-btn" onclick="practiceCase()">🎙️ この場面をシャドーイング</button>
+  <div style="text-align:center;font-size:11px;color:var(--grey);font-weight:700;margin-top:10px">⭐で保存したフレーズは単語カードの「マイフレーズ」デッキに入る</div>`;
+}
+function speakScn(i){
+  const ops=curScn.ops.filter(o=>!lvFilter||o.lv===lvFilter);
+  speak(ops[i].en);
+}
+function toggleMyPhrase(i){
+  const ops=curScn.ops.filter(o=>!lvFilter||o.lv===lvFilter);
+  const o=ops[i];
+  S.myPhrases=S.myPhrases||[];
+  const idx=S.myPhrases.findIndex(p=>p.en===o.en);
+  if(idx>=0){S.myPhrases.splice(idx,1);toast("マイフレーズから削除");}
+  else{S.myPhrases.push({c:curScn.c,en:o.en,ja:o.ja,ex:o.en,exJa:o.ja,note:o.note});toast("⭐ マイフレーズに保存");}
+  save();
+}
+function practiceCase(){
+  spDeck=curScn.ops.filter(o=>!lvFilter||o.lv===lvFilter).slice(0,5).map(o=>({ex:o.en,exJa:o.ja}));
+  si=0;go("speak");renderSpeak();
+}
+async function askAICase(){
+  const situation=prompt("シチュエーションを日本語で（例：寮の食堂で隣に座っていいか聞きたい）");
+  if(!situation)return;
+  const list=document.getElementById("cases-list");
+  list.innerHTML=`<div class="loading-pitch"><span class="ball">⚽</span><br>AIがケーススタディを作成中…</div>`+list.innerHTML;
+  try{
+    const data=await aiCall({model:"claude-sonnet-4-6",max_tokens:1500,messages:[{role:"user",content:
+`あなたはイングランドのサッカー現場に詳しいロンドン出身のコーチ。日本人選手向けに、次の状況のケーススタディを作る。
+状況:「${situation}」
+ルール: 現場のネイティブが実際に使う英語のみ。lv1=最短で通じる表現2つ、lv2=自然な定番2つ、lv3=ネイティブ級・スラング込み1〜2つ。ngは日本人がやりがちな教科書英語の失敗例。
+次のJSONのみ返す。前置き・コードブロック禁止:
+{"t":"タイトル","scene":"状況説明(日本語)","ops":[{"lv":1,"en":"","ja":"","note":""}],"ng":{"en":"","why":""}}`}]});
+    const text=(data.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("");
+    const p=JSON.parse(text.replace(/```json|```/g,"").trim());
+    const scn={id:"ai"+Date.now(),c:"locker",ic:"🤖",t:p.t,scene:p.scene,ops:p.ops,ng:p.ng};
+    SCENARIOS.unshift(scn);
+    openCase(scn);
+    toast("🤖 AIケーススタディ完成");
+  }catch(e){
+    openCases();
+    toast("⚠️ AI接続不可（公開時はAPIプロキシが必要）");
+  }
+}
+
+/* init */
+renderHome();
+</script>
+</body>
+</html>
