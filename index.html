@@ -695,28 +695,23 @@ function loadVoices(){
 }
 loadVoices(); if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=loadVoices;
 let rate=1.0;
-const AUDIO_MAP={
-  "Squeaky bum time":"audio/file021.mp3",
-  "Park the bus":"audio/file022.mp3",
-  "A game of two halves":"audio/file023.mp3",
-  "On me 'ead, son!":"audio/file024.mp3",
-  "Who are ya?":"audio/file025.mp3",
-  "Get in!":"audio/file026.mp3",
-  "Proper":"audio/file027.mp3",
-  "He's one of our own":"audio/file028.mp3",
-  "Plates":"audio/file029.mp3",
-  "Sorted":"audio/file030.mp3"
-};
 let audioPlayer=null;
-function playMp3(src){
-  if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
-  audioPlayer=new Audio(src);
-  audioPlayer.play().catch(()=>{});
+function textToAudioSrc(text){
+  return "audio/"+text.replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
 }
 function speak(text,r,cat){
   try{
-    const mp3=Object.entries(AUDIO_MAP).find(([k])=>text.includes(k));
-    if(mp3){playMp3(mp3[1]);return;}
+    if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
+    const a=new Audio(textToAudioSrc(text));
+    a.onerror=()=>speakTTS(text,r,cat);
+    audioPlayer=a;
+    a.play().catch(()=>speakTTS(text,r,cat));
+    return;
+  }catch(e){}
+  speakTTS(text,r,cat);
+}
+function speakTTS(text,r,cat){
+  try{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
     if(gbVoice)u.voice=gbVoice;
