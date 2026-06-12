@@ -703,9 +703,11 @@ function speak(text,r,cat){
   try{
     if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
     const a=new Audio(textToAudioSrc(text));
-    a.onerror=()=>speakTTS(text,r,cat);
+    let fell=false;
+    const fallback=()=>{if(fell)return;fell=true;speakTTS(text,r,cat);};
+    a.onerror=fallback;
     audioPlayer=a;
-    a.play().catch(()=>speakTTS(text,r,cat));
+    a.play().catch(fallback);
     return;
   }catch(e){}
   speakTTS(text,r,cat);
