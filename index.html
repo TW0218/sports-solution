@@ -696,20 +696,24 @@ function loadVoices(){
 loadVoices(); if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=loadVoices;
 let rate=1.0;
 let audioPlayer=null;
+let _audioPhrases=null;
+function getAudioPhrases(){
+  if(!_audioPhrases)_audioPhrases=new Set([...DB.map(d=>d.en),...COACH_DB.map(d=>d.en)]);
+  return _audioPhrases;
+}
 function textToAudioSrc(text){
   return "audio/"+text.replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
 }
 function speak(text,r,cat){
-  try{
-    if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
-    const a=new Audio(textToAudioSrc(text));
-    let fell=false;
-    const fallback=()=>{if(fell)return;fell=true;speakTTS(text,r,cat);};
-    a.onerror=fallback;
-    audioPlayer=a;
-    a.play().catch(fallback);
-    return;
-  }catch(e){}
+  if(getAudioPhrases().has(text)){
+    try{
+      if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
+      const a=new Audio(textToAudioSrc(text));
+      audioPlayer=a;
+      a.play().catch(()=>speakTTS(text,r,cat));
+      return;
+    }catch(e){}
+  }
   speakTTS(text,r,cat);
 }
 function speakTTS(text,r,cat){
