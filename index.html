@@ -817,11 +817,9 @@ const LV_NAMES={1:"★ 基礎（中1〜）",2:"★★ 標準",3:"★★★ 上�
 function unlockedLv(){return S.min<900?1:S.min<3600?2:3}
 function poolFor(cat){
   if(cat==="my")return (S.myPhrases||[]).slice();
-  const lv=unlockedLv();
-  const ok=d=>d.c==="pitch"||(d.lv||2)<=lv; /* ピッチ英語は最初から全開放 */
-  if(cat==="mix")return DB.filter(ok);
+  if(cat==="mix")return DB.slice();
   if(cat==="pitch")return DB.filter(d=>d.c==="pitch");
-  return DB.filter(d=>d.c===cat&&ok(d));
+  return DB.filter(d=>d.c===cat);
 }
 function startSession(cat,daily,ear){
   lastCat=cat;lastDaily=!!daily;earOnly=!!ear;
