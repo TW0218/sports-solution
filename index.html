@@ -1618,6 +1618,15 @@ const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
 let currentUser=null;
 
+const LOGIN_EXPIRY_MS=14*24*60*60*1000; /* 2週間 */
+function loginExpired(){
+  const t=localStorage.getItem("ssg_login_at");
+  if(!t)return true;
+  return Date.now()-parseInt(t)>LOGIN_EXPIRY_MS;
+}
+function stampLogin(){localStorage.setItem("ssg_login_at",Date.now().toString());}
+function clearLoginStamp(){localStorage.removeItem("ssg_login_at");}
+
 async function doLogin(){
   const email=document.getElementById("login-email").value.trim();
   const pass=document.getElementById("login-pass").value;
@@ -1628,6 +1637,7 @@ async function doLogin(){
   const{data,error}=await supa.auth.signInWithPassword({email,password:pass});
   btn.disabled=false;btn.textContent="ログイン ⚽";
   if(error){err.textContent="メールアドレスまたはパスワードが違います";return;}
+  stampLogin();
   currentUser=data.user;
   await loadFromSupabase();
   document.getElementById("scr-login").classList.add("hidden");
@@ -1636,6 +1646,7 @@ async function doLogin(){
 
 async function doLogout(){
   await supa.auth.signOut();
+  clearLoginStamp();
   currentUser=null;
   document.getElementById("scr-login").classList.remove("hidden");
   document.getElementById("login-pass").value="";
@@ -1658,11 +1669,14 @@ async function saveToSupabase(){
 /* セッション復元（リロード時） */
 (async()=>{
   const{data:{session}}=await supa.auth.getSession();
-  if(session){
+  if(session&&!loginExpired()){
     currentUser=session.user;
     await loadFromSupabase();
     document.getElementById("scr-login").classList.add("hidden");
     renderHome();
+  }else if(session&&loginExpired()){
+    await supa.auth.signOut();
+    clearLoginStamp();
   }
 })();
 
