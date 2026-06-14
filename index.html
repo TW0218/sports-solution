@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --green:#12A150; --green-dk:#0B7A3C; --green-lt:#E2F4E9;
+  --green:#1D9E75; --green-dk:#085041; --green-lt:#E1F5EE;
   --ink:#0F1A14; --bg:#F3F7F4; --white:#FFFFFF;
   --yellow:#FFC400; --red:#E2493B; --grey:#8AA095;
   --radius:18px; --shadow:0 4px 14px rgba(15,26,20,.10);
@@ -265,6 +265,73 @@ nav button.sel{color:var(--green-dk)}
 .ng-card .ng-tag{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--red);margin-bottom:6px}
 .ng-card .ng-en{font-size:15px;font-weight:900;text-decoration:line-through;color:#8a2a20;margin-bottom:4px}
 .ng-card .ng-why{font-size:12px;color:#6b2018;line-height:1.6}
+/* ---- new home ---- */
+.home-hero{background:var(--green);border-radius:22px;padding:20px 18px 18px;color:#fff;margin-bottom:14px}
+.home-hero-label{font-size:11px;font-weight:800;letter-spacing:.14em;opacity:.8;margin-bottom:6px}
+.home-hero h1{font-size:22px;font-weight:900;line-height:1.3;margin-bottom:2px}
+.home-hero p{font-size:12px;opacity:.85}
+.home-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.home-stat{background:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.home-stat .hv{font-size:22px;font-weight:900;margin-bottom:2px}
+.home-stat .hl{font-size:11px;color:var(--grey);font-weight:800}
+.home-cta-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.home-cta{display:flex;align-items:center;gap:14px;background:#fff;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent;font-family:inherit;width:100%;text-align:left}
+.home-cta:active{transform:scale(.98)}
+.home-cta.primary{border-color:var(--green)}
+.cta-ic{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 auto}
+.cta-ic.g{background:var(--green-lt)}
+.cta-ic.gd{background:var(--green)}
+.cta-texts{flex:1}
+.cta-name{font-size:15px;font-weight:900;color:var(--ink);margin-bottom:2px}
+.cta-meta{font-size:11px;color:var(--grey);font-weight:800}
+.cta-arrow{font-size:18px;color:var(--grey)}
+.more-link{display:block;width:100%;text-align:center;background:none;border:2px solid #E2EAE5;border-radius:14px;padding:11px;font-size:13px;font-weight:800;color:var(--grey);cursor:pointer;font-family:inherit}
+.more-link:active{opacity:.7}
+/* ---- 実戦準備度 ---- */
+.readiness-card{background:#fff;border-radius:20px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.readiness-title{font-size:12px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:14px}
+.r-meter{margin-bottom:12px}
+.r-meter:last-child{margin-bottom:0}
+.r-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.r-label{font-size:13px;font-weight:800;color:var(--ink)}
+.r-val{font-size:13px;font-weight:900;color:var(--green-dk)}
+.r-track{height:8px;background:#E2EAE5;border-radius:99px;overflow:hidden}
+.r-fill{height:100%;background:var(--green);border-radius:99px;transition:width .5s ease}
+/* ---- missed phrases ---- */
+.missed-card{background:#fff;border-radius:20px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.missed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.missed-title{font-size:13px;font-weight:900;color:var(--ink)}
+.miss-badge{background:#FBE9E7;color:var(--red);font-size:10px;font-weight:900;border-radius:999px;padding:3px 10px}
+.miss-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F0F4F1}
+.miss-item:last-child{border-bottom:none}
+.miss-en{font-size:14px;font-weight:900;color:var(--ink)}
+.miss-ja{font-size:11px;color:var(--grey);font-weight:700}
+.miss-play{border:none;background:#E2EAE5;border-radius:10px;width:32px;height:32px;font-size:14px;cursor:pointer;margin-left:auto}
+/* ---- others screen ---- */
+.others-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.other-card{background:#fff;border-radius:18px;padding:16px 14px;box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent}
+.other-card:active{transform:scale(.97)}
+.other-card .oc-ic{font-size:28px;margin-bottom:8px;display:block}
+.other-card h3{font-size:14px;font-weight:900;margin-bottom:3px}
+.other-card p{font-size:11px;color:var(--grey);line-height:1.45}
+.other-card.featured{border-color:var(--yellow)}
+/* ---- week program ---- */
+.week-card{background:#fff;border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
+.week-head{display:flex;align-items:center;gap:14px;padding:16px}
+.week-num-el{width:36px;height:36px;border-radius:50%;background:var(--green-lt);color:var(--green-dk);font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.week-num-el.locked{background:#F0F4F1;color:var(--grey)}
+.week-texts{flex:1}
+.week-title-el{font-size:15px;font-weight:900;color:var(--ink);margin-bottom:2px}
+.week-title-el.locked{color:var(--grey)}
+.week-desc-el{font-size:11px;color:var(--grey);font-weight:800}
+.week-badge{font-size:11px;font-weight:900;border-radius:999px;padding:4px 10px}
+.week-badge.active{background:var(--green-lt);color:var(--green-dk)}
+.week-badge.locked{background:#F0F4F1;color:var(--grey)}
+.week-unlock-bar{padding:0 16px 14px}
+.week-unlock-label{font-size:11px;color:var(--grey);font-weight:800;margin-bottom:6px}
+.week-btn{display:block;width:100%;border:none;background:var(--green);color:#fff;border-radius:14px;padding:13px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
+.week-btn:active{transform:translateY(2px);box-shadow:none}
+.week-btn.locked-btn{background:#E2EAE5;color:var(--grey);box-shadow:none;pointer-events:none}
 </style>
 </head>
 <body>
@@ -286,50 +353,65 @@ nav button.sel{color:var(--green-dk)}
 <!-- ============ HOME ============ -->
 <section class="screen active" id="scr-home">
   <div class="brand">
-    <div class="logo">TOP <span>BINS</span><span style="font-size:11px;color:var(--grey);font-style:normal;font-weight:800;margin-left:8px">Sports Solution English App</span></div>
-    <div class="streak-pill"><span class="fire">🔥</span><span id="streak-num">0</span></div>
-  </div>
-
-  <div class="hero">
-    <div class="label">TODAY'S MATCH — 1日5分</div>
-    <h1 id="hero-title">キックオフの時間だ。</h1>
-    <p id="hero-sub">10問＝90分。ピッチからゴシップ誌まで、今日のミックス戦。</p>
-    <button class="kickoff" id="btn-kickoff" onclick="startSession('mix',true)">⚽ KICK OFF</button>
-  </div>
-
-  <div class="coach-feature" onclick="openCoach()">
-    <div class="cf-left">
-      <div class="cf-tag">FLAGSHIP — 目玉機能</div>
-      <h2>📢 ピッチ翻訳</h2>
-      <p>日本語で状況を打ち込むと、現場で本当に叫ぶ英語コールを即返す。<br>例：「中を切れ」→ <b>Show him outside!</b></p>
-    </div>
-    <div class="cf-arrow">→</div>
-  </div>
-
-  <div class="section-title">TRAINING GROUND — モード別練習</div>
-  <div class="mode-card wide" onclick="openCases()">
-    <span class="ic">🎬</span>
-    <div><h3>ケーススタディ <span class="new-pill">NEW</span></h3>
-    <p>「こういう時、何て言う？」をレベル別の選択肢で学ぶ。初合流の挨拶からbanterの返しまで。</p></div>
-  </div>
-  <div class="mode-grid">
-    <div class="mode-card" onclick="openCatPicker('quiz')">
-      <span class="ic">🎯</span><h3>クイズ</h3><p>聞いて選ぶ・並べ替えて文をつくる</p>
-    </div>
-    <div class="mode-card" onclick="openCatPicker('ear')">
-      <span class="ic">🎧</span><h3>イヤーテスト</h3><p>音だけで勝負。文字なしリスニング</p>
-    </div>
-    <div class="mode-card" onclick="openCatPicker('speak')">
-      <span class="ic">🎙️</span><h3>シャドーイング</h3><p>マイクに向かって声に出す</p>
-    </div>
-    <div class="mode-card" onclick="openCatPicker('cards')">
-      <span class="ic">🃏</span><h3>単語カード</h3><p>スワイプ感覚でめくって覚える</p>
+    <div class="logo">TOP <span>BINS</span></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="streak-pill"><span class="fire">&#x1F525;</span><span id="streak-num">0</span></div>
+      <button class="login-user" id="logout-btn" onclick="doLogout()" style="position:relative;top:0;right:0;font-size:11px;padding:6px 12px">ログアウト</button>
     </div>
   </div>
 
-  <div class="section-title">FIXTURES — カテゴリー</div>
-  <div class="cat-row" id="home-cats"></div>
-  <div class="note-banner">🔊 音声は英国英語(en-GB)。本物のCockney音声はアプリ版でネイティブ録音を実装予定。スラング表記には <b>[Cockney]</b> マークつき。</div>
+  <div class="home-hero">
+    <div class="home-hero-label">SPORTS SOLUTION ENGLISH</div>
+    <h1>海外移籍初日を<br>乗り切る英語</h1>
+    <p>練習中に飛ぶ英語を、5分で身につける</p>
+  </div>
+
+  <div class="home-stats">
+    <div class="home-stat">
+      <div class="hv" id="h-pitch-rate" style="color:var(--green)">0%</div>
+      <div class="hl">ピッチ理解率</div>
+    </div>
+    <div class="home-stat">
+      <div class="hv" id="h-locker-rate" style="color:#D4537E">0%</div>
+      <div class="hl">ロッカー対応度</div>
+    </div>
+    <div class="home-stat">
+      <div class="hv" id="h-calls">0</div>
+      <div class="hl">即答できるコール</div>
+    </div>
+    <div class="home-stat">
+      <div class="hv" id="h-streak">0日</div>
+      <div class="hl">連続学習</div>
+    </div>
+  </div>
+
+  <div class="home-cta-list">
+    <button class="home-cta primary" onclick="startSession('mix',true)">
+      <div class="cta-ic gd">&#x26BD;</div>
+      <div class="cta-texts">
+        <div class="cta-name" id="cta-main-label">今日の1マッチ</div>
+        <div class="cta-meta">10問 &#xB7; 約5分 &#xB7; ピッチ+ロッカー</div>
+      </div>
+      <div class="cta-arrow">&#x2192;</div>
+    </button>
+    <button class="home-cta" onclick="startSession('pitch',false)">
+      <div class="cta-ic g">&#x26A1;</div>
+      <div class="cta-texts">
+        <div class="cta-name">ピッチで使う</div>
+        <div class="cta-meta">試合・練習中のコール &#xB7; 3分</div>
+      </div>
+      <div class="cta-arrow">&#x2192;</div>
+    </button>
+    <button class="home-cta" onclick="startSession('locker',false)">
+      <div class="cta-ic g">&#x1F9E6;</div>
+      <div class="cta-texts">
+        <div class="cta-name">ロッカーで使う</div>
+        <div class="cta-meta">チームメイトとの会話 &#xB7; 3分</div>
+      </div>
+      <div class="cta-arrow">&#x2192;</div>
+    </button>
+  </div>
+  <button class="more-link" onclick="renderOthers();go('others')">その他のメニューを見る &#x2192;</button>
 </section>
 
 <!-- ============ COACH'S CALL (ピッチ翻訳) ============ -->
@@ -383,21 +465,42 @@ nav button.sel{color:var(--green-dk)}
 
 <!-- ============ RESULT ============ -->
 <section class="screen" id="scr-result">
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-  <div class="result-card">
-    <div class="ft">FULL TIME — MATCH REPORT</div>
-    <div class="scoreline"><span class="g" id="res-goals">0</span> – <span class="r" id="res-miss">0</span></div>
-    <div class="vs">YOU vs MISTAKES</div>
-    <div class="stat-row">
-      <div class="stat"><div class="num" id="res-min">90'</div><div class="lbl">出場時間</div></div>
-      <div class="stat"><div class="num" id="res-acc">0%</div><div class="lbl">パス成功率</div></div>
-      <div class="stat"><div class="num" id="res-xp">+0</div><div class="lbl">通算分数</div></div>
+  <div style="flex:1;display:flex;flex-direction:column">
+  <div style="text-align:center;padding:14px 0 10px">
+    <div style="font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--grey);margin-bottom:6px">FULL TIME &#x2014; MATCH REPORT</div>
+    <div style="font-size:40px;font-weight:900;font-style:italic"><span style="color:var(--green)" id="res-goals">0</span> &#x2013; <span style="color:var(--red)" id="res-miss">0</span></div>
+    <div style="font-size:12px;font-weight:800;color:var(--grey)">正解 &#x2013; 間違い</div>
+  </div>
+  <div class="readiness-card">
+    <div class="readiness-title">&#x5B9F;&#x6226;&#x6E96;&#x5099;&#x5EA6;</div>
+    <div class="r-meter">
+      <div class="r-row"><span class="r-label">守備コール理解度</span><span class="r-val" id="r-pitch">0%</span></div>
+      <div class="r-track"><div class="r-fill" id="rf-pitch" style="width:0%"></div></div>
+    </div>
+    <div class="r-meter">
+      <div class="r-row"><span class="r-label">ロッカールーム対応度</span><span class="r-val" id="r-locker">0%</span></div>
+      <div class="r-track"><div class="r-fill" id="rf-locker" style="width:0%"></div></div>
+    </div>
+    <div class="r-meter">
+      <div class="r-row"><span class="r-label">即答率（今回）</span><span class="r-val" id="r-instant">0%</span></div>
+      <div class="r-track"><div class="r-fill" id="rf-instant" style="width:0%"></div></div>
+    </div>
+    <div class="r-meter">
+      <div class="r-row"><span class="r-label">初日サバイバル度</span><span class="r-val" id="r-survival">0%</span></div>
+      <div class="r-track"><div class="r-fill" id="rf-survival" style="width:0%"></div></div>
     </div>
   </div>
-  <div class="motm" id="res-motm">⭐ MAN OF THE MATCH — 全問正解！</div>
+  <div class="motm" id="res-motm">&#x2B50; MAN OF THE MATCH &#x2014; 全問正解！</div>
   <div id="res-badges"></div>
-  <button class="check-btn" onclick="go('home');renderHome()">ロッカールームに戻る</button>
-  <button class="check-btn" style="background:var(--ink);box-shadow:0 3px 0 #000;margin-top:10px" onclick="startSession(lastCat,lastDaily)">もう1試合</button>
+  <div class="missed-card" id="missed-wrap" style="display:none">
+    <div class="missed-header">
+      <div class="missed-title">間違えたフレーズ</div>
+      <div class="miss-badge" id="missed-count"></div>
+    </div>
+    <div id="missed-list"></div>
+  </div>
+  <button class="check-btn" onclick="go('home');renderHome()">ホームに戻る</button>
+  <button class="check-btn" style="background:var(--ink);box-shadow:0 3px 0 #000;margin-top:10px" onclick="startSession(lastCat,lastDaily)">もう1マッチ</button>
   </div>
 </section>
 
@@ -481,10 +584,10 @@ nav button.sel{color:var(--green-dk)}
 </div>
 
 <nav>
-  <button id="nav-home" class="sel" onclick="go('home');renderHome()"><span class="nic">🏟️</span>ホーム</button>
-  <button id="nav-cards" onclick="openCatPicker('cards')"><span class="nic">🃏</span>カード</button>
-  <button id="nav-career" onclick="go('career');renderCareer()"><span class="nic">🏆</span>キャリア</button>
-  <button onclick="doLogout()"><span class="nic">🚪</span>ログアウト</button>
+  <button id="nav-home" class="sel" onclick="go('home');renderHome()"><span class="nic">&#x1F3E0;</span>ホーム</button>
+  <button id="nav-play" onclick="startSession('mix',false)"><span class="nic">&#x25B6;&#xFE0F;</span>プレイ</button>
+  <button id="nav-strength" onclick="go('career');renderCareer()"><span class="nic">&#x1F4CA;</span>実力</button>
+  <button id="nav-others" onclick="renderOthers();go('others')"><span class="nic">&#x22EF;</span>その他</button>
 </nav>
 <div id="toast"></div>
 </div>
@@ -1480,7 +1583,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[]},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0},data.progress);
   }
 }
 
@@ -1521,7 +1624,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[]};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -1589,7 +1692,7 @@ function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("scr-"+id).classList.add("active");
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-  const nv={home:"nav-home",cards:"nav-cards",career:"nav-career"}[id];
+  const nv={home:"nav-home",cards:"nav-play",play:"nav-play",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-play"}[id];
   if(nv)document.getElementById(nv).classList.add("sel");
   document.getElementById("feedback").classList.remove("show");
   window.scrollTo(0,0);
@@ -1602,26 +1705,60 @@ const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])
 const pick=(a,n)=>shuffle(a).slice(0,n);
 
 /* ================= HOME ================= */
+function readiness(){
+  const pitchPct=S.pitchTotal>0?Math.round(S.pitchRight/S.pitchTotal*100):0;
+  const lockerPct=S.lockerTotal>0?Math.round(S.lockerRight/S.lockerTotal*100):0;
+  const tot=S.pitchTotal+S.lockerTotal;
+  const survival=tot>0?Math.round((S.pitchRight+S.lockerRight)/tot*100):0;
+  return {pitch:pitchPct,locker:lockerPct,survival:survival};
+}
+function weekUnlocked(n){
+  const r=readiness();
+  if(n===1)return true;
+  if(n===2)return r.pitch>=50||S.pitchRight>=10;
+  if(n===3)return r.locker>=50||S.lockerRight>=10;
+  if(n===4)return r.survival>=70;
+  return false;
+}
 function renderHome(){
+  const r=readiness();
   document.getElementById("streak-num").textContent=S.streak;
-  document.getElementById("streak-num2").textContent=S.streak;
+  document.getElementById("h-pitch-rate").textContent=r.pitch+"%";
+  document.getElementById("h-locker-rate").textContent=r.locker+"%";
+  document.getElementById("h-calls").textContent=Object.values(S.box).filter(v=>v>=2).length;
+  document.getElementById("h-streak").textContent=S.streak+"日";
   const done=S.doneToday===today();
-  const kb=document.getElementById("btn-kickoff");
-  kb.classList.toggle("done",done);
-  kb.innerHTML=done?"✅ 本日フル出場済み — もう1試合やる？":"⚽ KICK OFF";
-  document.getElementById("hero-title").textContent=done?"ナイスゲーム。":"キックオフの時間だ。";
-  document.querySelector(".hero .label").textContent="TODAY'S MATCH — 1日5分・語彙 "+LV_NAMES[unlockedLv()];
-  const hc=document.getElementById("home-cats");hc.innerHTML="";
-  Object.keys(CATS).forEach(k=>{
-    if(k==="mix")return;
-    const unlocked=poolFor(k);
-    const n=unlocked.length,total=DB.filter(d=>d.c===k).length;
-    const mastered=unlocked.filter(d=>(S.box[d.en]||0)>=2).length;
-    const div=document.createElement("div");
-    div.className="mode-card";div.style.flex="0 0 150px";
-    div.innerHTML=`<span class="ic">${CATS[k].ic}</span><h3 style="font-size:13px">${CATS[k].name}</h3><p>${mastered}/${n} 語マスター${n<total?`<br><span style="color:var(--yellow)">🔒 +${total-n}語は昇格で解放</span>`:""}</p>`;
-    div.onclick=()=>startSession(k,false);
-    hc.appendChild(div);
+  const lbl=document.getElementById("cta-main-label");
+  if(lbl)lbl.textContent=done?"もう1マッチ始める":"今日の1マッチ";
+}
+function renderOthers(){
+  // static grid — nothing to render dynamically
+}
+function renderWeek(){
+  const WEEKS=[
+    {n:1,title:"Week 1: 生き残る英語",desc:"合流初日に必要なピッチコール",cat:"pitch",unlock:"最初から利用可能"},
+    {n:2,title:"Week 2: 練習に入る英語",desc:"監督・コーチとの会話",cat:"locker",unlock:"ピッチ50%で解放"},
+    {n:3,title:"Week 3: ロッカーで浮かない英語",desc:"スラング・冥談・日常会話",cat:"locker",unlock:"ロッカー50%で解放"},
+    {n:4,title:"Week 4: 信頼を作る英語",desc:"プロの現場で光る一言",cat:"mix",unlock:"サバイバル度70%で解放"},
+  ];
+  const list=document.getElementById("week-list");list.innerHTML="";
+  WEEKS.forEach(function(w){
+    const unlocked=weekUnlocked(w.n);
+    const div=document.createElement("div");div.className="week-card";
+    const btnHtml=unlocked
+      ? '<button class="week-btn" onclick="startSession(''+w.cat+'',false)">Week '+w.n+'を練習する →</button>'
+      : '<button class="week-btn locked-btn">🔒 まだ解放されていない</button>';
+    div.innerHTML='<div class="week-head">'
+      +'<div class="week-num-el'+(unlocked?'':' locked')+'">'+w.n+'</div>'
+      +'<div class="week-texts">'
+      +'<div class="week-title-el'+(unlocked?'':' locked')+'">'+w.title+'</div>'
+      +'<div class="week-desc-el">'+w.desc+'</div>'
+      +'</div>'
+      +'<span class="week-badge '+(unlocked?(w.n===1?'active':'active'):'locked')+'">'+(unlocked?'決定':'🔒')+'</span>'
+      +'</div>'
+      +(!unlocked?'<div class="week-unlock-bar"><div class="week-unlock-label">解放条件: '+w.unlock+'</div></div>':'')
+      +'<div style="padding:0 16px 14px">'+btnHtml+'</div>';
+    list.appendChild(div);
   });
 }
 
@@ -1749,6 +1886,7 @@ function checkBuild(){
   answerResult(built===window.buildTarget);
 }
 function answerResult(ok){
+  if(curItem){if(curItem.c==="pitch"){S.pitchTotal++;if(ok)S.pitchRight++;}else if(curItem.c==="locker"){S.lockerTotal++;if(ok)S.lockerRight++;}}
   if(ok){goalsNow++;S.goals++;S.combo++;sfx("good");
     awardOnce("first","⚽ 初ゴール！");
     if(S.combo>=3)awardOnce("hat","🎩 ハットトリック！");
@@ -1790,10 +1928,18 @@ function finishSession(){
   save();
   document.getElementById("res-goals").textContent=goalsNow;
   document.getElementById("res-miss").textContent=missNow;
-  document.getElementById("res-acc").textContent=Math.round(goalsNow/Q.length*100)+"%";
-  document.getElementById("res-min").textContent="90'";
-  document.getElementById("res-xp").textContent="+90'";
   document.getElementById("res-motm").style.display=goalsNow===Q.length?"block":"none";
+  const rdn=readiness();
+  const instPct=Math.round(goalsNow/Q.length*100);
+  function setMeter(id,fid,v){document.getElementById(id).textContent=v+"%";document.getElementById(fid).style.width=v+"%";}
+  setMeter("r-pitch","rf-pitch",rdn.pitch);
+  setMeter("r-locker","rf-locker",rdn.locker);
+  setMeter("r-instant","rf-instant",instPct);
+  setMeter("r-survival","rf-survival",rdn.survival);
+  if(missNow>0){
+    document.getElementById("missed-wrap").style.display="block";
+    document.getElementById("missed-count").textContent=missNow+"問";
+  }else{document.getElementById("missed-wrap").style.display="none";}
   const rb=document.getElementById("res-badges");rb.innerHTML="";
   if(unlockedLv()>prevLv){
     rb.innerHTML+=`<div class="badge-pop" style="background:var(--green)"><span style="font-size:24px">📚</span><span>昇格ボーナス！新しい語彙レベル「${LV_NAMES[unlockedLv()]}」が解放された</span></div>`;
@@ -2246,6 +2392,66 @@ async function askAICase(){
     toast("⚠️ AI接続不可（公開時はAPIプロキシが必要）");
   }
 }
+
+<!-- ============ OTHERS MENU ============ -->
+<section class="screen" id="scr-others">
+  <div class="quiz-top"><button class="btn-x" onclick="go('home')">&#x2715;</button>
+    <div style="font-weight:900;font-size:17px">その他のメニュー</div></div>
+  <div class="others-grid">
+    <div class="other-card featured" onclick="renderWeek();go('week')">
+      <span class="oc-ic">&#x1F4C5;</span>
+      <h3>週間プログラム</h3>
+      <p>Week1&#xFF5E;4の段階的学習</p>
+    </div>
+    <div class="other-card" onclick="openCatPicker('cards')">
+      <span class="oc-ic">&#x1F0CF;</span>
+      <h3>単語カード</h3>
+      <p>スワイプで覚える復習デッキ</p>
+    </div>
+    <div class="other-card" onclick="openCatPicker('speak')">
+      <span class="oc-ic">&#x1F399;&#xFE0F;</span>
+      <h3>シャドーイング</h3>
+      <p>声に出してリズムを掴む</p>
+    </div>
+    <div class="other-card" onclick="openCatPicker('ear')">
+      <span class="oc-ic">&#x1F3A7;</span>
+      <h3>イヤーテスト</h3>
+      <p>音だけで意味を当てる</p>
+    </div>
+    <div class="other-card" onclick="openCoach()">
+      <span class="oc-ic">&#x1F4E2;</span>
+      <h3>ピッチ翻訳</h3>
+      <p>日本語&#x2192;現場英語を即返答</p>
+    </div>
+    <div class="other-card" onclick="openCases()">
+      <span class="oc-ic">&#x1F3AC;</span>
+      <h3>ケーススタディ</h3>
+      <p>場面別フレーズを学ぶ</p>
+    </div>
+    <div class="other-card" onclick="startSession('comm',false)">
+      <span class="oc-ic">&#x1F399;</span>
+      <h3>実況英語</h3>
+      <p>中継で飛び交う定番表現</p>
+    </div>
+    <div class="other-card" onclick="startSession('paper',false)">
+      <span class="oc-ic">&#x1F4F0;</span>
+      <h3>移籍語彙</h3>
+      <p>契約・交渉・移籍の英語</p>
+    </div>
+    <div class="other-card" onclick="go('career');renderCareer()">
+      <span class="oc-ic">&#x1F3C6;</span>
+      <h3>キャリア</h3>
+      <p>成長記録とトロフィー</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WEEK PROGRAM ============ -->
+<section class="screen" id="scr-week">
+  <div class="quiz-top"><button class="btn-x" onclick="renderOthers();go('others')">&#x2715;</button>
+    <div style="font-weight:900;font-size:17px">&#x1F4C5; 週間プログラム</div></div>
+  <div id="week-list"></div>
+</section>
 
 /* init — renderHome() はログイン後に呼ばれる */
 </script>
