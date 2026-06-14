@@ -591,6 +591,68 @@ nav button.sel{color:var(--green-dk)}
 </nav>
 <div id="toast"></div>
 </div>
+
+<!-- ============ OTHERS MENU ============ -->
+<section class="screen" id="scr-others">
+  <div class="quiz-top"><button class="btn-x" onclick="go('home')">&#x2715;</button>
+    <div style="font-weight:900;font-size:17px">その他のメニュー</div></div>
+  <div class="others-grid">
+    <div class="other-card featured" onclick="renderWeek();go('week')">
+      <span class="oc-ic">&#x1F4C5;</span>
+      <h3>週間プログラム</h3>
+      <p>Week1&#xFF5E;4の段階的学習</p>
+    </div>
+    <div class="other-card" onclick="openCatPicker('cards')">
+      <span class="oc-ic">&#x1F0CF;</span>
+      <h3>単語カード</h3>
+      <p>スワイプで覚える復習デッキ</p>
+    </div>
+    <div class="other-card" onclick="openCatPicker('speak')">
+      <span class="oc-ic">&#x1F399;&#xFE0F;</span>
+      <h3>シャドーイング</h3>
+      <p>声に出してリズムを掴む</p>
+    </div>
+    <div class="other-card" onclick="openCatPicker('ear')">
+      <span class="oc-ic">&#x1F3A7;</span>
+      <h3>イヤーテスト</h3>
+      <p>音だけで意味を当てる</p>
+    </div>
+    <div class="other-card" onclick="openCoach()">
+      <span class="oc-ic">&#x1F4E2;</span>
+      <h3>ピッチ翻訳</h3>
+      <p>日本語&#x2192;現場英語を即返答</p>
+    </div>
+    <div class="other-card" onclick="openCases()">
+      <span class="oc-ic">&#x1F3AC;</span>
+      <h3>ケーススタディ</h3>
+      <p>場面別フレーズを学ぶ</p>
+    </div>
+    <div class="other-card" onclick="startSession('comm',false)">
+      <span class="oc-ic">&#x1F399;</span>
+      <h3>実況英語</h3>
+      <p>中継で飛び交う定番表現</p>
+    </div>
+    <div class="other-card" onclick="startSession('paper',false)">
+      <span class="oc-ic">&#x1F4F0;</span>
+      <h3>移籍語彙</h3>
+      <p>契約・交渉・移籍の英語</p>
+    </div>
+    <div class="other-card" onclick="go('career');renderCareer()">
+      <span class="oc-ic">&#x1F3C6;</span>
+      <h3>キャリア</h3>
+      <p>成長記録とトロフィー</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WEEK PROGRAM ============ -->
+<section class="screen" id="scr-week">
+  <div class="quiz-top"><button class="btn-x" onclick="renderOthers();go('others')">&#x2715;</button>
+    <div style="font-weight:900;font-size:17px">&#x1F4C5; 週間プログラム</div></div>
+  <div id="week-list"></div>
+</section>
+
+
 <script>
 /* ================= DATA =================
    ※すべてオリジナルの例文・訳。市販辞典からの転載なし */
@@ -1746,7 +1808,7 @@ function renderWeek(){
     const unlocked=weekUnlocked(w.n);
     const div=document.createElement("div");div.className="week-card";
     const btnHtml=unlocked
-      ? '<button class="week-btn" onclick="startSession(''+w.cat+'',false)">Week '+w.n+'を練習する →</button>'
+      ? '<button class="week-btn" onclick="startSession(\''+w.cat+'\',false)">Week '+w.n+'を練習する &#x2192;</button>'
       : '<button class="week-btn locked-btn">🔒 まだ解放されていない</button>';
     div.innerHTML='<div class="week-head">'
       +'<div class="week-num-el'+(unlocked?'':' locked')+'">'+w.n+'</div>'
@@ -2392,66 +2454,6 @@ async function askAICase(){
     toast("⚠️ AI接続不可（公開時はAPIプロキシが必要）");
   }
 }
-
-<!-- ============ OTHERS MENU ============ -->
-<section class="screen" id="scr-others">
-  <div class="quiz-top"><button class="btn-x" onclick="go('home')">&#x2715;</button>
-    <div style="font-weight:900;font-size:17px">その他のメニュー</div></div>
-  <div class="others-grid">
-    <div class="other-card featured" onclick="renderWeek();go('week')">
-      <span class="oc-ic">&#x1F4C5;</span>
-      <h3>週間プログラム</h3>
-      <p>Week1&#xFF5E;4の段階的学習</p>
-    </div>
-    <div class="other-card" onclick="openCatPicker('cards')">
-      <span class="oc-ic">&#x1F0CF;</span>
-      <h3>単語カード</h3>
-      <p>スワイプで覚える復習デッキ</p>
-    </div>
-    <div class="other-card" onclick="openCatPicker('speak')">
-      <span class="oc-ic">&#x1F399;&#xFE0F;</span>
-      <h3>シャドーイング</h3>
-      <p>声に出してリズムを掴む</p>
-    </div>
-    <div class="other-card" onclick="openCatPicker('ear')">
-      <span class="oc-ic">&#x1F3A7;</span>
-      <h3>イヤーテスト</h3>
-      <p>音だけで意味を当てる</p>
-    </div>
-    <div class="other-card" onclick="openCoach()">
-      <span class="oc-ic">&#x1F4E2;</span>
-      <h3>ピッチ翻訳</h3>
-      <p>日本語&#x2192;現場英語を即返答</p>
-    </div>
-    <div class="other-card" onclick="openCases()">
-      <span class="oc-ic">&#x1F3AC;</span>
-      <h3>ケーススタディ</h3>
-      <p>場面別フレーズを学ぶ</p>
-    </div>
-    <div class="other-card" onclick="startSession('comm',false)">
-      <span class="oc-ic">&#x1F399;</span>
-      <h3>実況英語</h3>
-      <p>中継で飛び交う定番表現</p>
-    </div>
-    <div class="other-card" onclick="startSession('paper',false)">
-      <span class="oc-ic">&#x1F4F0;</span>
-      <h3>移籍語彙</h3>
-      <p>契約・交渉・移籍の英語</p>
-    </div>
-    <div class="other-card" onclick="go('career');renderCareer()">
-      <span class="oc-ic">&#x1F3C6;</span>
-      <h3>キャリア</h3>
-      <p>成長記録とトロフィー</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ WEEK PROGRAM ============ -->
-<section class="screen" id="scr-week">
-  <div class="quiz-top"><button class="btn-x" onclick="renderOthers();go('others')">&#x2715;</button>
-    <div style="font-weight:900;font-size:17px">&#x1F4C5; 週間プログラム</div></div>
-  <div id="week-list"></div>
-</section>
 
 /* init — renderHome() はログイン後に呼ばれる */
 </script>
