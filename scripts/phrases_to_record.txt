@@ -1,0 +1,815 @@
+Worldie
+Dead leg
+Leave it
+Keeper\'s ball
+Step
+Hold
+Press
+Track
+Cover
+Screen
+Block
+Switch
+Recover
+Stay
+Tight
+Inside
+Outside
+Goal side
+Shoulder
+Runner
+Watch him
+Feet
+Into feet
+Back
+Set
+Wall pass
+Through
+Wide
+Line
+Clip it
+Drive it
+Play simple
+Play forward
+Recycle
+Keep it
+Turn out
+First time
+Go
+Drive
+Run at him
+Take him on
+Cross
+Cut back
+Shoot
+Hit it
+Far post
+Near post
+Follow in
+Get in the box
+Attack the box
+Arrive late
+Underlap
+Switch play
+Play wide
+Inside run
+Outside run
+Double up
+Force him wide
+Delay
+Contain
+Hold shape
+Stay compact
+Win it
+Challenge
+Block it
+Track back
+Match his run
+Stay goal side
+Clear it
+Head it away
+Step out
+Mark him
+Keeper
+Mine
+Push out
+Step up
+Wall
+Quick
+Slow it down
+Claim it
+Catch
+Punch
+Play short
+Play long
+Front post
+Back post
+Edge
+Attack it
+Delivery
+Inswinger
+Outswinger
+Flick on
+Mark up
+Pick him up
+Stay with him
+Zonal
+Man mark
+Rebound
+Well done
+Good ball
+Great effort
+Unlucky
+Again
+Keep going
+Relax
+Calm
+Focus
+Wake up
+Organise
+Communicate
+Talk
+Help him
+Support
+Be patient
+Quicker
+Slower
+Check shoulder
+Half turn
+Receive
+Bounce pass
+Between lines
+Play through
+Split them
+Dictate tempo
+Keep possession
+Find space
+Isolate him
+Beat your man
+Stretch them
+Hug the touchline
+Cut inside
+Attack space
+Run beyond
+Cross early
+Pin him
+Spin
+Lay it off
+Occupy centre-back
+Near-post run
+Far-post run
+Attack the cross
+Stay central
+Get across him
+Hold the line
+Step in
+Drop together
+Stay connected
+Cover across
+Shift across
+Clear danger
+Win first contact
+Control the game
+Manage the game
+Kill the game
+Slow the tempo
+Raise the tempo
+Win second balls
+Protect the lead
+Play through pressure
+Break the press
+attacking third
+defensive third
+middle third
+final third
+half space
+central area
+wide area
+corridor
+channel
+inside channel
+outside channel
+low block
+mid block
+high block
+high press
+counter press
+gegenpress
+pressing trigger
+press resistance
+compact shape
+team shape
+rest defence
+transition
+positive transition
+negative transition
+counter attack
+build-up
+possession play
+direct play
+route one
+switch of play
+overload
+underload
+isolation
+rotation
+third man run
+wall pass
+combination play
+penetration
+line breaking pass
+vertical pass
+horizontal pass
+diagonal pass
+switch play
+deep block
+high line
+offside trap
+man marking
+zonal marking
+hybrid marking
+centre-back
+full-back
+wing-back
+holding midfielder
+defensive midfielder
+central midfielder
+box-to-box midfielder
+attacking midfielder
+number six
+number eight
+number ten
+double pivot
+single pivot
+false nine
+target man
+inside forward
+wide forward
+second striker
+shadow striker
+playmaker
+deep-lying playmaker
+ball-playing defender
+inverted full-back
+inverted winger
+overlapping full-back
+underlapping full-back
+sweeper keeper
+anchor
+regista
+destroyer
+overlap
+underlap
+pinning
+occupy defenders
+stretch the line
+compress space
+find pockets
+between the lines
+play through lines
+break lines
+receive on the half-turn
+scan
+body orientation
+first touch direction
+support angle
+passing lane
+cover shadow
+jump to press
+lock the side
+trap outside
+trap inside
+numerical superiority
+qualitative superiority
+positional superiority
+free man
+blind-side run
+late run
+near-post run
+far-post run
+second-ball situation
+build from the back
+play out from the back
+retain possession
+circulate the ball
+tempo control
+game management
+protect the lead
+see out the game
+break the press
+play through pressure
+hamstring
+quad
+calf
+groin
+ankle
+knee
+hip
+back
+shoulder
+neck
+strain
+sprain
+tear
+rupture
+inflammation
+swelling
+bruise
+cramp
+stiffness
+fatigue
+knock
+niggle
+pain
+soreness
+tightness
+discomfort
+symptom
+diagnosis
+assessment
+evaluation
+physio
+doctor
+medical staff
+rehab
+treatment
+recovery
+return to play
+fitness test
+medical clearance
+availability
+MRI scan
+ultrasound
+x-ray
+blood test
+ACL
+MCL
+meniscus
+concussion
+head injury
+warm-up
+cool-down
+stretching
+mobility
+activation
+hydration
+nutrition
+sleep quality
+load management
+monitoring
+minutes restriction
+full training
+individual training
+modified training
+non-contact
+contact training
+fit
+fully fit
+unfit
+ruled out
+accommodation
+apartment
+house
+landlord
+lease agreement
+utility bill
+internet connection
+bank account
+debit card
+direct debit
+salary
+payslip
+tax
+insurance
+work permit
+visa
+passport
+residency permit
+registration
+international clearance
+clubhouse
+training ground
+first team
+reserve team
+academy
+kit room
+kit man
+equipment manager
+physio room
+gym
+team bus
+away trip
+hotel
+roommate
+team meal
+meal plan
+nutritionist
+chef
+hydration station
+recovery area
+team meeting
+video session
+analysis meeting
+matchday schedule
+curfew
+day off
+rest day
+travel day
+recovery session
+activation session
+player liaison
+club secretary
+sporting director
+head coach
+assistant coach
+goalkeeping coach
+strength coach
+analyst
+translator
+agent
+local area
+public transport
+driving licence
+car insurance
+mobile contract
+emergency contact
+language lesson
+settle in
+homesick
+adaptation period
+proper player
+proper footballer
+top lad
+good lad
+quality player
+quality
+class
+different class
+different gravy
+unreal
+baller
+absolute baller
+technician
+rolls royce
+engine
+workhorse
+beast
+monster
+tank
+unit
+buzzing
+chuffed
+gutted
+fuming
+raging
+knackered
+shattered
+dead on my feet
+absolutely flying
+on fire
+sorted
+spot on
+sound
+fair play
+good shout
+cheeky
+cheeky nutmeg
+having a laugh
+taking the piss
+wind him up
+bottle it
+bottler
+lost his head
+head's gone
+switch off
+sleeping
+shocking
+poor
+smash it
+do the business
+deliver
+turn up
+kick on
+push on
+crack on
+get stuck in
+lads
+the boys
+new boy
+academy kid
+first-teamer
+veteran
+club legend
+one of our own
+you alright?
+alright?
+how's it going?
+what's up?
+not bad
+can't complain
+all good
+living the dream
+same old
+cheers
+thanks mate
+nice one
+appreciate it
+legend
+top man
+no worries
+no problem
+leave it with me
+I'll sort it
+works for me
+mate
+pal
+buddy
+lad
+bloke
+fella
+fancy a coffee?
+fancy lunch?
+grab a coffee
+grab a bite
+you in?
+count me in
+I'm up for it
+can't make it
+over the moon
+reckon
+to be fair
+fair enough
+see you later
+see you in a bit
+take care
+have a good one
+catch you later
+all the best
+morning lads
+how's things?
+good weekend?
+how's the family?
+long time no see
+good to have you back
+get changed
+boots on
+meeting in five
+grab your bib
+don't be late
+let's go boys
+ready to go?
+where are my boots?
+where's my kit?
+pass the tape
+who's on music?
+this tune is quality
+that's a banger
+ice bath time
+stretch properly
+grab a shake
+how are the legs?
+feeling fresh?
+feeling heavy
+bit sore
+good session
+good shift
+unlucky mate
+you'll be alright
+head up
+forget about it
+first round on you
+settling in alright?
+who are you rooming with?
+team meal tonight
+see you at dinner
+the lads are heading out
+good performance
+team effort
+great result
+important win
+deserved win
+hard-fought win
+clean sheet
+three points
+momentum
+consistency
+credit to the lads
+full credit to them
+fantastic support
+our supporters
+home crowd
+away fans
+special atmosphere
+big occasion
+top opponent
+quality side
+at the end of the day
+we move on
+one game at a time
+keep improving
+stay focused
+stay humble
+keep working hard
+learn from it
+bounce back
+take responsibility
+disappointed
+frustrated
+tough game
+tough opponent
+close game
+fine margins
+small details
+unfortunate
+deserved more
+not good enough
+confidence
+belief
+character
+mentality
+leadership
+professionalism
+commitment
+determination
+ambition
+motivation
+debut
+first goal
+milestone
+career
+journey
+dream come true
+proud moment
+special moment
+family support
+grateful
+interview
+press conference
+mixed zone
+media duties
+broadcast interview
+live interview
+headline
+quote
+off the record
+soundbite
+representation agreement
+client
+mandate
+agency fee
+contract
+employment contract
+contract extension
+renewal
+expiry date
+gross salary
+net salary
+signing-on fee
+bonus
+appearance bonus
+goal bonus
+assist bonus
+loyalty bonus
+promotion bonus
+release clause
+buyout clause
+sell-on clause
+image rights
+commercial rights
+transfer fee
+permanent transfer
+loan transfer
+loan agreement
+option to buy
+obligation to buy
+medical
+international transfer
+free agent
+pre-contract
+letter of intent
+training compensation
+solidarity contribution
+protected period
+just cause
+mutual termination
+technical director
+head scout
+shortlist
+due diligence
+formal offer
+verbal offer
+written offer
+counter offer
+proposal
+term sheet
+deal structure
+contract draft
+final draft
+redline version
+salary package
+base salary
+take-home pay
+signing bonus
+appearance fee
+sporting project
+development plan
+pathway to first team
+playing time
+minutes expectation
+recruitment team
+loan fee
+buy-back clause
+medical examination
+registration process
+visa application
+exclusive mandate
+tax equalisation
+tax liability
+tax residency
+withholding tax
+social security contribution
+termination clause
+breach of contract
+default notice
+material breach
+governing law
+jurisdiction
+dispute resolution
+arbitration
+CAS appeal
+indemnity
+limitation of liability
+force majeure
+confidentiality clause
+non-disclosure agreement
+compliance
+conflict of interest
+legal counsel
+guaranteed compensation
+performance incentive
+retention bonus
+payment schedule
+outstanding amount
+settlement agreement
+amendment
+addendum
+binding agreement
+scout
+scouting report
+player profile
+target player
+recruitment target
+longlist
+priority target
+backup option
+replacement target
+succession planning
+recruitment strategy
+squad planning
+position need
+development potential
+ceiling
+upside
+technical ability
+ball control
+passing range
+decision making
+game intelligence
+football IQ
+positioning
+awareness
+scanning
+composure
+athleticism
+pace
+acceleration
+duel success rate
+aerial ability
+one-v-one defending
+recovery speed
+character assessment
+coachability
+adaptability
+competitive mindset
+cultural fit
+dressing room fit
+green light
+sign-off
+FIFA Agent
+representation contract
+client representation
+exclusive representation
+engagement letter
+letter of authority
+informed consent
+service fee
+commission
+invoice
+payment instruction
+proof of payment
+transfer matching system
+TMS declaration
+international transfer certificate
+player passport
+registration period
+training club
+distribution statement
+clearing house
+sporting just cause
+unilateral termination
+mutual termination agreement
+temporary transfer
+buy option
+buy obligation
+minor player
+parental consent
+dual nationality
+eligibility
+disciplinary proceeding
+CAS arbitration
+legal submission
+settlement negotiation
+claimant
+respondent
+burden of proof
+final decision
