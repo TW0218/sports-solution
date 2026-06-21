@@ -1735,6 +1735,11 @@ function getCasePhrases(){
   if(!_casePhrases)_casePhrases=new Set(SCENARIOS.flatMap(s=>s.ops.map(o=>o.en)));
   return _casePhrases;
 }
+let _coachPhrases;
+function getCoachPhrases(){
+  if(!_coachPhrases)_coachPhrases=new Set(COACH_DB.flatMap(d=>[d.en,...(d.alt||[])]));
+  return _coachPhrases;
+}
 function playMp3(src,text,r,cat){
   if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
   const a=new Audio(src);
@@ -1747,6 +1752,9 @@ function speak(text,r,cat){
   }
   if(getExPhrases().has(text)||getCasePhrases().has(text)){
     try{playMp3(exToAudioSrc(text),text,r,cat);return;}catch(e){}
+  }
+  if(getCoachPhrases().has(text)){
+    try{playMp3(textToAudioSrc(text),text,r,cat);return;}catch(e){}
   }
   speakTTS(text,r,cat);
 }
