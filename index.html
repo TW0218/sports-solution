@@ -753,7 +753,7 @@ const DB = [
 {c:"paper",en:"Gardening leave",ja:"（解任後の）自宅待機",ex:"The sacked boss is on gardening leave.",exJa:"解任された監督は契約満了まで自宅待機。",lv:3},
 
 /* ---- pitch (extended) ---- */
-{c:"pitch",en:"Man on",ja:"後ろ来てる",ex:"Man on, Taku!",exJa:"後ろから来てるぞ、タク！",note:"[Warning]",lv:3},
+{c:"pitch",en:"Man on",ja:"後ろ来てる",ex:"Man on, Shohei!",exJa:"後ろから来てるぞ、ショウヘイ！",note:"[Warning]",lv:3},
 {c:"pitch",en:"Time",ja:"時間ある",ex:"Time, turn!",exJa:"時間ある、前を向け！",note:"[Warning]",lv:3},
 {c:"pitch",en:"Turn",ja:"前を向け",ex:"Turn and drive forward.",exJa:"前を向いて運べ。",note:"[Warning]",lv:3},
 {c:"pitch",en:"Leave it",ja:"触るな",ex:"Leave it, keeper\'s got it.",exJa:"触るな、キーパーだ。",note:"[Warning]",lv:3},
@@ -2300,12 +2300,12 @@ async function askAI(situation){
 const SCENARIOS=[
 {id:"s1",c:"locker",ic:"🚪",t:"初合流。ロッカールームで初対面の挨拶",scene:"移籍初日。ロッカールームに入ると選手たちがこっちを見ている。第一声で空気が決まる。",
  ops:[
- {lv:1,en:"Alright? I'm Taku.",ja:"よう。タクだ。",note:"Alright? は「元気？」と聞いていない万能挨拶。返しも Alright が正解"},
+ {lv:1,en:"Alright? I'm Shohei.",ja:"よう。ショウヘイだ。",note:"Alright? は「元気？」と聞いていない万能挨拶。返しも Alright が正解"},
  {lv:1,en:"Good to be here, lads.",ja:"ここに来られて嬉しいよ。",note:"lads（みんな）を付けるだけで現場っぽくなる"},
- {lv:2,en:"Alright lads? Taku. Buzzing to be here.",ja:"よう、みんな。タクだ。最高の気分だよ。",note:"buzzing はロッカールーム頻出のポジティブ語"},
+ {lv:2,en:"Alright lads? Shohei. Buzzing to be here.",ja:"よう、みんな。ショウヘイだ。最高の気分だよ。",note:"buzzing はロッカールーム頻出のポジティブ語"},
  {lv:2,en:"So... what's the gaffer like, then?",ja:"で…監督ってどんな人？",note:"質問で会話を始めると輪に入りやすい"},
- {lv:3,en:"Alright boys? Taku. Go easy on me in the rondo, yeah?",ja:"よう。タクだ。ロンドでは手加減してくれよ？",note:"自虐の軽口で笑いを取る。初日に一番強いカード"}],
- ng:{en:"Hello everyone. My name is Taku. Please take care of me.",why:"「よろしくお願いします」の直訳は存在しない。丁寧すぎる自己紹介は逆に距離を作る"}},
+ {lv:3,en:"Alright boys? Shohei. Go easy on me in the rondo, yeah?",ja:"よう。ショウヘイだ。ロンドでは手加減してくれよ？",note:"自虐の軽口で笑いを取る。初日に一番強いカード"}],
+ ng:{en:"Hello everyone. My name is Shohei. Please take care of me.",why:"「よろしくお願いします」の直訳は存在しない。丁寧すぎる自己紹介は逆に距離を作る"}},
 {id:"s2",c:"locker",ic:"🍝",t:"練習後、チームメイトに食事に誘われた",scene:"「このあと飯行くけど来る？」と誘われた。受けるか、角を立てずに断るか。",
  ops:[
  {lv:1,en:"Yeah, sounds good.",ja:"いいね、行くよ。",note:"これだけで十分"},
@@ -2363,9 +2363,9 @@ const SCENARIOS=[
  ng:{en:"I'm fine. No problem.",why:"違和感を隠して悪化させるのが最悪のシナリオ。正確な申告は自己管理能力として評価される"}},
 {id:"s10",c:"locker",ic:"📋",t:"トライアル初日、コーチへの自己紹介",scene:"練習参加の初日。コーチに名前とポジションを聞かれた。売り込みのチャンスは一瞬。",
  ops:[
- {lv:1,en:"Taku. Midfielder. Thanks for having me.",ja:"タクです。MFです。機会をありがとうございます。",note:"最低限はこの3点"},
- {lv:2,en:"Taku — box-to-box midfielder. Played my football in Japan. Where do you want me?",ja:"タク、ボックストゥボックスのMFです。日本でプレーしてました。どこに入りますか？",note:"Where do you want me? で即戦力感を出す"},
- {lv:3,en:"Taku. I'll do my talking on the pitch — but I'm an eight, and I'll run all day for you.",ja:"タクです。実力はピッチで見せますが、8番タイプで、90分走り続けます。",note:"do my talking on the pitch は決まり文句。数字でポジションを言えると通"}],
+ {lv:1,en:"Shohei. Midfielder. Thanks for having me.",ja:"ショウヘイです。MFです。機会をありがとうございます。",note:"最低限はこの3点"},
+ {lv:2,en:"Shohei — box-to-box midfielder. Played my football in Japan. Where do you want me?",ja:"ショウヘイ、ボックストゥボックスのMFです。日本でプレーしてました。どこに入りますか？",note:"Where do you want me? で即戦力感を出す"},
+ {lv:3,en:"Shohei. I'll do my talking on the pitch — but I'm an eight, and I'll run all day for you.",ja:"ショウヘイです。実力はピッチで見せますが、8番タイプで、90分走り続けます。",note:"do my talking on the pitch は決まり文句。数字でポジションを言えると通"}],
  ng:{en:"I am not confident but I will try hard.",why:"謙遜は美徳ではなくセールスポイントの欠如と見なされる。トライアルでは特に致命的"}},
 {id:"s11",c:"pitch",ic:"🤜",t:"試合後、対戦相手と握手・交流",scene:"激しくやり合った相手と試合後にすれ違う。敵への敬意もフットボールの言語。",
  ops:[
