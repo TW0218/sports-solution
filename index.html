@@ -971,7 +971,7 @@ const DB = [
 {c:"pitch",en:"line breaking pass",ja:"ライン間パス",ex:"line breaking pass",exJa:"ライン間パス",lv:3},
 {c:"pitch",en:"vertical pass",ja:"縦パス",ex:"vertical pass",exJa:"縦パス",lv:2},
 {c:"pitch",en:"horizontal pass",ja:"横パス",ex:"horizontal pass",exJa:"横パス",lv:1},
-{c:"pitch",en:"diagonal pass",ja:"斜めパス",ex:"diagonal pass",exJa:"斜めパス",lv:2},
+{c:"pitch",en:"diagonal",ja:"斜めに",ex:"Play it diagonal.",exJa:"斜めに出せ。",lv:2},
 {c:"pitch",en:"switch play",ja:"展開変更",ex:"switch play",exJa:"展開変更",lv:2},
 {c:"pitch",en:"deep block",ja:"撤退守備",ex:"deep block",exJa:"撤退守備",lv:3},
 {c:"pitch",en:"high line",ja:"ハイライン",ex:"high line",exJa:"ハイライン",lv:3},
@@ -1723,11 +1723,28 @@ function getAudioPhrases(){
 function textToAudioSrc(text){
   return "audio/"+text.replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
 }
+function exToAudioSrc(text){
+  return "audio/"+text.toLowerCase().replace(/[!?',.\/\-]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
+}
+let _exPhrases;
+function getExPhrases(){
+  if(!_exPhrases)_exPhrases=new Set([...DB.map(d=>d.ex),...(COACH_DB||[]).map(d=>d.ex)]);
+  return _exPhrases;
+}
 function speak(text,r,cat){
   if(getAudioPhrases().has(text)){
     try{
       if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
       const a=new Audio(textToAudioSrc(text));
+      audioPlayer=a;
+      a.play().catch(()=>speakTTS(text,r,cat));
+      return;
+    }catch(e){}
+  }
+  if(getExPhrases().has(text)){
+    try{
+      if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
+      const a=new Audio(exToAudioSrc(text));
       audioPlayer=a;
       a.play().catch(()=>speakTTS(text,r,cat));
       return;
