@@ -283,10 +283,14 @@ nav button.sel{color:var(--green-dk)}
 .ng-card .ng-en{font-size:15px;font-weight:900;text-decoration:line-through;color:#8a2a20;margin-bottom:4px}
 .ng-card .ng-why{font-size:12px;color:#6b2018;line-height:1.6}
 /* ---- new home ---- */
-.home-hero{background:var(--green);border-radius:22px;padding:20px 18px 18px;color:#fff;margin-bottom:14px}
-.home-hero-label{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--yellow);margin-bottom:6px}
-.home-hero h1{font-size:22px;font-weight:900;line-height:1.3;margin-bottom:2px}
-.home-hero p{font-size:12px;opacity:.85}
+.home-hero{background:var(--green);border-radius:22px;padding:20px 18px 18px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden}
+.home-hero-label{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--yellow);margin-bottom:6px;position:relative;z-index:1}
+.home-hero h1{font-size:22px;font-weight:900;line-height:1.3;margin-bottom:2px;position:relative;z-index:1}
+.home-hero p{font-size:12px;opacity:.85;position:relative;z-index:1}
+.home-hero-pitch{position:absolute;right:-10px;top:50%;transform:translateY(-50%);opacity:.22;pointer-events:none}
+.pitch-line{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@keyframes pitch-draw{to{stroke-dashoffset:0}}
+.pitch-draw{stroke-dasharray:var(--len,400);stroke-dashoffset:var(--len,400);animation:pitch-draw .8s ease forwards}
 .home-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
 .home-stat{background:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
 .home-stat .hv{font-size:22px;font-weight:900;margin-bottom:2px}
@@ -392,6 +396,24 @@ nav button.sel{color:var(--green-dk)}
     <div class="home-hero-label">SPORTS SOLUTION ENGLISH</div>
     <h1 id="home-hero-h1">海外移籍初日を<br>乗り切る英語</h1>
     <p id="home-hero-p">練習中に飛ぶ英語を、5分で身につける</p>
+    <svg class="home-hero-pitch" width="160" height="110" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" id="hero-pitch-svg">
+      <!-- center line -->
+      <line class="pitch-line pitch-draw" x1="80" y1="4" x2="80" y2="106" style="--len:102;animation-delay:.0s"/>
+      <!-- center circle -->
+      <circle class="pitch-line pitch-draw" cx="80" cy="55" r="22" style="--len:138;animation-delay:.15s"/>
+      <!-- center spot -->
+      <circle class="pitch-line" cx="80" cy="55" r="2" fill="#fff" opacity=".22"/>
+      <!-- goal line (right) -->
+      <line class="pitch-line pitch-draw" x1="156" y1="4" x2="156" y2="106" style="--len:102;animation-delay:.3s"/>
+      <!-- penalty area -->
+      <rect class="pitch-line pitch-draw" x="112" y="28" width="44" height="54" style="--len:196;animation-delay:.45s"/>
+      <!-- goal area -->
+      <rect class="pitch-line pitch-draw" x="138" y="39" width="18" height="32" style="--len:100;animation-delay:.6s"/>
+      <!-- penalty spot -->
+      <circle class="pitch-line" cx="130" cy="55" r="2" fill="#fff" opacity=".22"/>
+      <!-- penalty arc -->
+      <path class="pitch-line pitch-draw" d="M112,43 A22,22 0 0,0 112,67" style="--len:48;animation-delay:.75s"/>
+    </svg>
   </div>
 
   <div id="home-stats-area">
