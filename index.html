@@ -27,10 +27,27 @@ body{
 @media(min-width:560px){ body{background:#0F1A14 repeating-linear-gradient(90deg,#12241A 0 60px,#0F1F16 60px 120px)} #app{box-shadow:0 0 60px rgba(0,0,0,.5)} }
 
 /* ---------- screens ---------- */
-.screen{display:none;flex:1;flex-direction:column;padding:calc(16px + var(--safe-t)) 18px calc(86px + var(--safe-b));animation:fadein .25s ease}
+.screen{display:none;flex:1;flex-direction:column;padding:calc(16px + var(--safe-t)) 18px calc(86px + var(--safe-b))}
 .screen.active{display:flex}
-@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- view transitions ---------- */
+@keyframes vt-slide-out-left {to{transform:translateX(-28px);opacity:0}}
+@keyframes vt-slide-in-right {from{transform:translateX(28px);opacity:0}}
+@keyframes vt-slide-out-right{to{transform:translateX(28px);opacity:0}}
+@keyframes vt-slide-in-left  {from{transform:translateX(-28px);opacity:0}}
+@keyframes vt-fade-out{to{opacity:0}}
+@keyframes vt-fade-in {from{opacity:0}}
+
+/* default = push (新画面は右から入る) */
+::view-transition-old(root){animation:.25s ease both vt-slide-out-left}
+::view-transition-new(root){animation:.25s ease both vt-slide-in-right}
+/* pop = 戻る（左から入る） */
+:root.vt-pop ::view-transition-old(root){animation:.25s ease both vt-slide-out-right}
+:root.vt-pop ::view-transition-new(root){animation:.25s ease both vt-slide-in-left}
+/* tab = ボトムナビ（クロスフェード） */
+:root.vt-tab ::view-transition-old(root){animation:.18s ease both vt-fade-out}
+:root.vt-tab ::view-transition-new(root){animation:.18s ease both vt-fade-in}
 
 /* ---------- header ---------- */
 .brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -510,7 +527,7 @@ nav button.sel{color:var(--green-dk)}
     </div>
     <div id="missed-list"></div>
   </div>
-  <button class="check-btn" onclick="go('home');renderHome()">ホームに戻る</button>
+  <button class="check-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
   <button class="check-btn" style="background:var(--ink);box-shadow:0 3px 0 #000;margin-top:10px" onclick="startSession(lastCat,lastDaily)">もう1マッチ</button>
   </div>
 </section>
@@ -595,10 +612,10 @@ nav button.sel{color:var(--green-dk)}
 </div>
 
 <nav>
-  <button id="nav-home" class="sel" onclick="go('home');renderHome()"><span class="nic">&#x1F3E0;</span>ホーム</button>
+  <button id="nav-home" class="sel" onclick="go('home','tab');renderHome()"><span class="nic">&#x1F3E0;</span>ホーム</button>
   <button id="nav-play" onclick="startSession('mix',false)"><span class="nic">&#x25B6;&#xFE0F;</span>プレイ</button>
-  <button id="nav-strength" onclick="go('career');renderCareer()"><span class="nic">&#x1F4CA;</span>実力</button>
-  <button id="nav-others" onclick="renderOthers();go('others')"><span class="nic">&#x22EF;</span>その他</button>
+  <button id="nav-strength" onclick="go('career','tab');renderCareer()"><span class="nic">&#x1F4CA;</span>実力</button>
+  <button id="nav-others" onclick="renderOthers();go('others','tab')"><span class="nic">&#x22EF;</span>その他</button>
 </nav>
 <!-- ============ OTHERS MENU ============ -->
 <section class="screen" id="scr-others">
@@ -1799,14 +1816,34 @@ function sfx(type){
 }
 
 /* ================= NAV ================= */
-function go(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById("scr-"+id).classList.add("active");
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-  const nv={home:"nav-home",cards:"nav-play",play:"nav-play",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-play"}[id];
-  if(nv)document.getElementById(nv).classList.add("sel");
-  document.getElementById("feedback").classList.remove("show");
-  window.scrollTo(0,0);
+// ✕ボタン（.btn-x）クリック時に次のgo()を自動でpopにする
+document.addEventListener('click',function(e){
+  if(e.target.closest('.btn-x')) window._vtNextDir='pop';
+});
+
+function go(id, dir){
+  dir = dir || window._vtNextDir || 'push';
+  window._vtNextDir = null;
+
+  const doSwitch=()=>{
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.getElementById("scr-"+id).classList.add("active");
+    document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
+    const nv={home:"nav-home",cards:"nav-play",play:"nav-play",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-play"}[id];
+    if(nv)document.getElementById(nv).classList.add("sel");
+    document.getElementById("feedback").classList.remove("show");
+    window.scrollTo(0,0);
+  };
+
+  const root=document.documentElement;
+  root.classList.remove('vt-push','vt-pop','vt-tab');
+  root.classList.add('vt-'+dir);
+
+  if(document.startViewTransition){
+    document.startViewTransition(doSwitch);
+  } else {
+    doSwitch();
+  }
 }
 function toast(msg){
   const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
