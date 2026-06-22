@@ -354,18 +354,18 @@ nav button.sel{color:var(--green-dk)}
 .streak-countdown{font-size:11px;color:#A32D2D;font-weight:700}
 /* ---- tier cards (zero state + current tier) ---- */
 .day1-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate;transform:translateZ(0)}
-.tier-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:12px;position:relative;overflow:hidden;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate;transform:translateZ(0)}
-.day1-card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%}
-.day1-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,14,.95) 45%,rgba(10,20,14,.3) 100%)}
+.tier-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:12px;position:relative;overflow:hidden;min-height:220px;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate;transform:translateZ(0)}
+.day1-card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%;filter:brightness(1.35) contrast(1.05)}
+.day1-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,8,.82) 35%,rgba(5,10,8,.1) 75%,transparent 100%)}
 .day1-card-body{position:relative;z-index:2;padding:20px 18px 22px}
 .tier-card-body{position:relative;z-index:2;padding:14px 16px 16px}
-.day1-eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;color:var(--yellow);margin-bottom:8px}
-.day1-title{font-size:26px;font-weight:900;line-height:1.25;margin-bottom:8px}
+.day1-eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;color:var(--yellow);margin-bottom:8px;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.day1-title{font-size:26px;font-weight:900;line-height:1.25;margin-bottom:8px;text-shadow:0 2px 8px rgba(0,0,0,.7)}
 .day1-checklist{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:6px}
-.day1-checklist li{font-size:13px;color:#B9CDC2;display:flex;align-items:center;gap:8px}
+.day1-checklist li{font-size:13px;color:#B9CDC2;display:flex;align-items:center;gap:8px;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .day1-checklist li::before{content:"→";color:var(--green);font-weight:900;flex-shrink:0}
-.tier-card-title{font-size:18px;font-weight:900;line-height:1.25;margin-bottom:2px}
-.tier-card-sub{font-size:12px;color:rgba(255,255,255,.65);margin-bottom:10px}
+.tier-card-title{font-size:18px;font-weight:900;line-height:1.25;margin-bottom:2px;text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.tier-card-sub{font-size:12px;color:rgba(255,255,255,.8);margin-bottom:10px;text-shadow:0 1px 4px rgba(0,0,0,.7)}
 .tier-next-bar{display:flex;align-items:center;gap:8px}
 .tier-next-label{font-size:9px;font-weight:900;letter-spacing:.12em;color:rgba(255,255,255,.5);white-space:nowrap}
 .tier-next-track{flex:1;height:4px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden}
