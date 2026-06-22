@@ -337,16 +337,25 @@ nav button.sel{color:var(--green-dk)}
 .other-card h3{font-size:14px;font-weight:900;margin-bottom:3px}
 .other-card p{font-size:11px;color:var(--grey);line-height:1.45}
 .other-card.featured{border-color:var(--yellow)}
-/* ---- day-1 zero state ---- */
+/* ---- tier cards (zero state + current tier) ---- */
 .day1-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end}
+.tier-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:12px;position:relative;overflow:hidden;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end}
 .day1-card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
 .day1-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,14,.95) 45%,rgba(10,20,14,.3) 100%)}
 .day1-card-body{position:relative;z-index:2;padding:20px 18px 22px}
+.tier-card-body{position:relative;z-index:2;padding:14px 16px 16px}
 .day1-eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;color:var(--yellow);margin-bottom:8px}
 .day1-title{font-size:26px;font-weight:900;line-height:1.25;margin-bottom:8px}
 .day1-checklist{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:6px}
 .day1-checklist li{font-size:13px;color:#B9CDC2;display:flex;align-items:center;gap:8px}
 .day1-checklist li::before{content:"→";color:var(--green);font-weight:900;flex-shrink:0}
+.tier-card-title{font-size:18px;font-weight:900;line-height:1.25;margin-bottom:2px}
+.tier-card-sub{font-size:12px;color:rgba(255,255,255,.65);margin-bottom:10px}
+.tier-next-bar{display:flex;align-items:center;gap:8px}
+.tier-next-label{font-size:9px;font-weight:900;letter-spacing:.12em;color:rgba(255,255,255,.5);white-space:nowrap}
+.tier-next-track{flex:1;height:4px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden}
+.tier-next-fill{height:100%;background:var(--yellow);border-radius:99px;transition:width .6s ease}
+.tier-next-pct{font-size:10px;font-weight:900;color:var(--yellow);min-width:28px;text-align:right}
 /* ---- week program ---- */
 .week-card{background:#fff;border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
 .week-head{display:flex;align-items:center;gap:14px;padding:16px}
@@ -1733,13 +1742,13 @@ async function saveToSupabase(){
 
 /* ================= STATE ================= */
 const TIERS=[
- {name:"SUNDAY LEAGUE",ja:"日曜リーグの挑戦者",min:0},
- {name:"NON-LEAGUE",ja:"ノンリーグの注目株",min:270},
- {name:"LEAGUE TWO",ja:"4部のプロ契約選手",min:900},
- {name:"LEAGUE ONE",ja:"3部の主力",min:1800},
- {name:"CHAMPIONSHIP",ja:"2部のスター",min:3600},
- {name:"PREMIER LEAGUE",ja:"プレミアの常連",min:7200},
- {name:"ENGLAND CALL-UP",ja:"代表クラスの語学力",min:14400}
+ {name:"SUNDAY LEAGUE",ja:"草ピッチの挑戦者",min:0,    img:"images/tier-sunday.png",    title:"今日がスタートライン",sub:"草ピッチから這い上がれ"},
+ {name:"NON-LEAGUE",  ja:"ノンリーグの注目株",min:270,  img:"images/tier-nonleague.png", title:"プロへの入口に立った",  sub:"スカウトの目が光りはじめる"},
+ {name:"LEAGUE TWO",  ja:"4部のプロ契約選手",min:900,  img:"images/tier-leaguetwo.png", title:"4部でプロ契約を掴んだ", sub:"チームメイトはみんな外国人"},
+ {name:"LEAGUE ONE",  ja:"3部の主力",       min:1800, img:"images/tier-leagueone.png", title:"3部の主力に成り上がった",sub:"ロッカーで冗談が言える"},
+ {name:"CHAMPIONSHIP",ja:"2部のスター",      min:3600, img:"images/tier-championship.png",title:"2部のスターへ昇り詰めた",sub:"プレミアのクラブが注目してる"},
+ {name:"PREMIER LEAGUE",ja:"プレミアの常連", min:7200, img:"images/tier-premier.png",   title:"ついにプレミアの舞台へ", sub:"世界中が見ている"},
+ {name:"JAPAN CALL-UP", ja:"サムライブルーの語学力",min:14400,img:"images/tier-japan.png",title:"日本代表招集の電話が鳴った",sub:"サムライブルーで世界へ"}
 ];
 const TROPHIES=[
  {id:"first",ic:"⚽",n:"初ゴール",d:"初めて正解する"},
@@ -1748,7 +1757,7 @@ const TROPHIES=[
  {id:"week",ic:"📅",n:"週間MVP",d:"7日連続出場"},
  {id:"month",ic:"🏅",n:"月間MVP",d:"30日連続出場"},
  {id:"fifty",ic:"📖",n:"50語マスター",d:"カード50語を習得"},
- {id:"cap",ic:"🦁",n:"スリーライオンズ",d:"通算14400分到達"},
+ {id:"cap",ic:"🔵",n:"サムライブルー",d:"通算14400分到達"},
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
@@ -1897,31 +1906,49 @@ function renderHome(){
   const calls=Object.values(S.box).filter(v=>v>=2).length;
   const isZero=r.pitch===0&&r.locker===0&&calls===0&&S.streak===0;
   const area=document.getElementById("home-stats-area");
+  const t=tierFor(S.min);
+  const ti=TIERS.indexOf(t);
+  const next=TIERS[ti+1];
 
   if(isZero){
     document.getElementById("home-hero-h1").innerHTML="さあ、<br>キックオフだ";
     document.getElementById("home-hero-p").textContent="初めてのマッチで今の実力を確かめよう";
     area.innerHTML='<div class="day1-card">'
-      +'<img class="day1-card-img" src="images/day1-pitch.png" alt="">'
+      +'<img class="day1-card-img" src="'+t.img+'" alt="">'
       +'<div class="day1-card-overlay"></div>'
       +'<div class="day1-card-body">'
-      +'<div class="day1-eyebrow">DAY 1 — KICK OFF</div>'
+      +'<div class="day1-eyebrow">'+t.name+' — KICK OFF</div>'
       +'<div class="day1-title">今日が<br>スタートライン</div>'
       +'<ul class="day1-checklist">'
       +'<li>ピッチで飛び交うコールを覚える</li>'
       +'<li>ロッカールームの会話に入れるようになる</li>'
-      +'<li>League Two → Premier League へ昇格する</li>'
+      +'<li>Sunday League → Japan Call-Up へ昇格する</li>'
       +'</ul>'
       +'</div>'
       +'</div>';
   } else {
     document.getElementById("home-hero-h1").innerHTML="海外移籍初日を<br>乗り切る英語";
     document.getElementById("home-hero-p").textContent="練習中に飛ぶ英語を、5分で身につける";
-    area.innerHTML='<div class="home-stats">'
-      +'<div class="home-stat"><div class="hv" id="h-pitch-rate" style="color:var(--green)">'+r.pitch+'%</div><div class="hl">ピッチ理解率</div></div>'
-      +'<div class="home-stat"><div class="hv" id="h-locker-rate" style="color:#D4537E">'+r.locker+'%</div><div class="hl">ロッカー対応度</div></div>'
-      +'<div class="home-stat"><div class="hv" id="h-calls">'+calls+'</div><div class="hl">即答できるコール</div></div>'
-      +'<div class="home-stat"><div class="hv" id="h-streak">'+S.streak+'日</div><div class="hl">連続学習</div></div>'
+    const nextBar=next
+      ?'<div class="tier-next-bar"><span class="tier-next-label">NEXT: '+next.name+'</span>'
+        +'<div class="tier-next-track"><div class="tier-next-fill" style="width:'+Math.min(100,Math.round((S.min-t.min)/(next.min-t.min)*100))+'%"></div></div>'
+        +'<span class="tier-next-pct">'+Math.min(100,Math.round((S.min-t.min)/(next.min-t.min)*100))+'%</span></div>'
+      :'<div class="tier-next-bar"><span class="tier-next-label">JAPAN CALL-UP 達成！</span></div>';
+    area.innerHTML='<div class="tier-card">'
+      +'<img class="day1-card-img" src="'+t.img+'" alt="">'
+      +'<div class="day1-card-overlay"></div>'
+      +'<div class="tier-card-body">'
+      +'<div class="day1-eyebrow">'+t.name+'</div>'
+      +'<div class="tier-card-title">'+t.title+'</div>'
+      +'<div class="tier-card-sub">'+t.sub+'</div>'
+      +nextBar
+      +'</div>'
+      +'</div>'
+      +'<div class="home-stats">'
+      +'<div class="home-stat"><div class="hv" style="color:var(--green)">'+r.pitch+'%</div><div class="hl">ピッチ理解率</div></div>'
+      +'<div class="home-stat"><div class="hv" style="color:#D4537E">'+r.locker+'%</div><div class="hl">ロッカー対応度</div></div>'
+      +'<div class="home-stat"><div class="hv">'+calls+'</div><div class="hl">即答できるコール</div></div>'
+      +'<div class="home-stat"><div class="hv">'+S.streak+'日</div><div class="hl">連続学習</div></div>'
       +'</div>';
   }
 
