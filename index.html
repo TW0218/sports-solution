@@ -315,6 +315,15 @@ nav button.sel{color:var(--green-dk)}
 .other-card h3{font-size:14px;font-weight:900;margin-bottom:3px}
 .other-card p{font-size:11px;color:var(--grey);line-height:1.45}
 .other-card.featured{border-color:var(--yellow)}
+/* ---- day-1 zero state ---- */
+.day1-card{background:var(--ink);color:#fff;border-radius:20px;padding:20px 18px;margin-bottom:14px;position:relative;overflow:hidden}
+.day1-card::after{content:"⚽";position:absolute;right:-8px;bottom:-14px;font-size:72px;opacity:.12}
+.day1-eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;color:var(--yellow);margin-bottom:8px}
+.day1-title{font-size:26px;font-weight:900;line-height:1.25;margin-bottom:8px}
+.day1-body{font-size:13px;color:#B9CDC2;line-height:1.7}
+.day1-checklist{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.day1-checklist li{font-size:13px;color:#B9CDC2;display:flex;align-items:center;gap:8px}
+.day1-checklist li::before{content:"→";color:var(--green);font-weight:900;flex-shrink:0}
 /* ---- week program ---- */
 .week-card{background:#fff;border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
 .week-head{display:flex;align-items:center;gap:14px;padding:16px}
@@ -360,28 +369,30 @@ nav button.sel{color:var(--green-dk)}
     </div>
   </div>
 
-  <div class="home-hero">
+  <div class="home-hero" id="home-hero">
     <div class="home-hero-label">SPORTS SOLUTION ENGLISH</div>
-    <h1>海外移籍初日を<br>乗り切る英語</h1>
-    <p>練習中に飛ぶ英語を、5分で身につける</p>
+    <h1 id="home-hero-h1">海外移籍初日を<br>乗り切る英語</h1>
+    <p id="home-hero-p">練習中に飛ぶ英語を、5分で身につける</p>
   </div>
 
-  <div class="home-stats">
-    <div class="home-stat">
-      <div class="hv" id="h-pitch-rate" style="color:var(--green)">0%</div>
-      <div class="hl">ピッチ理解率</div>
-    </div>
-    <div class="home-stat">
-      <div class="hv" id="h-locker-rate" style="color:#D4537E">0%</div>
-      <div class="hl">ロッカー対応度</div>
-    </div>
-    <div class="home-stat">
-      <div class="hv" id="h-calls">0</div>
-      <div class="hl">即答できるコール</div>
-    </div>
-    <div class="home-stat">
-      <div class="hv" id="h-streak">0日</div>
-      <div class="hl">連続学習</div>
+  <div id="home-stats-area">
+    <div class="home-stats">
+      <div class="home-stat">
+        <div class="hv" id="h-pitch-rate" style="color:var(--green)">0%</div>
+        <div class="hl">ピッチ理解率</div>
+      </div>
+      <div class="home-stat">
+        <div class="hv" id="h-locker-rate" style="color:#D4537E">0%</div>
+        <div class="hl">ロッカー対応度</div>
+      </div>
+      <div class="home-stat">
+        <div class="hv" id="h-calls">0</div>
+        <div class="hl">即答できるコール</div>
+      </div>
+      <div class="home-stat">
+        <div class="hv" id="h-streak">0日</div>
+        <div class="hl">連続学習</div>
+      </div>
     </div>
   </div>
 
@@ -1822,11 +1833,34 @@ function weekUnlocked(n){
 }
 function renderHome(){
   const r=readiness();
+  const calls=Object.values(S.box).filter(v=>v>=2).length;
+  const isZero=r.pitch===0&&r.locker===0&&calls===0&&S.streak===0;
+  const area=document.getElementById("home-stats-area");
+
+  if(isZero){
+    document.getElementById("home-hero-h1").innerHTML="さあ、<br>キックオフだ";
+    document.getElementById("home-hero-p").textContent="初めてのマッチで今の実力を確かめよう";
+    area.innerHTML='<div class="day1-card">'
+      +'<div class="day1-eyebrow">DAY 1 — KICK OFF</div>'
+      +'<div class="day1-title">今日が<br>スタートライン</div>'
+      +'<ul class="day1-checklist">'
+      +'<li>ピッチで飛び交うコールを覚える</li>'
+      +'<li>ロッカールームの会話に入れるようになる</li>'
+      +'<li>League Two → Premier League へ昇格する</li>'
+      +'</ul>'
+      +'</div>';
+  } else {
+    document.getElementById("home-hero-h1").innerHTML="海外移籍初日を<br>乗り切る英語";
+    document.getElementById("home-hero-p").textContent="練習中に飛ぶ英語を、5分で身につける";
+    area.innerHTML='<div class="home-stats">'
+      +'<div class="home-stat"><div class="hv" id="h-pitch-rate" style="color:var(--green)">'+r.pitch+'%</div><div class="hl">ピッチ理解率</div></div>'
+      +'<div class="home-stat"><div class="hv" id="h-locker-rate" style="color:#D4537E">'+r.locker+'%</div><div class="hl">ロッカー対応度</div></div>'
+      +'<div class="home-stat"><div class="hv" id="h-calls">'+calls+'</div><div class="hl">即答できるコール</div></div>'
+      +'<div class="home-stat"><div class="hv" id="h-streak">'+S.streak+'日</div><div class="hl">連続学習</div></div>'
+      +'</div>';
+  }
+
   document.getElementById("streak-num").textContent=S.streak;
-  document.getElementById("h-pitch-rate").textContent=r.pitch+"%";
-  document.getElementById("h-locker-rate").textContent=r.locker+"%";
-  document.getElementById("h-calls").textContent=Object.values(S.box).filter(v=>v>=2).length;
-  document.getElementById("h-streak").textContent=S.streak+"日";
   const done=S.doneToday===today();
   const lbl=document.getElementById("cta-main-label");
   if(lbl)lbl.textContent=done?"もう1マッチ始める":"今日の1マッチ";
