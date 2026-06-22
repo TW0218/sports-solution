@@ -337,6 +337,21 @@ nav button.sel{color:var(--green-dk)}
 .other-card h3{font-size:14px;font-weight:900;margin-bottom:3px}
 .other-card p{font-size:11px;color:var(--grey);line-height:1.45}
 .other-card.featured{border-color:var(--yellow)}
+/* ---- streak card ---- */
+:root{--sb:#0D2B6E;--sb-mid:#1E4DA8;--sb-lt:#D6E4FF}
+.streak-card{background:#fff;border-radius:20px;padding:16px 18px;margin-bottom:12px;border:0.5px solid rgba(0,0,0,.08)}
+.streak-card-top{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.streak-big{font-size:36px;font-weight:900;color:var(--sb);line-height:1}
+.streak-unit{font-size:13px;font-weight:800;color:var(--sb);opacity:.7}
+.streak-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.streak-tag{border-radius:99px;font-size:11px;font-weight:800;padding:5px 12px}
+.streak-tag.done{background:var(--sb);color:var(--sb-lt)}
+.streak-tag.today-done{background:var(--sb-mid);color:#fff;outline:2px solid var(--sb-mid);outline-offset:2px}
+.streak-tag.today-pending{background:transparent;color:var(--sb);border:1.5px dashed var(--sb-mid)}
+.streak-tag.empty{background:#F1EFE8;color:#B4B2A9}
+.streak-card-footer{display:flex;align-items:center;justify-content:space-between}
+.streak-ticket{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--sb);background:var(--sb-lt);border-radius:99px;padding:4px 10px}
+.streak-countdown{font-size:11px;color:#A32D2D;font-weight:700}
 /* ---- tier cards (zero state + current tier) ---- */
 .day1-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end}
 .tier-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:12px;position:relative;overflow:hidden;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end}
@@ -1717,7 +1732,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0},data.progress);
   }
 }
 
@@ -1761,7 +1776,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -1901,6 +1916,29 @@ function weekUnlocked(n){
   if(n===4)return r.survival>=70;
   return false;
 }
+function buildStreakCard(){
+  const todayStr=today();
+  const done=S.doneToday===todayStr;
+  const hist=S.history||[];
+  const tags=[];
+  for(let i=6;i>=1;i--){
+    const d=new Date(Date.now()-864e5*i).toISOString().slice(0,10);
+    tags.push(hist.includes(d)?'<div class="streak-tag done">Day '+(S.streak-(done?i:i-1))+'</div>':'<div class="streak-tag empty">—</div>');
+  }
+  const todayTag=done
+    ?'<div class="streak-tag today-done">Day '+S.streak+'</div>'
+    :'<div class="streak-tag today-pending">今日</div>';
+  tags.push(todayTag);
+  const countdownHtml=!done
+    ?'<span class="streak-countdown" id="streak-cd"></span>':'';
+  const ticketHtml=S.tickets>0
+    ?'<span class="streak-ticket">🎫 復活チケット ×'+S.tickets+'</span>':'<span></span>';
+  return '<div class="streak-card">'
+    +'<div class="streak-card-top"><span class="streak-big">'+S.streak+'</span><span class="streak-unit">日連続</span></div>'
+    +'<div class="streak-tags">'+tags.join('')+'</div>'
+    +'<div class="streak-card-footer">'+ticketHtml+countdownHtml+'</div>'
+    +'</div>';
+}
 function renderHome(){
   const r=readiness();
   const calls=Object.values(S.box).filter(v=>v>=2).length;
@@ -1944,11 +1982,12 @@ function renderHome(){
       +nextBar
       +'</div>'
       +'</div>'
+      +buildStreakCard()
       +'<div class="home-stats">'
       +'<div class="home-stat"><div class="hv" style="color:var(--green)">'+r.pitch+'%</div><div class="hl">ピッチ理解率</div></div>'
       +'<div class="home-stat"><div class="hv" style="color:#D4537E">'+r.locker+'%</div><div class="hl">ロッカー対応度</div></div>'
       +'<div class="home-stat"><div class="hv">'+calls+'</div><div class="hl">即答できるコール</div></div>'
-      +'<div class="home-stat"><div class="hv">'+S.streak+'日</div><div class="hl">連続学習</div></div>'
+      +'<div class="home-stat"><div class="hv">'+S.min+'分</div><div class="hl">総学習時間</div></div>'
       +'</div>';
   }
 
@@ -1956,6 +1995,20 @@ function renderHome(){
   const done=S.doneToday===today();
   const lbl=document.getElementById("cta-main-label");
   if(lbl)lbl.textContent=done?"もう1マッチ始める":"今日の1マッチ";
+  if(!done){
+    clearInterval(window._cdTimer);
+    window._cdTimer=setInterval(()=>{
+      const el=document.getElementById("streak-cd");
+      if(!el){clearInterval(window._cdTimer);return;}
+      const now=new Date();
+      const midnight=new Date();midnight.setHours(24,0,0,0);
+      const diff=midnight-now;
+      const h=String(Math.floor(diff/36e5)).padStart(2,'0');
+      const m=String(Math.floor(diff%36e5/6e4)).padStart(2,'0');
+      const s=String(Math.floor(diff%6e4/1e3)).padStart(2,'0');
+      el.textContent=h+':'+m+':'+s+' でリセット';
+    },1000);
+  }
 }
 function renderOthers(){
   // static grid — nothing to render dynamically
@@ -2144,8 +2197,14 @@ function finishSession(){
   const t=today();
   if(S.doneToday!==t){
     const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
-    S.streak=(S.last===y||S.last===t)?S.streak+1:1;
+    const prevStreak=S.streak;
+    if(S.last===y||S.last===t){S.streak++;}else if(S.tickets>0){S.tickets--;S.streak++;}else{S.streak=1;}
     S.last=t;S.doneToday=t;
+    if(!S.history)S.history=[];
+    S.history=S.history.filter(d=>d!==t);
+    S.history.push(t);
+    if(S.history.length>30)S.history=S.history.slice(-30);
+    if(S.streak%7===0&&S.streak>prevStreak){S.tickets=(S.tickets||0)+1;toast("復活チケット獲得！🎫");}
   }
   if(S.streak>=7)awardOnce("week","📅 週間MVP！7日連続出場");
   if(S.streak>=30)awardOnce("month","🏅 月間MVP！30日連続");
