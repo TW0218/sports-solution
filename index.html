@@ -211,19 +211,22 @@ nav button.sel{color:var(--green-dk)}
 .hide-nav nav{display:none}
 
 /* ---------- login ---------- */
-#scr-login{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:200}
+#scr-login{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:200;overflow:hidden}
 #scr-login.hidden{display:none}
-.login-logo{font-weight:900;font-style:italic;font-size:36px;color:#fff;letter-spacing:-.5px;margin-bottom:6px}
-.login-logo span{color:var(--green)}
-.login-sub{font-size:13px;color:#9DB3A8;font-weight:800;margin-bottom:40px}
+#scr-login-bg{position:absolute;inset:0;background-image:url('images/tier-japan.png');background-size:cover;background-position:center 40%;filter:brightness(.55)}
+#scr-login-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,8,.92) 30%,rgba(5,10,8,.4) 70%,transparent 100%)}
+#scr-login-content{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center}
+.login-logo{font-weight:900;font-style:italic;font-size:40px;color:#fff;letter-spacing:-.5px;margin-bottom:4px;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.login-logo span{color:var(--yellow)}
+.login-sub{font-size:12px;color:rgba(255,255,255,.7);font-weight:800;letter-spacing:.12em;margin-bottom:48px;text-shadow:0 1px 6px rgba(0,0,0,.6)}
 .login-box{width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px}
-.login-input{border:2px solid #2A3B30;border-radius:16px;padding:16px 18px;font-size:16px;font-family:inherit;font-weight:700;background:#1A2B22;color:#fff;outline:none;-webkit-user-select:text;user-select:text}
-.login-input::placeholder{color:#4A6B56}
-.login-input:focus{border-color:var(--green)}
+.login-input{border:2px solid rgba(255,255,255,.15);border-radius:16px;padding:16px 18px;font-size:16px;font-family:inherit;font-weight:700;background:rgba(255,255,255,.1);color:#fff;outline:none;-webkit-user-select:text;user-select:text;backdrop-filter:blur(8px)}
+.login-input::placeholder{color:rgba(255,255,255,.4)}
+.login-input:focus{border-color:var(--yellow)}
 .login-btn{background:var(--green);color:#fff;border:none;border-radius:16px;padding:18px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
 .login-btn:active{transform:translateY(2px);box-shadow:none}
 .login-btn:disabled{opacity:.5;box-shadow:none}
-.login-err{color:var(--red);font-size:13px;font-weight:800;text-align:center;min-height:20px}
+.login-err{color:#ffb3b3;font-size:13px;font-weight:800;text-align:center;min-height:20px}
 .login-user{position:fixed;top:calc(12px + var(--safe-t));right:16px;background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;z-index:50;backdrop-filter:blur(8px)}
 
 /* toast */
@@ -398,14 +401,18 @@ nav button.sel{color:var(--green-dk)}
 <body>
 <!-- ============ LOGIN ============ -->
 <div id="scr-login">
-  <div class="login-logo">TOP <span>BINS</span></div>
-  <div class="login-sub">Sports Solution English App</div>
-  <div class="login-box">
-    <input class="login-input" id="login-email" type="email" inputmode="email" placeholder="メールアドレス" autocomplete="email">
-    <input class="login-input" id="login-pass" type="password" placeholder="パスワード" autocomplete="current-password"
-      onkeydown="if(event.key==='Enter')doLogin()">
-    <div class="login-err" id="login-err"></div>
-    <button class="login-btn" id="login-btn" onclick="doLogin()">ログイン ⚽</button>
+  <div id="scr-login-bg"></div>
+  <div id="scr-login-overlay"></div>
+  <div id="scr-login-content">
+    <div class="login-logo">TOP <span>BINS</span></div>
+    <div class="login-sub">SPORTS SOLUTION ENGLISH</div>
+    <div class="login-box">
+      <input class="login-input" id="login-email" type="email" inputmode="email" placeholder="メールアドレス" autocomplete="email">
+      <input class="login-input" id="login-pass" type="password" placeholder="パスワード" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="login-err" id="login-err"></div>
+      <button class="login-btn" id="login-btn" onclick="doLogin()">ログイン ⚽</button>
+    </div>
   </div>
 </div>
 
