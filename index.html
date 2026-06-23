@@ -590,12 +590,9 @@ nav button.sel{color:var(--green-dk)}
 
 <!-- ============ HOME ============ -->
 <section class="screen active" id="scr-home">
-  <div class="brand">
+  <div class="brand" style="justify-content:center;position:relative">
     <div class="logo">TOP <span>BINS</span></div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div class="streak-pill"><span class="fire">&#x1F525;</span><span id="streak-num">0</span></div>
-      <button class="login-user" id="logout-btn" onclick="doLogout()" style="position:relative;top:0;right:0;font-size:11px;padding:6px 12px">ログアウト</button>
-    </div>
+    <button class="login-user" id="logout-btn" onclick="doLogout()" style="position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:11px;padding:6px 12px">ログアウト</button>
   </div>
 
   <div class="home-hero" id="home-hero">
@@ -647,7 +644,6 @@ nav button.sel{color:var(--green-dk)}
   </div>
 
   <div id="home-session-area"></div>
-  <button class="more-link" onclick="renderOthers();go('others')">その他のメニューを見る &#x2192;</button>
 </section>
 
 <!-- ============ COACH'S CALL (ピッチ翻訳) ============ -->
@@ -2252,7 +2248,6 @@ function renderHome(){
   });
   area.innerHTML=buildStreakCard();
 
-  document.getElementById("streak-num").textContent=S.streak;
   requestAnimationFrame(animateStreakCount);
 
   /* Today's Session card */
@@ -2288,6 +2283,7 @@ function renderHome(){
         <div class="mission-body">
           <div class="mission-label">SHADOWING</div>
           <div class="mission-name-row"><span class="mission-name">シャドーイング</span></div>
+          <div style="font-size:11px;color:${speakDone?'#bbb':'rgba(255,255,255,.45)'};font-weight:700;margin-top:2px">聞いて真似る・3分</div>
         </div>
         <div class="mission-end">${speakEnd}</div>
       </button>
@@ -2296,8 +2292,8 @@ function renderHome(){
 
   const posLabel=S.position?`FOR YOU — ${S.position.split(',').map(p=>p.toUpperCase()).join(' / ')}`:``;
   document.getElementById("home-session-area").innerHTML=
-    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span><span class="today-session-time">⏱ 30秒</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
-    +`<button class="play-session-btn" onclick="startTodaySession()"><span class="play-session-btn-left"><span class="play-session-btn-play">▶</span>今日の３フレーズを練習する</span><span class="play-session-btn-arrow">›</span></button>`
+    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
+    +`<button class="play-session-btn" onclick="startTodaySession()"><span class="play-session-btn-left"><span class="play-session-btn-play">▶</span>今日の３フレーズを練習する</span><span style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:rgba(255,255,255,.55);font-weight:800">⏱ 30秒</span><span class="play-session-btn-arrow">›</span></span></button>`
     +missionsHtml;
 
   const done=S.doneToday===today();
