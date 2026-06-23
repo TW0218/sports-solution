@@ -336,49 +336,45 @@ nav button.sel{color:var(--green-dk)}
 .quiz-opt-meta{font-size:11px;color:var(--grey);font-weight:700;margin-top:2px}
 .quiz-opt-badge{font-size:14px;font-weight:900;color:var(--green)}
 /* ---- daily missions ---- */
-.missions-section{margin-bottom:12px}
-.missions-header{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:900;color:#fff;margin-bottom:12px;padding:10px 14px;background:linear-gradient(135deg,#e65c00,#c0392b);border-radius:14px;letter-spacing:-.2px}
-.missions-header-icon{font-size:20px;line-height:1}
-.missions-grid{display:flex;flex-direction:column;gap:10px}
-.mission-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;cursor:pointer;position:relative;overflow:hidden;border:none;width:100%;font-family:inherit;text-align:left;transition:transform .12s,box-shadow .12s}
-.mission-card:active{transform:scale(.97)}
-.mission-card.quiz-card{background:linear-gradient(135deg,#1a3a1e 0%,#0f2412 100%);box-shadow:0 3px 0 #0a1a0d,0 4px 14px rgba(20,80,30,.2)}
-.mission-card.speak-card{background:linear-gradient(135deg,#1a1040 0%,#0d0824 100%);box-shadow:0 3px 0 #08051a,0 4px 14px rgba(30,20,80,.2)}
-.mission-card.done-card{background:#f5f5f3;box-shadow:none;opacity:.6;cursor:default}
-.mission-card.done-card:active{transform:none}
-.mission-big-icon{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 auto}
-.mission-card.quiz-card .mission-big-icon{background:rgba(255,255,255,.12)}
-.mission-card.speak-card .mission-big-icon{background:rgba(255,255,255,.12)}
-.mission-card.done-card .mission-big-icon{background:rgba(0,0,0,.06)}
+.missions-section{background:#fff;border-radius:20px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.missions-header{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:900;color:#fff;padding:10px 16px;background:linear-gradient(135deg,#c0392b,#922b21);letter-spacing:.04em}
+.missions-header-icon{font-size:16px;line-height:1}
+.missions-grid{display:flex;flex-direction:column;padding:4px 0}
+.mission-card{display:flex;align-items:center;gap:12px;padding:12px 16px;border:none;width:100%;font-family:inherit;text-align:left;background:transparent;cursor:pointer;border-bottom:1px solid #F0F4F1;transition:background .1s}
+.mission-card:last-child{border-bottom:none}
+.mission-card:active{background:#f6faf7}
+.mission-card.done-card{opacity:.5;cursor:default}
+.mission-card.done-card:active{background:transparent}
+.mission-big-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 auto}
+.mission-card.quiz-card .mission-big-icon{background:#E8F5EE}
+.mission-card.speak-card .mission-big-icon{background:#EDE7F6}
+.mission-card.done-card .mission-big-icon{background:#F0F0F0}
 .mission-body{flex:1;min-width:0}
-.mission-label{font-size:9px;font-weight:900;letter-spacing:.14em;margin-bottom:2px}
-.mission-card.quiz-card .mission-label{color:rgba(100,255,120,.7)}
-.mission-card.speak-card .mission-label{color:rgba(160,140,255,.7)}
-.mission-card.done-card .mission-label{color:var(--grey)}
+.mission-label{font-size:9px;font-weight:900;letter-spacing:.14em;color:var(--grey);margin-bottom:2px}
 .mission-name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.mission-name{font-size:15px;font-weight:900;line-height:1.1}
-.mission-card.quiz-card .mission-name,.mission-card.speak-card .mission-name{color:#fff}
-.mission-card.done-card .mission-name{color:#999}
+.mission-name{font-size:14px;font-weight:900;color:var(--ink);line-height:1.1}
+.mission-card.done-card .mission-name{color:#aaa}
 .mission-end{display:flex;align-items:center;gap:4px;flex:0 0 auto}
-.mission-time-hint{font-size:11px;font-weight:800;color:rgba(255,255,255,.4)}
-.mission-arrow{font-size:18px;color:rgba(255,255,255,.35)}
-.mission-done-check{width:26px;height:26px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:900}
+.mission-time-hint{font-size:11px;font-weight:800;color:var(--grey)}
+.mission-arrow{font-size:18px;color:#ccc}
+.mission-done-check{width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:900}
 .mission-progress-pills{display:flex;gap:4px}
 .mission-pill{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;letter-spacing:.04em;border:1px solid}
-.mission-pill.done-pill{background:rgba(100,255,120,.15);border-color:rgba(100,255,120,.4);color:rgba(120,255,140,.9)}
-.mission-pill.todo-pill{background:transparent;border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.35)}
+.mission-pill.done-pill{background:rgba(30,150,60,.1);border-color:rgba(30,150,60,.3);color:rgba(20,130,50,.9)}
+.mission-pill.todo-pill{background:transparent;border-color:#ddd;color:#bbb}
 /* ---- today session ---- */
-.today-session-card{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:12px}
-.today-session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.today-session-card{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:1px solid #eef2ee}
+.today-session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .today-session-label{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--green-dk)}
 .today-session-time{font-size:11px;font-weight:800;color:var(--grey);background:var(--green-lt);border-radius:99px;padding:3px 10px}
-.today-session-title{font-size:18px;font-weight:900;color:var(--ink);margin-bottom:10px;margin-top:2px}
+.today-session-title{font-size:20px;font-weight:900;color:var(--ink);margin-bottom:12px;margin-top:0;display:inline-block;border-left:4px solid var(--green);padding-left:10px;line-height:1.2}
 .today-phrase-item{display:flex;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F0F4F1}
 .today-phrase-item:last-child{border-bottom:none;padding-bottom:0}
 .today-phrase-en{font-size:17px;font-weight:900;color:var(--ink)}
 .today-phrase-ja{font-size:11px;font-weight:700;color:var(--grey);text-align:right;max-width:55%}
-.play-session-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--green);color:#fff;border:none;border-radius:20px;padding:20px;font-size:18px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 0 var(--green-dk);margin-bottom:12px;letter-spacing:.02em}
-.play-session-btn:active{transform:translateY(2px);box-shadow:none}
+.play-session-btn{display:flex;align-items:center;justify-content:space-between;width:100%;background:var(--ink);color:#FFD700;border:none;border-radius:0 0 20px 20px;padding:16px 20px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;margin-bottom:12px;letter-spacing:.01em;box-shadow:var(--shadow)}
+.play-session-btn:active{opacity:.85}
+.play-session-btn-arrow{font-size:22px;color:rgba(255,215,0,.6)}
 .continue-card{display:flex;align-items:center;justify-content:space-between;width:100%;background:#fff;border:2px solid #E2EAE5;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);cursor:pointer;font-family:inherit;margin-bottom:12px}
 .continue-card:active{transform:scale(.98)}
 .continue-label{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--grey);margin-bottom:3px}
@@ -2290,8 +2286,8 @@ function renderHome(){
 
   const posLabel=S.position?`FOR YOU — ${S.position.split(',').map(p=>p.toUpperCase()).join(' / ')}`:``;
   document.getElementById("home-session-area").innerHTML=
-    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span><span class="today-session-time">⏱ 30秒</span></div><div class="today-session-title">きょうの３フレーズ</div>${phrasesHtml}</div>`
-    +`<button class="play-session-btn" onclick="startTodaySession()">▶&nbsp; 今日のセッションを始める</button>`
+    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span><span class="today-session-time">⏱ 30秒</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
+    +`<button class="play-session-btn" onclick="startTodaySession()"><span>▶&nbsp; 今日の３フレーズ</span><span class="play-session-btn-arrow">›</span></button>`
     +missionsHtml;
 
   const done=S.doneToday===today();
