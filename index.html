@@ -379,9 +379,17 @@ nav button.sel{color:var(--green-dk)}
 .mission-pill.done-pill{background:rgba(30,150,60,.1);border-color:rgba(30,150,60,.3);color:rgba(20,130,50,.9)}
 .mission-pill.todo-pill{background:transparent;border-color:#ddd;color:#bbb}
 /* ---- today session ---- */
-.today-session-card{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:1px solid #eef2ee}
-.today-session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.today-session-label{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--green-dk)}
+@keyframes made-for-shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+.today-session-card{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:1px solid #eef2ee;position:relative;overflow:hidden}
+.today-session-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(255,215,0,.6),transparent);background-size:200% auto;animation:made-for-shimmer 3s linear infinite;pointer-events:none}
+.today-session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.today-session-label{display:flex;align-items:center;gap:6px}
+.made-for-text{font-size:10px;font-weight:900;letter-spacing:.1em;background:linear-gradient(90deg,#1a6b35,#2d9a52,#1a6b35);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:made-for-shimmer 4s linear infinite}
+.pos-shirt-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;font-size:9px;font-weight:900;color:#fff;letter-spacing:.04em}
+.pos-shirt-badge.fw{background:#E53935}
+.pos-shirt-badge.mf{background:#43A047}
+.pos-shirt-badge.df{background:#1E88E5}
+.pos-shirt-badge.gk{background:#8E24AA}
 .today-session-time{font-size:11px;font-weight:800;color:var(--grey);background:var(--green-lt);border-radius:99px;padding:3px 10px}
 .today-session-title{font-size:20px;font-weight:900;color:var(--ink);margin-bottom:12px;margin-top:0;display:inline-block;border-left:4px solid var(--green);padding-left:10px;line-height:1.2}
 .today-phrase-item{display:flex;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F0F4F1}
@@ -528,51 +536,86 @@ nav button.sel{color:var(--green-dk)}
 .week-btn:active{transform:translateY(2px);box-shadow:none}
 .week-btn.locked-btn{background:#E2EAE5;color:var(--grey);box-shadow:none;pointer-events:none}
 /* ---- position picker ---- */
-#pos-picker{position:fixed;inset:0;z-index:300;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;color:#fff}
+#pos-picker{position:fixed;inset:0;z-index:300;background:#060f08;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;color:#fff;overflow:hidden}
 #pos-picker.hidden{display:none}
-.pos-title{font-size:28px;font-weight:900;text-align:center;margin-bottom:8px;line-height:1.25}
-.pos-sub{font-size:14px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:40px;font-weight:700}
-.pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:320px}
-.pos-btn{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.15);border-radius:20px;padding:24px 16px;color:#fff;font-family:inherit;cursor:pointer;text-align:center;transition:background .15s,border-color .15s}
+#pos-picker::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:340px;height:340px;background:radial-gradient(ellipse,rgba(255,215,0,.08) 0%,transparent 70%);pointer-events:none}
+.onboard-step{width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center}
+.onboard-step.hidden{display:none}
+.onboard-logo{font-size:11px;font-weight:900;letter-spacing:.22em;color:rgba(255,215,0,.6);margin-bottom:28px}
+.pos-title{font-size:26px;font-weight:900;text-align:center;margin-bottom:8px;line-height:1.25}
+.pos-sub{font-size:13px;color:rgba(255,255,255,.45);text-align:center;margin-bottom:32px;font-weight:700;line-height:1.6}
+.onboard-name-input{width:100%;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.15);border-radius:16px;padding:16px 18px;font-size:18px;font-weight:900;color:#fff;font-family:inherit;text-align:center;outline:none;transition:border-color .2s;box-sizing:border-box}
+.onboard-name-input::placeholder{color:rgba(255,255,255,.25)}
+.onboard-name-input:focus{border-color:rgba(255,215,0,.5)}
+.pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.pos-btn{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);border-radius:18px;padding:20px 12px;color:#fff;font-family:inherit;cursor:pointer;text-align:center;transition:background .15s,border-color .15s;position:relative;overflow:hidden}
 .pos-btn:active{transform:scale(.96)}
-.pos-btn.sel{background:rgba(255,220,0,.15);border-color:var(--yellow)}
-.pos-badge{font-size:32px;margin-bottom:8px}
-.pos-name{font-size:18px;font-weight:900;margin-bottom:4px}
-.pos-desc{font-size:11px;color:rgba(255,255,255,.45);font-weight:700;line-height:1.4}
-.pos-confirm{display:block;width:100%;max-width:320px;margin-top:24px;background:var(--yellow);color:var(--ink);border:none;border-radius:18px;padding:18px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer}
-.pos-confirm:disabled{opacity:.3;cursor:default}
-.pos-skip{background:none;border:none;color:rgba(255,255,255,.3);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:16px}
+.pos-btn.sel{background:rgba(255,220,0,.1);border-color:rgba(255,220,0,.6)}
+.pos-btn.sel::after{content:'✓';position:absolute;top:8px;right:10px;font-size:11px;font-weight:900;color:#FFD700}
+.pos-shirt{width:36px;height:36px;margin:0 auto 10px;display:block}
+.pos-name{font-size:16px;font-weight:900;margin-bottom:3px}
+.pos-desc{font-size:10px;color:rgba(255,255,255,.4);font-weight:700;line-height:1.4}
+.pos-confirm{display:block;width:100%;margin-top:20px;background:linear-gradient(135deg,#FFD700,#FFC200);color:#111;border:none;border-radius:16px;padding:17px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;letter-spacing:.02em}
+.pos-confirm:disabled{opacity:.25;cursor:default}
+.pos-skip{background:none;border:none;color:rgba(255,255,255,.25);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:14px}
+.onboard-back{background:none;border:none;color:rgba(255,255,255,.35);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:20px;align-self:flex-start}
 </style>
 </head>
 <body>
-<!-- ============ POSITION PICKER ============ -->
+<!-- ============ ONBOARDING ============ -->
 <div id="pos-picker" class="hidden">
-  <div class="pos-title">あなたのポジションは？</div>
-  <div class="pos-sub">最大2つまで選べます・あなたに最適なフレーズを届けます</div>
-  <div class="pos-grid">
-    <button class="pos-btn" onclick="selectPos('fw')">
-      <div class="pos-badge">⚡</div>
-      <div class="pos-name">FW</div>
-      <div class="pos-desc">フォワード<br>ゴールを決める英語</div>
-    </button>
-    <button class="pos-btn" onclick="selectPos('mf')">
-      <div class="pos-badge">🎯</div>
-      <div class="pos-name">MF</div>
-      <div class="pos-desc">ミッドフィルダー<br>組み立てる英語</div>
-    </button>
-    <button class="pos-btn" onclick="selectPos('df')">
-      <div class="pos-badge">🛡️</div>
-      <div class="pos-name">DF</div>
-      <div class="pos-desc">ディフェンダー<br>守備で使う英語</div>
-    </button>
-    <button class="pos-btn" onclick="selectPos('gk')">
-      <div class="pos-badge">🥅</div>
-      <div class="pos-name">GK</div>
-      <div class="pos-desc">ゴールキーパー<br>指示を出す英語</div>
-    </button>
+  <!-- Step 1: Name -->
+  <div class="onboard-step" id="onboard-step1">
+    <div class="onboard-logo">TOP BINS</div>
+    <div class="pos-title">あなたの名前は？</div>
+    <div class="pos-sub">呼び名を教えてください。<br>あなた専用のトレーニングを届けます。</div>
+    <input class="onboard-name-input" id="onboard-name-input" type="text" placeholder="例：タク、Kenji..." maxlength="20" oninput="onNameInput()"/>
+    <button class="pos-confirm" id="onboard-name-btn" disabled onclick="goToStep2()">次へ →</button>
+    <button class="pos-skip" onclick="skipPos()">スキップ</button>
   </div>
-  <button class="pos-confirm" id="pos-confirm-btn" disabled onclick="confirmPos()">このポジションで始める</button>
-  <button class="pos-skip" onclick="skipPos()">あとで設定する</button>
+  <!-- Step 2: Position -->
+  <div class="onboard-step hidden" id="onboard-step2">
+    <div class="onboard-logo">TOP BINS</div>
+    <button class="onboard-back" onclick="goToStep1()">← 戻る</button>
+    <div class="pos-title">ポジションは？</div>
+    <div class="pos-sub">最大2つまで選べます</div>
+    <div class="pos-grid">
+      <button class="pos-btn" onclick="selectPos('fw')">
+        <svg class="pos-shirt" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 3L9 7l-6 2 2 6h4v15h18V15h4l2-6-6-2-4-4h-4" fill="#E53935" stroke="none" opacity=".9"/>
+          <path d="M13 3c0 3 2.5 5 5 5s5-2 5-5" fill="#fff" opacity=".25" stroke="none"/>
+        </svg>
+        <div class="pos-name">FW</div>
+        <div class="pos-desc">フォワード<br>決める英語</div>
+      </button>
+      <button class="pos-btn" onclick="selectPos('mf')">
+        <svg class="pos-shirt" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 3L9 7l-6 2 2 6h4v15h18V15h4l2-6-6-2-4-4h-4" fill="#43A047" stroke="none" opacity=".9"/>
+          <path d="M13 3c0 3 2.5 5 5 5s5-2 5-5" fill="#fff" opacity=".25" stroke="none"/>
+        </svg>
+        <div class="pos-name">MF</div>
+        <div class="pos-desc">ミッドフィルダー<br>組み立てる英語</div>
+      </button>
+      <button class="pos-btn" onclick="selectPos('df')">
+        <svg class="pos-shirt" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 3L9 7l-6 2 2 6h4v15h18V15h4l2-6-6-2-4-4h-4" fill="#1E88E5" stroke="none" opacity=".9"/>
+          <path d="M13 3c0 3 2.5 5 5 5s5-2 5-5" fill="#fff" opacity=".25" stroke="none"/>
+        </svg>
+        <div class="pos-name">DF</div>
+        <div class="pos-desc">ディフェンダー<br>守る英語</div>
+      </button>
+      <button class="pos-btn" onclick="selectPos('gk')">
+        <svg class="pos-shirt" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 3L9 7l-6 2 2 6h4v15h18V15h4l2-6-6-2-4-4h-4" fill="#8E24AA" stroke="none" opacity=".9"/>
+          <path d="M13 3c0 3 2.5 5 5 5s5-2 5-5" fill="#fff" opacity=".25" stroke="none"/>
+        </svg>
+        <div class="pos-name">GK</div>
+        <div class="pos-desc">ゴールキーパー<br>指示を出す英語</div>
+      </button>
+    </div>
+    <button class="pos-confirm" id="pos-confirm-btn" disabled onclick="confirmPos()">始める</button>
+    <button class="pos-skip" onclick="skipPos()">スキップ</button>
+  </div>
 </div>
 <!-- ============ LOGIN ============ -->
 <div id="scr-login">
@@ -1982,7 +2025,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:""};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2010,6 +2053,20 @@ const POS_PHRASES={
   gk:["Keeper's!","Away!","Stay big!","Drop!","Squeeze!","Track your runner!","Man on!","Show him inside!","Second ball!"]
 };
 let _selectedPositions=[];
+function onNameInput(){
+  const v=document.getElementById('onboard-name-input').value.trim();
+  document.getElementById('onboard-name-btn').disabled=v.length===0;
+}
+function goToStep1(){
+  document.getElementById('onboard-step1').classList.remove('hidden');
+  document.getElementById('onboard-step2').classList.add('hidden');
+}
+function goToStep2(){
+  const v=document.getElementById('onboard-name-input').value.trim();
+  if(!v)return;
+  document.getElementById('onboard-step1').classList.add('hidden');
+  document.getElementById('onboard-step2').classList.remove('hidden');
+}
 function selectPos(p){
   const btn=event.currentTarget;
   const idx=_selectedPositions.indexOf(p);
@@ -2024,19 +2081,31 @@ function selectPos(p){
 }
 function confirmPos(){
   if(!_selectedPositions.length)return;
+  const nameVal=document.getElementById('onboard-name-input')?.value.trim();
+  if(nameVal)S.name=nameVal;
   S.position=_selectedPositions.join(',');save();
   document.getElementById('pos-picker').classList.add('hidden');
   renderHome();
 }
 function skipPos(){
+  const nameVal=document.getElementById('onboard-name-input')?.value.trim();
+  if(nameVal)S.name=nameVal;
+  save();
   document.getElementById('pos-picker').classList.add('hidden');
   renderHome();
 }
 function maybeShowPosPicker(){
-  if(!S.position){
+  if(!S.position||!S.name){
     _selectedPositions=[];
     document.querySelectorAll('.pos-btn').forEach(b=>b.classList.remove('sel'));
     document.getElementById('pos-confirm-btn').disabled=true;
+    if(S.name){
+      document.getElementById('onboard-step1').classList.add('hidden');
+      document.getElementById('onboard-step2').classList.remove('hidden');
+    } else {
+      document.getElementById('onboard-step1').classList.remove('hidden');
+      document.getElementById('onboard-step2').classList.add('hidden');
+    }
     document.getElementById('pos-picker').classList.remove('hidden');
   } else {
     renderHome();
@@ -2302,7 +2371,10 @@ function renderHome(){
     </div>
   </div>`;
 
-  const posLabel=S.position?`FOR YOU — ${S.position.split(',').map(p=>p.toUpperCase()).join(' / ')}`:``;
+  const posShirtColors={fw:'#E53935',mf:'#43A047',df:'#1E88E5',gk:'#8E24AA'};
+  const posBadges=S.position?S.position.split(',').map(p=>`<span class="pos-shirt-badge ${p}">${p.toUpperCase()}</span>`).join(''):'';
+  const madeName=S.name?S.name:'YOU';
+  const posLabel=`<span class="made-for-text">Made for ${madeName}</span>${posBadges}`;
   document.getElementById("home-session-area").innerHTML=
     `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
     +`<button class="play-session-btn" onclick="startTodaySession()"><span class="play-session-btn-play">▶</span><span class="play-session-btn-center"><span class="play-session-btn-text">今日の３フレーズを練習する</span><span class="play-session-btn-hint">⏱ 30秒</span></span><span class="play-session-btn-arrow">›</span></button>`
