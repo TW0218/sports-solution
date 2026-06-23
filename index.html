@@ -389,10 +389,11 @@ nav button.sel{color:var(--green-dk)}
 .today-phrase-ja{font-size:11px;font-weight:700;color:var(--grey);text-align:right;max-width:55%}
 .play-session-btn{display:flex;align-items:center;justify-content:space-between;width:100%;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:0 0 20px 20px;padding:18px 20px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;margin-bottom:12px;letter-spacing:.01em;box-shadow:0 4px 0 #0a3272,0 6px 18px rgba(21,101,192,.35)}
 .play-session-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #0a3272}
-.play-session-btn-left{display:flex;align-items:center;gap:10px}
-.play-session-btn-play{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px}
-.play-session-btn-arrow{font-size:22px;color:rgba(255,255,255,.5)}
-.play-session-hint{text-align:center;font-size:11px;color:rgba(255,255,255,.5);font-weight:800;margin-top:-6px;margin-bottom:12px;letter-spacing:.03em}
+.play-session-btn-play{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.play-session-btn-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.play-session-btn-text{font-size:17px;font-weight:900}
+.play-session-btn-hint{font-size:11px;font-weight:800;color:rgba(255,255,255,.55);letter-spacing:.03em}
+.play-session-btn-arrow{font-size:22px;color:rgba(255,255,255,.5);flex-shrink:0}
 .continue-card{display:flex;align-items:center;justify-content:space-between;width:100%;background:#fff;border:2px solid #E2EAE5;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);cursor:pointer;font-family:inherit;margin-bottom:12px}
 .continue-card:active{transform:scale(.98)}
 .continue-label{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--grey);margin-bottom:3px}
@@ -2296,7 +2297,7 @@ function renderHome(){
   const posLabel=S.position?`FOR YOU — ${S.position.split(',').map(p=>p.toUpperCase()).join(' / ')}`:``;
   document.getElementById("home-session-area").innerHTML=
     `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
-    +`<div class="play-session-wrap"><button class="play-session-btn" onclick="startTodaySession()"><span class="play-session-btn-left"><span class="play-session-btn-play">▶</span>今日の３フレーズを練習する</span><span class="play-session-btn-arrow">›</span></button><div class="play-session-hint">⏱ 30秒でできる</div></div>`
+    +`<button class="play-session-btn" onclick="startTodaySession()"><span class="play-session-btn-play">▶</span><span class="play-session-btn-center"><span class="play-session-btn-text">今日の３フレーズを練習する</span><span class="play-session-btn-hint">⏱ 30秒</span></span><span class="play-session-btn-arrow">›</span></button>`
     +missionsHtml;
 
   const done=S.doneToday===today();
