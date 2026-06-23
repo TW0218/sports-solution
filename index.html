@@ -337,7 +337,8 @@ nav button.sel{color:var(--green-dk)}
 .quiz-opt-badge{font-size:14px;font-weight:900;color:var(--green)}
 /* ---- daily missions ---- */
 .missions-section{margin-bottom:12px}
-.missions-header{font-size:22px;font-weight:900;color:var(--ink);margin-bottom:12px;padding:0 2px;letter-spacing:-.3px}
+.missions-header{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:900;color:#fff;margin-bottom:12px;padding:10px 14px;background:linear-gradient(135deg,#e65c00,#c0392b);border-radius:14px;letter-spacing:-.2px}
+.missions-header-icon{font-size:20px;line-height:1}
 .missions-grid{display:flex;flex-direction:column;gap:10px}
 .mission-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;cursor:pointer;position:relative;overflow:hidden;border:none;width:100%;font-family:inherit;text-align:left;transition:transform .12s,box-shadow .12s}
 .mission-card:active{transform:scale(.97)}
@@ -358,7 +359,8 @@ nav button.sel{color:var(--green-dk)}
 .mission-name{font-size:15px;font-weight:900;line-height:1.1}
 .mission-card.quiz-card .mission-name,.mission-card.speak-card .mission-name{color:#fff}
 .mission-card.done-card .mission-name{color:#999}
-.mission-end{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.mission-end{display:flex;align-items:center;gap:4px;flex:0 0 auto}
+.mission-time-hint{font-size:11px;font-weight:800;color:rgba(255,255,255,.4)}
 .mission-arrow{font-size:18px;color:rgba(255,255,255,.35)}
 .mission-done-check{width:26px;height:26px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:900}
 .mission-progress-pills{display:flex;gap:4px}
@@ -370,6 +372,7 @@ nav button.sel{color:var(--green-dk)}
 .today-session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .today-session-label{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--green-dk)}
 .today-session-time{font-size:11px;font-weight:800;color:var(--grey);background:var(--green-lt);border-radius:99px;padding:3px 10px}
+.today-session-title{font-size:18px;font-weight:900;color:var(--ink);margin-bottom:10px;margin-top:2px}
 .today-phrase-item{display:flex;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F0F4F1}
 .today-phrase-item:last-child{border-bottom:none;padding-bottom:0}
 .today-phrase-en{font-size:17px;font-weight:900;color:var(--ink)}
@@ -2259,18 +2262,18 @@ function renderHome(){
   const quizPills=`<div class="mission-progress-pills"><span class="mission-pill ${pitchQuizDone?'done-pill':'todo-pill'}">PITCH</span><span class="mission-pill ${lockerQuizDone?'done-pill':'todo-pill'}">LOCKER</span></div>`;
   const quizEnd=quizAllDone
     ?`<div class="mission-done-check">✓</div>`
-    :`<div class="mission-arrow">›</div>`;
+    :`<span class="mission-time-hint">5分</span><div class="mission-arrow">›</div>`;
   const speakEnd=speakDone
     ?`<div class="mission-done-check">✓</div>`
-    :`<div class="mission-arrow">›</div>`;
+    :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
   const missionsHtml=`<div class="missions-section">
-    <div class="missions-header">TODAY'S MISSIONS</div>
+    <div class="missions-header"><span class="missions-header-icon">🎯</span>TODAY'S MISSIONS</div>
     <div class="missions-grid">
       <button class="mission-card quiz-card${quizAllDone?' done-card':''}" onclick="${quizAllDone?'':'openQuizPicker()'}">
         <div class="mission-big-icon">⚽</div>
         <div class="mission-body">
           <div class="mission-label">DAILY QUIZ</div>
-          <div class="mission-name-row"><span class="mission-name">クイズ</span>${quizPills}</div>
+          <div class="mission-name-row"><span class="mission-name">今日のクイズ10選</span>${quizPills}</div>
         </div>
         <div class="mission-end">${quizEnd}</div>
       </button>
@@ -2285,9 +2288,9 @@ function renderHome(){
     </div>
   </div>`;
 
-  const posLabel=S.position?`FOR YOU — ${S.position.split(',').map(p=>p.toUpperCase()).join(' / ')}`:`TODAY'S SESSION`;
+  const posLabel=S.position?`FOR YOU — ${S.position.split(',').map(p=>p.toUpperCase()).join(' / ')}`:``;
   document.getElementById("home-session-area").innerHTML=
-    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span><span class="today-session-time">⏱ 30秒・3フレーズ</span></div>${phrasesHtml}</div>`
+    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span><span class="today-session-time">⏱ 30秒</span></div><div class="today-session-title">きょうの３フレーズ</div>${phrasesHtml}</div>`
     +`<button class="play-session-btn" onclick="startTodaySession()">▶&nbsp; 今日のセッションを始める</button>`
     +missionsHtml;
 
