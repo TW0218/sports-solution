@@ -23,6 +23,11 @@
   --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+@keyframes tap-ripple{0%{opacity:.18;transform:scale(.85)}60%{opacity:.08;transform:scale(1.04)}100%{opacity:0;transform:scale(1.08)}}
+@keyframes tap-glow{0%{opacity:1}100%{opacity:0}}
+.tap-fx{position:relative;overflow:hidden}
+.tap-fx::after{content:'';position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.12);opacity:0;pointer-events:none;transition:opacity .08s}
+.tap-fx:active::after{animation:tap-glow .35s ease forwards}
 html,body{height:100dvh;overflow:hidden}
 body{
   font-family:ui-rounded,"Hiragino Maru Gothic ProN","BIZ UDGothic",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -106,7 +111,7 @@ body{
 .speed-btn.sel{background:var(--yellow);border-color:var(--yellow)}
 .opts{display:flex;flex-direction:column;gap:10px}
 .opt{background:var(--card2);border:1px solid var(--border2);border-radius:16px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);transition:transform .1s}
-.opt:active{transform:scale(.98)}
+.opt:active{transform:scale(.98);border-color:var(--green);box-shadow:0 0 12px rgba(29,158,117,.25)}
 .opt.correct{background:rgba(29,158,117,.2);border-color:var(--green);color:#4fe8b0}
 .opt.wrong{background:rgba(226,73,59,.15);border-color:var(--red);color:#ff7b6f}
 .opt.dim{opacity:.45;pointer-events:none}
@@ -120,7 +125,7 @@ body{
 .wchip.used{visibility:hidden}
 .check-btn{display:block;width:100%;margin-top:16px;background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
 .check-btn:disabled{opacity:.4;box-shadow:none}
-.check-btn:active{transform:translateY(2px);box-shadow:none}
+.check-btn:active{transform:translateY(2px);box-shadow:none;filter:brightness(1.2)}
 
 /* feedback banner */
 .feedback{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;padding:18px 18px calc(18px + var(--safe-b));border-radius:24px 24px 0 0;transform:translateY(110%);transition:transform .25s ease;z-index:50}
@@ -213,6 +218,7 @@ nav button .nic{width:24px;height:24px;display:flex;align-items:center;justify-c
 nav button .nic svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke-width .15s}
 nav button.sel .nic svg{stroke-width:2.4}
 nav button.sel{color:var(--green)}
+nav button:active{color:var(--green);transform:scale(.9);transition:transform .08s,color .08s}
 .hide-nav nav{display:none}
 
 /* ---------- login ---------- */
@@ -367,7 +373,7 @@ nav button.sel{color:var(--green)}
 .missions-grid{display:flex;flex-direction:column;padding:4px 0}
 .mission-card{display:flex;align-items:center;gap:12px;padding:12px 16px;border:none;width:100%;font-family:inherit;text-align:left;background:transparent;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s}
 .mission-card:last-child{border-bottom:none}
-.mission-card:active{background:var(--card2)}
+.mission-card:active{background:var(--card2);filter:brightness(1.1)}
 .mission-card.done-card{opacity:.5;cursor:default}
 .mission-card.done-card:active{background:transparent}
 .mission-big-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 auto}
@@ -406,7 +412,7 @@ nav button.sel{color:var(--green)}
 .today-phrase-en{font-size:17px;font-weight:900;color:var(--ink)}
 .today-phrase-ja{font-size:11px;font-weight:700;color:var(--grey);text-align:right;max-width:55%}
 .play-session-btn{display:flex;align-items:center;justify-content:space-between;width:100%;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;border:none;border-radius:0 0 20px 20px;padding:18px 20px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;margin-bottom:12px;letter-spacing:.01em;box-shadow:0 4px 0 #0a3272,0 6px 18px rgba(21,101,192,.35)}
-.play-session-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #0a3272}
+.play-session-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #0a3272,0 0 18px rgba(21,101,192,.6);filter:brightness(1.15)}
 .play-session-btn-play{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .play-session-btn-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
 .play-session-btn-text{font-size:17px;font-weight:900}
@@ -468,7 +474,7 @@ nav button.sel{color:var(--green)}
 /* ---- others screen ---- */
 .others-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .other-card{background:var(--white);border-radius:18px;padding:16px 14px;box-shadow:var(--shadow);cursor:pointer;border:1px solid var(--border)}
-.other-card:active{transform:scale(.97)}
+.other-card:active{transform:scale(.97);border-color:var(--border2);box-shadow:0 0 16px rgba(29,158,117,.2)}
 .other-card .oc-ic{font-size:28px;margin-bottom:8px;display:block}
 .other-card h3{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:3px}
 .other-card p{font-size:11px;color:var(--grey);line-height:1.45}
@@ -566,7 +572,7 @@ nav button.sel{color:var(--green)}
 .onboard-name-input:focus{border-color:rgba(255,215,0,.5)}
 .pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
 .pos-btn{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);border-radius:18px;padding:20px 12px;color:#fff;font-family:inherit;cursor:pointer;text-align:center;transition:background .15s,border-color .15s;position:relative;overflow:hidden}
-.pos-btn:active{transform:scale(.96)}
+.pos-btn:active{transform:scale(.96);border-color:rgba(255,220,0,.5);box-shadow:0 0 14px rgba(255,220,0,.2)}
 .pos-btn.sel{background:rgba(255,220,0,.1);border-color:rgba(255,220,0,.6)}
 .pos-btn.sel::after{content:'✓';position:absolute;top:8px;right:10px;font-size:11px;font-weight:900;color:#FFD700}
 .pos-shirt{width:36px;height:36px;margin:0 auto 10px;display:block}
@@ -925,7 +931,7 @@ nav button.sel{color:var(--green)}
   <div class="quiz-top"><button class="btn-x" onclick="go('home')">&#x2715;</button>
     <div style="font-weight:900;font-size:17px">その他のメニュー</div></div>
   <div class="others-grid">
-    <div class="other-card hero" onclick="openCoach()">
+    <div class="other-card hero tap-fx" onclick="openCoach()">
       <span class="oc-ic">&#x1F4E2;</span>
       <div>
         <div class="hero-sub">PITCH VOCAB</div>
@@ -933,7 +939,7 @@ nav button.sel{color:var(--green)}
         <p>日本語→現場英語を即返答</p>
       </div>
     </div>
-    <div class="other-card hero" onclick="openCases()">
+    <div class="other-card hero tap-fx" onclick="openCases()">
       <span class="oc-ic">&#x1F3AC;</span>
       <div>
         <div class="hero-sub">CASE STUDY</div>
@@ -2391,7 +2397,7 @@ function renderHome(){
   const posLabel=`<span class="made-for-text">Made for ${madeName}</span>${posBadges}`;
   document.getElementById("home-session-area").innerHTML=
     `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
-    +`<button class="play-session-btn" onclick="startTodaySession()"><span class="play-session-btn-play">▶</span><span class="play-session-btn-center"><span class="play-session-btn-text">今日の３フレーズを練習する</span><span class="play-session-btn-hint">⏱ 30秒</span></span><span class="play-session-btn-arrow">›</span></button>`
+    +`<button class="play-session-btn tap-fx" onclick="startTodaySession()"><span class="play-session-btn-play">▶</span><span class="play-session-btn-center"><span class="play-session-btn-text">今日の３フレーズを練習する</span><span class="play-session-btn-hint">⏱ 30秒</span></span><span class="play-session-btn-arrow">›</span></button>`
     +missionsHtml;
 
   const done=S.doneToday===today();
