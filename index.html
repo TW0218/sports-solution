@@ -343,6 +343,34 @@ nav button.sel{color:var(--green-dk)}
 .r-val{font-size:13px;font-weight:900;color:var(--green-dk)}
 .r-track{height:8px;background:#E2EAE5;border-radius:99px;overflow:hidden}
 .r-fill{height:100%;background:var(--green);border-radius:99px;transition:width .5s ease}
+/* ---- player screen ---- */
+#scr-player{background:var(--ink);color:#fff;display:flex;flex-direction:column;min-height:100dvh}
+#scr-player.active{display:flex}
+.player-header{display:flex;align-items:center;justify-content:space-between;padding:calc(16px + var(--safe-t)) 20px 0}
+.player-quit{background:none;border:none;color:rgba(255,255,255,.4);font-size:22px;cursor:pointer;font-family:inherit;padding:4px;line-height:1}
+.player-cat{font-size:10px;font-weight:900;letter-spacing:.16em;color:rgba(255,255,255,.35)}
+.player-count{font-size:12px;font-weight:800;color:rgba(255,255,255,.35)}
+.player-dots{display:flex;gap:8px;padding:16px 24px 0;justify-content:center}
+.player-dot{flex:1;height:3px;border-radius:99px;background:rgba(255,255,255,.15);max-width:80px;transition:background .3s}
+.player-dot.done{background:var(--green)}
+.player-dot.active{background:var(--yellow)}
+.player-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;text-align:center}
+.player-listen-btn{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;transition:background .2s}
+.player-listen-btn.playing{background:rgba(39,174,96,.3);border-color:var(--green);animation:playerPulse 1.2s infinite}
+@keyframes playerPulse{0%,100%{box-shadow:0 0 0 0 rgba(39,174,96,.35)}60%{box-shadow:0 0 0 14px rgba(39,174,96,0)}}
+.player-phrase{font-size:38px;font-weight:900;line-height:1.15;margin-bottom:14px;letter-spacing:-.5px}
+.player-meaning{font-size:15px;color:rgba(255,255,255,.55);font-weight:700;margin-bottom:10px}
+.player-example{font-size:13px;color:rgba(255,255,255,.3);font-style:italic;line-height:1.5}
+.player-actions{padding:20px 24px calc(32px + var(--safe-b));display:flex;flex-direction:column;gap:10px}
+.player-speak-btn{background:var(--yellow);color:var(--ink);border:none;border-radius:20px;padding:20px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.25);transition:opacity .2s,transform .1s}
+.player-speak-btn:active{transform:translateY(2px);box-shadow:none}
+.player-speak-btn:disabled{opacity:.35;cursor:default}
+.player-next-btn{background:rgba(255,255,255,.08);color:rgba(255,255,255,.55);border:none;border-radius:16px;padding:14px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer}
+.player-complete{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+.player-complete-icon{font-size:56px;margin-bottom:16px}
+.player-complete-title{font-size:28px;font-weight:900;margin-bottom:8px}
+.player-complete-sub{font-size:14px;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:36px}
+.player-complete-btn{background:var(--green);color:#fff;border:none;border-radius:20px;padding:20px 40px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 0 var(--green-dk)}
 /* ---- missed phrases ---- */
 .missed-card{background:#fff;border-radius:20px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
 .missed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -651,6 +679,26 @@ nav button.sel{color:var(--green-dk)}
   <div class="pyramid" id="pyramid"></div>
   <div class="section-title">TROPHY CABINET — トロフィー</div>
   <div class="trophy-grid" id="trophies"></div>
+</section>
+
+<!-- ============ PLAYER SCREEN ============ -->
+<section class="screen" id="scr-player">
+  <div class="player-header">
+    <button class="player-quit" onclick="go('home','pop');renderHome()">✕</button>
+    <span class="player-cat">TODAY'S SESSION</span>
+    <span class="player-count" id="player-count">1 / 3</span>
+  </div>
+  <div class="player-dots" id="player-dots"></div>
+  <div class="player-body" id="player-body">
+    <button class="player-listen-btn" id="player-listen-btn" onclick="playerListen()">🔊</button>
+    <div class="player-phrase" id="player-phrase"></div>
+    <div class="player-meaning" id="player-meaning"></div>
+    <div class="player-example" id="player-example"></div>
+  </div>
+  <div class="player-actions" id="player-actions">
+    <button class="player-speak-btn" id="player-speak-btn" onclick="playerSpeak()" disabled>🎤 &nbsp;真似して言う</button>
+    <button class="player-next-btn" onclick="playerNext()">スキップ → 次へ</button>
+  </div>
 </section>
 
 <!-- feedback / nav / toast -->
@@ -1880,7 +1928,7 @@ function go(id, dir){
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.getElementById("scr-"+id).classList.add("active");
     document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-    const nv={home:"nav-home",cards:"nav-play",play:"nav-play",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-play"}[id];
+    const nv={home:"nav-home",cards:"nav-play",play:"nav-play",player:"nav-play",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-play"}[id];
     if(nv)document.getElementById(nv).classList.add("sel");
     document.getElementById("feedback").classList.remove("show");
     window.scrollTo(0,0);
@@ -2099,15 +2147,63 @@ function todayPhrases(){
   for(let i=arr.length-1;i>0;i--){s=(s*1664525+1013904223)&0xffffffff;const j=Math.abs(s)%(i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}
   return arr.slice(0,3);
 }
+let playerPhrases=[],playerIdx=0,playerReady=false;
 function startTodaySession(){
-  const tp=todayPhrases();
-  lastCat='mix';lastDaily=true;earOnly=false;
-  rate=unlockedLv()===1?0.7:1.0;
-  Q=tp.map(item=>({item,type:'listen'}));
-  qi=0;goalsNow=0;missNow=0;sessionBadges=[];S.combo=0;
+  playerPhrases=todayPhrases();
+  playerIdx=0;
   localStorage.setItem('lastSessionCat','mix');
   localStorage.setItem('lastSessionLabel','Today\'s Session');
-  sfx('whistle');go('quiz');renderQuestion();
+  sfx('whistle');
+  go('player','push');
+  renderPlayer();
+}
+function renderPlayer(){
+  const p=playerPhrases[playerIdx];
+  const total=playerPhrases.length;
+  document.getElementById('player-count').textContent=(playerIdx+1)+' / '+total;
+  document.getElementById('player-dots').innerHTML=playerPhrases.map((_,i)=>`<div class="player-dot ${i<playerIdx?'done':i===playerIdx?'active':''}"></div>`).join('');
+  document.getElementById('player-phrase').textContent=p.en;
+  document.getElementById('player-meaning').textContent=p.ja;
+  document.getElementById('player-example').textContent=p.ex||'';
+  document.getElementById('player-body').style.display='flex';
+  document.getElementById('player-body').style.flexDirection='column';
+  document.getElementById('player-actions').style.display='flex';
+  // reset speak button
+  playerReady=false;
+  const sb=document.getElementById('player-speak-btn');
+  sb.disabled=true;sb.textContent='🎤  真似して言う';
+  // auto-play after short delay
+  const lb=document.getElementById('player-listen-btn');
+  lb.classList.add('playing');
+  setTimeout(()=>{
+    speak(p.en);
+    setTimeout(()=>{lb.classList.remove('playing');playerReady=true;sb.disabled=false;},2200);
+  },350);
+}
+function playerListen(){
+  const p=playerPhrases[playerIdx];
+  const lb=document.getElementById('player-listen-btn');
+  lb.classList.add('playing');
+  speak(p.en);
+  setTimeout(()=>{lb.classList.remove('playing');playerReady=true;document.getElementById('player-speak-btn').disabled=false;},2200);
+}
+function playerSpeak(){
+  speak(playerPhrases[playerIdx].en);
+  const sb=document.getElementById('player-speak-btn');
+  sb.textContent='✓ 完璧！';sb.disabled=true;
+  setTimeout(()=>playerNext(),1000);
+}
+function playerNext(){
+  playerIdx++;
+  if(playerIdx>=playerPhrases.length){playerComplete();return;}
+  renderPlayer();
+}
+function playerComplete(){
+  const td=today();
+  if(S.doneToday!==td){S.streak++;S.doneToday=td;save();}
+  document.getElementById('player-body').innerHTML=`<div class="player-complete"><div class="player-complete-icon">🎉</div><div class="player-complete-title">セッション完了！</div><div class="player-complete-sub">今日の3フレーズをクリア</div><button class="player-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button></div>`;
+  document.getElementById('player-actions').style.display='none';
+  document.getElementById('player-dots').innerHTML=playerPhrases.map(()=>'<div class="player-dot done"></div>').join('');
 }
 function startSession(cat,daily,ear){
   localStorage.setItem('lastSessionCat',cat);
