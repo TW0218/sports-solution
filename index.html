@@ -408,19 +408,38 @@ nav button.sel{color:var(--green-dk)}
 .other-card.featured{border-color:var(--yellow)}
 /* ---- streak card ---- */
 :root{--sb:#0D2B6E;--sb-mid:#1E4DA8;--sb-lt:#D6E4FF}
-.streak-card{background:#fff;border-radius:20px;padding:16px 18px;margin-bottom:12px;border:0.5px solid rgba(0,0,0,.08)}
-.streak-card-top{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
-.streak-big{font-size:36px;font-weight:900;color:var(--sb);line-height:1}
-.streak-unit{font-size:13px;font-weight:800;color:var(--sb);opacity:.7}
-.streak-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.streak-tag{border-radius:99px;font-size:11px;font-weight:800;padding:5px 12px}
-.streak-tag.done{background:var(--sb);color:var(--sb-lt)}
-.streak-tag.today-done{background:var(--sb-mid);color:#fff;outline:2px solid var(--sb-mid);outline-offset:2px}
-.streak-tag.today-pending{background:transparent;color:var(--sb);border:1.5px dashed var(--sb-mid)}
-.streak-tag.empty{background:#F1EFE8;color:#B4B2A9}
-.streak-card-footer{display:flex;align-items:center;justify-content:space-between}
-.streak-ticket{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--sb);background:var(--sb-lt);border-radius:99px;padding:4px 10px}
-.streak-countdown{font-size:11px;color:#A32D2D;font-weight:700}
+.streak-card{background:linear-gradient(150deg,#1c0800 0%,#2e1200 55%,#1a0900 100%);border-radius:24px;padding:22px 20px 18px;margin-bottom:12px;position:relative;overflow:hidden;border:1px solid rgba(255,140,0,.2)}
+.streak-card::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:260px;height:220px;background:radial-gradient(circle,rgba(255,110,0,.28) 0%,transparent 70%);pointer-events:none}
+@keyframes fire-flicker{
+  0%{transform:scale(1) rotate(-1.5deg);filter:drop-shadow(0 0 10px rgba(255,130,0,.65))}
+  20%{transform:scale(1.09) rotate(1.5deg);filter:drop-shadow(0 0 22px rgba(255,190,0,.9))}
+  45%{transform:scale(1.04) rotate(-2deg);filter:drop-shadow(0 0 14px rgba(255,90,0,.75))}
+  70%{transform:scale(1.12) rotate(1deg);filter:drop-shadow(0 0 26px rgba(255,210,0,1))}
+  100%{transform:scale(1) rotate(-1.5deg);filter:drop-shadow(0 0 10px rgba(255,130,0,.65))}
+}
+@keyframes streak-glow{
+  0%,100%{text-shadow:0 0 20px rgba(255,180,0,.5),0 2px 0 rgba(0,0,0,.6)}
+  50%{text-shadow:0 0 40px rgba(255,210,0,.85),0 0 60px rgba(255,150,0,.4),0 2px 0 rgba(0,0,0,.6)}
+}
+@keyframes today-pulse{
+  0%,100%{box-shadow:0 0 8px rgba(255,210,0,.5),inset 0 0 0 0 rgba(255,255,255,.1)}
+  50%{box-shadow:0 0 20px rgba(255,210,0,.9),0 0 35px rgba(255,140,0,.35)}
+}
+@keyframes dot-pop{from{transform:scale(0.4);opacity:0}to{transform:scale(1);opacity:1}}
+.streak-fire-wrap{text-align:center;margin-bottom:6px}
+.streak-fire{font-size:62px;line-height:1;display:inline-block;animation:fire-flicker 2s ease-in-out infinite}
+.streak-number-wrap{text-align:center;margin-bottom:2px}
+.streak-big{font-size:76px;font-weight:900;color:#FFD700;line-height:1;display:inline-block;animation:streak-glow 2.4s ease-in-out infinite;letter-spacing:-2px}
+.streak-unit{display:block;text-align:center;font-size:12px;font-weight:800;color:rgba(255,190,80,.75);letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px}
+.streak-dots{display:flex;justify-content:center;gap:7px;margin-bottom:14px}
+.streak-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;animation:dot-pop .35s ease both}
+.streak-dot.done{background:rgba(255,165,0,.85);box-shadow:0 0 8px rgba(255,165,0,.45)}
+.streak-dot.today-done{background:#FFD700;animation:today-pulse 1.4s ease-in-out infinite,dot-pop .35s ease both;font-size:18px}
+.streak-dot.today-pending{background:rgba(255,255,255,.07);border:1.5px dashed rgba(255,190,0,.35);font-size:13px;color:rgba(255,200,100,.5)}
+.streak-dot.empty{background:rgba(255,255,255,.05);color:rgba(255,255,255,.18);font-size:13px}
+.streak-card-footer{display:flex;align-items:center;justify-content:center;gap:10px}
+.streak-ticket{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:rgba(255,200,100,.85);background:rgba(255,165,0,.12);border:1px solid rgba(255,165,0,.25);border-radius:99px;padding:4px 11px}
+.streak-countdown{font-size:11px;color:rgba(255,110,70,.9);font-weight:700}
 /* ---- tier cards (zero state + current tier) ---- */
 .day1-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate;transform:translateZ(0)}
 .tier-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:12px;position:relative;overflow:hidden;min-height:220px;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate;transform:translateZ(0)}
@@ -478,7 +497,7 @@ nav button.sel{color:var(--green-dk)}
 <!-- ============ POSITION PICKER ============ -->
 <div id="pos-picker" class="hidden">
   <div class="pos-title">あなたのポジションは？</div>
-  <div class="pos-sub">あなたに最適なフレーズを毎日届けます</div>
+  <div class="pos-sub">最大2つまで選べます・あなたに最適なフレーズを届けます</div>
   <div class="pos-grid">
     <button class="pos-btn" onclick="selectPos('fw')">
       <div class="pos-badge">⚡</div>
@@ -1915,16 +1934,22 @@ const POS_PHRASES={
   df:["Man on!","Track your runner!","Show him inside!","Squeeze!","Drop!","Away!","Stay big!","Win your header!","Second ball!","Keeper's!","Show him inside!"],
   gk:["Keeper's!","Away!","Stay big!","Drop!","Squeeze!","Track your runner!","Man on!","Show him inside!","Second ball!"]
 };
-let _selectedPos=null;
+let _selectedPositions=[];
 function selectPos(p){
-  _selectedPos=p;
-  document.querySelectorAll('.pos-btn').forEach(b=>b.classList.remove('sel'));
-  event.currentTarget.classList.add('sel');
-  document.getElementById('pos-confirm-btn').disabled=false;
+  const btn=event.currentTarget;
+  const idx=_selectedPositions.indexOf(p);
+  if(idx>-1){
+    _selectedPositions.splice(idx,1);
+    btn.classList.remove('sel');
+  } else if(_selectedPositions.length<2){
+    _selectedPositions.push(p);
+    btn.classList.add('sel');
+  }
+  document.getElementById('pos-confirm-btn').disabled=_selectedPositions.length===0;
 }
 function confirmPos(){
-  if(!_selectedPos)return;
-  S.position=_selectedPos;save();
+  if(!_selectedPositions.length)return;
+  S.position=_selectedPositions.join(',');save();
   document.getElementById('pos-picker').classList.add('hidden');
   renderHome();
 }
@@ -1934,6 +1959,9 @@ function skipPos(){
 }
 function maybeShowPosPicker(){
   if(!S.position){
+    _selectedPositions=[];
+    document.querySelectorAll('.pos-btn').forEach(b=>b.classList.remove('sel'));
+    document.getElementById('pos-confirm-btn').disabled=true;
     document.getElementById('pos-picker').classList.remove('hidden');
   } else {
     renderHome();
@@ -2073,24 +2101,41 @@ function buildStreakCard(){
   const todayStr=today();
   const done=S.doneToday===todayStr;
   const hist=S.history||[];
-  const tags=[];
+  const dots=[];
   for(let i=6;i>=1;i--){
     const d=new Date(Date.now()-864e5*i).toISOString().slice(0,10);
-    tags.push(hist.includes(d)?'<div class="streak-tag done">Day '+(S.streak-(done?i:i-1))+'</div>':'<div class="streak-tag empty">—</div>');
+    if(hist.includes(d)) dots.push('<div class="streak-dot done" style="animation-delay:'+(0.05*(6-i))+'s">🔥</div>');
+    else dots.push('<div class="streak-dot empty" style="animation-delay:'+(0.05*(6-i))+'s">—</div>');
   }
-  const todayTag=done
-    ?'<div class="streak-tag today-done">Day '+S.streak+'</div>'
-    :'<div class="streak-tag today-pending">今日</div>';
-  tags.push(todayTag);
-  const countdownHtml=!done
-    ?'<span class="streak-countdown" id="streak-cd"></span>':'';
-  const ticketHtml=S.tickets>0
-    ?'<span class="streak-ticket">🎫 復活チケット ×'+S.tickets+'</span>':'<span></span>';
+  const todayDot=done
+    ?'<div class="streak-dot today-done" style="animation-delay:.3s">🔥</div>'
+    :'<div class="streak-dot today-pending" style="animation-delay:.3s">今日</div>';
+  dots.push(todayDot);
+  const countdownHtml=!done?'<span class="streak-countdown" id="streak-cd"></span>':'';
+  const ticketHtml=S.tickets>0?'<span class="streak-ticket">🎫 復活チケット ×'+S.tickets+'</span>':'';
   return '<div class="streak-card">'
-    +'<div class="streak-card-top"><span class="streak-big">'+S.streak+'</span><span class="streak-unit">日連続</span></div>'
-    +'<div class="streak-tags">'+tags.join('')+'</div>'
-    +'<div class="streak-card-footer">'+ticketHtml+countdownHtml+'</div>'
+    +'<div class="streak-fire-wrap"><span class="streak-fire">🔥</span></div>'
+    +'<div class="streak-number-wrap"><span class="streak-big" id="streak-big-num">0</span></div>'
+    +'<span class="streak-unit">DAY STREAK</span>'
+    +'<div class="streak-dots">'+dots.join('')+'</div>'
+    +(ticketHtml||countdownHtml?'<div class="streak-card-footer">'+ticketHtml+countdownHtml+'</div>':'')
     +'</div>';
+}
+function animateStreakCount(){
+  const el=document.getElementById('streak-big-num');
+  if(!el)return;
+  const target=S.streak;
+  if(target===0){el.textContent='0';return;}
+  const dur=600;
+  const start=performance.now();
+  const from=Math.max(0,target-Math.min(target,30));
+  function step(now){
+    const p=Math.min((now-start)/dur,1);
+    const ease=1-Math.pow(1-p,3);
+    el.textContent=Math.round(from+(target-from)*ease);
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 function renderHome(){
   const r=readiness();
@@ -2145,6 +2190,7 @@ function renderHome(){
   }
 
   document.getElementById("streak-num").textContent=S.streak;
+  requestAnimationFrame(animateStreakCount);
 
   /* Today's Session card */
   const tp=todayPhrases();
@@ -2174,7 +2220,7 @@ function renderHome(){
     </div>
   </div>`;
 
-  const posLabel=S.position?`FOR YOU — ${S.position.toUpperCase()}`:`TODAY'S SESSION`;
+  const posLabel=S.position?`FOR YOU — ${S.position.split(',').map(p=>p.toUpperCase()).join(' / ')}`:`TODAY'S SESSION`;
   document.getElementById("home-session-area").innerHTML=
     `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span><span class="today-session-time">⏱ 30秒・3フレーズ</span></div>${phrasesHtml}</div>`
     +`<button class="play-session-btn" onclick="startTodaySession()">▶&nbsp; 今日のセッションを始める</button>`
@@ -2267,10 +2313,9 @@ function todayPhrases(){
   const d=new Date();
   const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
   const seededShuffle=(arr,s)=>{const a=[...arr];let x=s;for(let i=a.length-1;i>0;i--){x=(x*1664525+1013904223)&0xffffffff;const j=Math.abs(x)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
-  const pos=S.position;
-  if(pos && POS_PHRASES[pos]){
-    /* ポジション関連フレーズを優先、残りで補完 */
-    const posEnSet=new Set(POS_PHRASES[pos]);
+  const positions=S.position?S.position.split(',').filter(p=>POS_PHRASES[p]):[];
+  if(positions.length){
+    const posEnSet=new Set(positions.flatMap(p=>POS_PHRASES[p]));
     const priority=seededShuffle(DB.filter(p=>p.lv===1&&posEnSet.has(p.en)),seed);
     const rest=seededShuffle(DB.filter(p=>p.lv===1&&!posEnSet.has(p.en)),seed+1);
     return [...priority,...rest].slice(0,3);
