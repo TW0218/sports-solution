@@ -408,38 +408,39 @@ nav button.sel{color:var(--green-dk)}
 .other-card.featured{border-color:var(--yellow)}
 /* ---- streak card ---- */
 :root{--sb:#0D2B6E;--sb-mid:#1E4DA8;--sb-lt:#D6E4FF}
-.streak-card{background:linear-gradient(150deg,#1c0800 0%,#2e1200 55%,#1a0900 100%);border-radius:24px;padding:22px 20px 18px;margin-bottom:12px;position:relative;overflow:hidden;border:1px solid rgba(255,140,0,.2)}
-.streak-card::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:260px;height:220px;background:radial-gradient(circle,rgba(255,110,0,.28) 0%,transparent 70%);pointer-events:none}
+.streak-card{background:linear-gradient(135deg,#1c0800 0%,#2e1200 55%,#1a0900 100%);border-radius:20px;padding:14px 18px;margin-bottom:12px;position:relative;overflow:hidden;border:1px solid rgba(255,140,0,.2);display:flex;align-items:center;gap:14px}
+.streak-card::before{content:'';position:absolute;top:-30px;left:0;width:160px;height:160px;background:radial-gradient(circle,rgba(255,110,0,.22) 0%,transparent 70%);pointer-events:none}
 @keyframes fire-flicker{
-  0%{transform:scale(1) rotate(-1.5deg);filter:drop-shadow(0 0 10px rgba(255,130,0,.65))}
-  20%{transform:scale(1.09) rotate(1.5deg);filter:drop-shadow(0 0 22px rgba(255,190,0,.9))}
-  45%{transform:scale(1.04) rotate(-2deg);filter:drop-shadow(0 0 14px rgba(255,90,0,.75))}
-  70%{transform:scale(1.12) rotate(1deg);filter:drop-shadow(0 0 26px rgba(255,210,0,1))}
-  100%{transform:scale(1) rotate(-1.5deg);filter:drop-shadow(0 0 10px rgba(255,130,0,.65))}
+  0%{transform:scale(1) rotate(-1.5deg);filter:drop-shadow(0 0 8px rgba(255,130,0,.65))}
+  20%{transform:scale(1.1) rotate(1.5deg);filter:drop-shadow(0 0 18px rgba(255,190,0,.9))}
+  45%{transform:scale(1.05) rotate(-2deg);filter:drop-shadow(0 0 12px rgba(255,90,0,.75))}
+  70%{transform:scale(1.13) rotate(1deg);filter:drop-shadow(0 0 22px rgba(255,210,0,1))}
+  100%{transform:scale(1) rotate(-1.5deg);filter:drop-shadow(0 0 8px rgba(255,130,0,.65))}
 }
 @keyframes streak-glow{
-  0%,100%{text-shadow:0 0 20px rgba(255,180,0,.5),0 2px 0 rgba(0,0,0,.6)}
-  50%{text-shadow:0 0 40px rgba(255,210,0,.85),0 0 60px rgba(255,150,0,.4),0 2px 0 rgba(0,0,0,.6)}
+  0%,100%{text-shadow:0 0 16px rgba(255,180,0,.5),0 2px 0 rgba(0,0,0,.6)}
+  50%{text-shadow:0 0 32px rgba(255,210,0,.85),0 0 50px rgba(255,150,0,.4),0 2px 0 rgba(0,0,0,.6)}
 }
 @keyframes today-pulse{
-  0%,100%{box-shadow:0 0 8px rgba(255,210,0,.5),inset 0 0 0 0 rgba(255,255,255,.1)}
-  50%{box-shadow:0 0 20px rgba(255,210,0,.9),0 0 35px rgba(255,140,0,.35)}
+  0%,100%{box-shadow:0 0 6px rgba(255,210,0,.5)}
+  50%{box-shadow:0 0 16px rgba(255,210,0,.9),0 0 28px rgba(255,140,0,.35)}
 }
 @keyframes dot-pop{from{transform:scale(0.4);opacity:0}to{transform:scale(1);opacity:1}}
-.streak-fire-wrap{text-align:center;margin-bottom:6px}
-.streak-fire{font-size:62px;line-height:1;display:inline-block;animation:fire-flicker 2s ease-in-out infinite}
-.streak-number-wrap{text-align:center;margin-bottom:2px}
-.streak-big{font-size:76px;font-weight:900;color:#FFD700;line-height:1;display:inline-block;animation:streak-glow 2.4s ease-in-out infinite;letter-spacing:-2px}
-.streak-unit{display:block;text-align:center;font-size:12px;font-weight:800;color:rgba(255,190,80,.75);letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px}
-.streak-dots{display:flex;justify-content:center;gap:7px;margin-bottom:14px}
-.streak-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;animation:dot-pop .35s ease both}
-.streak-dot.done{background:rgba(255,165,0,.85);box-shadow:0 0 8px rgba(255,165,0,.45)}
-.streak-dot.today-done{background:#FFD700;animation:today-pulse 1.4s ease-in-out infinite,dot-pop .35s ease both;font-size:18px}
-.streak-dot.today-pending{background:rgba(255,255,255,.07);border:1.5px dashed rgba(255,190,0,.35);font-size:13px;color:rgba(255,200,100,.5)}
-.streak-dot.empty{background:rgba(255,255,255,.05);color:rgba(255,255,255,.18);font-size:13px}
-.streak-card-footer{display:flex;align-items:center;justify-content:center;gap:10px}
-.streak-ticket{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:rgba(255,200,100,.85);background:rgba(255,165,0,.12);border:1px solid rgba(255,165,0,.25);border-radius:99px;padding:4px 11px}
-.streak-countdown{font-size:11px;color:rgba(255,110,70,.9);font-weight:700}
+.streak-left{display:flex;flex-direction:column;align-items:center;min-width:72px}
+.streak-fire{font-size:28px;line-height:1;display:inline-block;animation:fire-flicker 2s ease-in-out infinite;margin-bottom:2px}
+.streak-big{font-size:42px;font-weight:900;color:#FFD700;line-height:1;display:block;animation:streak-glow 2.4s ease-in-out infinite;letter-spacing:-1px;text-align:center}
+.streak-unit{font-size:9px;font-weight:800;color:rgba(255,190,80,.7);letter-spacing:.1em;text-transform:uppercase;text-align:center;margin-top:2px}
+.streak-right{flex:1;display:flex;flex-direction:column;gap:8px}
+.streak-dots{display:flex;gap:5px;flex-wrap:nowrap}
+.streak-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex:1;animation:dot-pop .35s ease both}
+.streak-dot.done{background:rgba(255,165,0,.85);box-shadow:0 0 7px rgba(255,165,0,.4)}
+.streak-dot.today-done{background:#FFD700;animation:today-pulse 1.4s ease-in-out infinite,dot-pop .35s ease both;font-size:13px}
+.streak-dot.today-pending{background:rgba(255,255,255,.06);border:1.5px dashed rgba(255,190,0,.3);font-size:10px;color:rgba(255,200,100,.45)}
+.streak-dot.empty{background:rgba(255,255,255,.05);color:rgba(255,255,255,.15);font-size:11px}
+.streak-card-footer{display:flex;align-items:center;gap:8px}
+.streak-ticket{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:rgba(255,200,100,.85);background:rgba(255,165,0,.12);border:1px solid rgba(255,165,0,.25);border-radius:99px;padding:3px 9px}
+.streak-countdown{font-size:10px;color:rgba(255,110,70,.9);font-weight:700}
+.streak-fire-wrap{display:none}
 /* ---- tier cards (zero state + current tier) ---- */
 .day1-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate;transform:translateZ(0)}
 .tier-card{background:var(--ink);color:#fff;border-radius:20px;margin-bottom:12px;position:relative;overflow:hidden;min-height:220px;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate;transform:translateZ(0)}
@@ -2114,11 +2115,10 @@ function buildStreakCard(){
   const countdownHtml=!done?'<span class="streak-countdown" id="streak-cd"></span>':'';
   const ticketHtml=S.tickets>0?'<span class="streak-ticket">🎫 復活チケット ×'+S.tickets+'</span>':'';
   return '<div class="streak-card">'
-    +'<div class="streak-fire-wrap"><span class="streak-fire">🔥</span></div>'
-    +'<div class="streak-number-wrap"><span class="streak-big" id="streak-big-num">0</span></div>'
-    +'<span class="streak-unit">DAY STREAK</span>'
-    +'<div class="streak-dots">'+dots.join('')+'</div>'
+    +'<div class="streak-left"><span class="streak-fire">🔥</span><span class="streak-big" id="streak-big-num">0</span><span class="streak-unit">DAY STREAK</span></div>'
+    +'<div class="streak-right"><div class="streak-dots">'+dots.join('')+'</div>'
     +(ticketHtml||countdownHtml?'<div class="streak-card-footer">'+ticketHtml+countdownHtml+'</div>':'')
+    +'</div>'
     +'</div>';
 }
 function animateStreakCount(){
