@@ -317,6 +317,22 @@ nav button.sel{color:var(--green-dk)}
 .cta-arrow{font-size:18px;color:var(--grey)}
 .more-link{display:block;width:100%;text-align:center;background:none;border:2px solid #E2EAE5;border-radius:14px;padding:11px;font-size:13px;font-weight:800;color:var(--grey);cursor:pointer;font-family:inherit}
 .more-link:active{opacity:.7}
+/* ---- today session ---- */
+.today-session-card{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:12px}
+.today-session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.today-session-label{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--green-dk)}
+.today-session-time{font-size:11px;font-weight:800;color:var(--grey);background:var(--green-lt);border-radius:99px;padding:3px 10px}
+.today-phrase-item{display:flex;align-items:baseline;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F0F4F1}
+.today-phrase-item:last-child{border-bottom:none;padding-bottom:0}
+.today-phrase-en{font-size:17px;font-weight:900;color:var(--ink)}
+.today-phrase-ja{font-size:11px;font-weight:700;color:var(--grey);text-align:right;max-width:55%}
+.play-session-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--green);color:#fff;border:none;border-radius:20px;padding:20px;font-size:18px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 0 var(--green-dk);margin-bottom:12px;letter-spacing:.02em}
+.play-session-btn:active{transform:translateY(2px);box-shadow:none}
+.continue-card{display:flex;align-items:center;justify-content:space-between;width:100%;background:#fff;border:2px solid #E2EAE5;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);cursor:pointer;font-family:inherit;margin-bottom:12px}
+.continue-card:active{transform:scale(.98)}
+.continue-label{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--grey);margin-bottom:3px}
+.continue-name{font-size:14px;font-weight:900;color:var(--ink)}
+.continue-arrow{font-size:18px;color:var(--green)}
 /* ---- 実戦準備度 ---- */
 .readiness-card{background:#fff;border-radius:20px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
 .readiness-title{font-size:12px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:14px}
@@ -473,32 +489,7 @@ nav button.sel{color:var(--green-dk)}
     </div>
   </div>
 
-  <div class="home-cta-list">
-    <button class="home-cta primary" onclick="startSession('mix',true)">
-      <div class="cta-ic gd">&#x26BD;</div>
-      <div class="cta-texts">
-        <div class="cta-name" id="cta-main-label">今日の1マッチ</div>
-        <div class="cta-meta">10問 &#xB7; 約5分 &#xB7; ピッチ+ロッカー</div>
-      </div>
-      <div class="cta-arrow">&#x2192;</div>
-    </button>
-    <button class="home-cta" onclick="startSession('pitch',false)">
-      <div class="cta-ic g">&#x26A1;</div>
-      <div class="cta-texts">
-        <div class="cta-name">ピッチで使う</div>
-        <div class="cta-meta">試合・練習中のコール &#xB7; 3分</div>
-      </div>
-      <div class="cta-arrow">&#x2192;</div>
-    </button>
-    <button class="home-cta" onclick="startSession('locker',false)">
-      <div class="cta-ic g">&#x1F9E6;</div>
-      <div class="cta-texts">
-        <div class="cta-name">ロッカーで使う</div>
-        <div class="cta-meta">チームメイトとの会話 &#xB7; 3分</div>
-      </div>
-      <div class="cta-arrow">&#x2192;</div>
-    </button>
-  </div>
+  <div id="home-session-area"></div>
   <button class="more-link" onclick="renderOthers();go('others')">その他のメニューを見る &#x2192;</button>
 </section>
 
@@ -2004,9 +1995,19 @@ function renderHome(){
   }
 
   document.getElementById("streak-num").textContent=S.streak;
+
+  /* Today's Session card */
+  const tp=todayPhrases();
+  const phrasesHtml=tp.map(p=>`<div class="today-phrase-item"><span class="today-phrase-en">${p.en}</span><span class="today-phrase-ja">${p.ja}</span></div>`).join('');
+  const lastCatSaved=localStorage.getItem('lastSessionCat');
+  const lastLabelSaved=localStorage.getItem('lastSessionLabel');
+  const continueHtml=lastCatSaved?`<button class="continue-card" onclick="startSession('${lastCatSaved}',false)"><div><div class="continue-label">前回の続きから</div><div class="continue-name">${lastLabelSaved||lastCatSaved}</div></div><div class="continue-arrow">→</div></button>`:'';
+  document.getElementById("home-session-area").innerHTML=
+    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">TODAY'S SESSION</span><span class="today-session-time">⏱ 30秒・3フレーズ</span></div>${phrasesHtml}</div>`
+    +`<button class="play-session-btn" onclick="startTodaySession()">▶&nbsp; 今日のセッションを始める</button>`
+    +continueHtml;
+
   const done=S.doneToday===today();
-  const lbl=document.getElementById("cta-main-label");
-  if(lbl)lbl.textContent=done?"もう1マッチ始める":"今日の1マッチ";
   if(!done){
     clearInterval(window._cdTimer);
     window._cdTimer=setInterval(()=>{
@@ -2089,7 +2090,29 @@ function poolFor(cat){
   if(cat==="pitch")return DB.filter(d=>d.c==="pitch");
   return DB.filter(d=>d.c===cat);
 }
+function todayPhrases(){
+  const d=new Date();
+  const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  const pool=DB.filter(p=>p.lv===1);
+  const arr=[...pool];
+  let s=seed;
+  for(let i=arr.length-1;i>0;i--){s=(s*1664525+1013904223)&0xffffffff;const j=Math.abs(s)%(i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr.slice(0,3);
+}
+function startTodaySession(){
+  const tp=todayPhrases();
+  lastCat='mix';lastDaily=true;earOnly=false;
+  rate=unlockedLv()===1?0.7:1.0;
+  Q=tp.map(item=>({item,type:'listen'}));
+  qi=0;goalsNow=0;missNow=0;sessionBadges=[];S.combo=0;
+  localStorage.setItem('lastSessionCat','mix');
+  localStorage.setItem('lastSessionLabel','Today\'s Session');
+  sfx('whistle');go('quiz');renderQuestion();
+}
 function startSession(cat,daily,ear){
+  localStorage.setItem('lastSessionCat',cat);
+  const labels={pitch:'ピッチで使う英語',locker:'ロッカーの英語',mix:'ミックスセッション',my:'マイフレーズ'};
+  localStorage.setItem('lastSessionLabel',labels[cat]||cat);
   lastCat=cat;lastDaily=!!daily;earOnly=!!ear;
   rate=unlockedLv()===1?0.7:1.0; /* 基礎レベルはゆっくり再生がデフォルト */
   const pool=poolFor(cat);
