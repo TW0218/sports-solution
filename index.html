@@ -32,8 +32,8 @@ body{
 @media(min-width:560px){ body{background:#0F1A14 repeating-linear-gradient(90deg,#12241A 0 60px,#0F1F16 60px 120px)} #app{box-shadow:0 0 60px rgba(0,0,0,.5)} }
 
 /* ---------- screens ---------- */
-.screen{display:none;flex:1;flex-direction:column;padding:calc(16px + var(--safe-t)) 18px calc(86px + var(--safe-b));height:100dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-.screen.active{display:flex}
+.screen{display:none;padding:calc(16px + var(--safe-t)) 18px calc(86px + var(--safe-b));height:100dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;box-sizing:border-box}
+.screen.active{display:block}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* ---------- view transitions ---------- */
