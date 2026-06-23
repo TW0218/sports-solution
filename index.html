@@ -207,7 +207,9 @@ body{
 nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:2px solid #E8EFEA;display:flex;padding:6px 8px 0;z-index:40}
 nav::after{content:'';position:absolute;bottom:calc(-1 * env(safe-area-inset-bottom,0px));left:0;right:0;height:env(safe-area-inset-bottom,0px);background:rgba(255,255,255,.96)}
 nav button{flex:1;border:none;background:none;font-family:inherit;font-size:10px;font-weight:800;color:var(--grey);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px}
-nav button .nic{font-size:21px}
+nav button .nic{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+nav button .nic svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke-width .15s}
+nav button.sel .nic svg{stroke-width:2.4}
 nav button.sel{color:var(--green-dk)}
 .hide-nav nav{display:none}
 
@@ -390,6 +392,7 @@ nav button.sel{color:var(--green-dk)}
 .play-session-btn-left{display:flex;align-items:center;gap:10px}
 .play-session-btn-play{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px}
 .play-session-btn-arrow{font-size:22px;color:rgba(255,255,255,.5)}
+.play-session-hint{text-align:center;font-size:11px;color:rgba(255,255,255,.5);font-weight:800;margin-top:-6px;margin-bottom:12px;letter-spacing:.03em}
 .continue-card{display:flex;align-items:center;justify-content:space-between;width:100%;background:#fff;border:2px solid #E2EAE5;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);cursor:pointer;font-family:inherit;margin-bottom:12px}
 .continue-card:active{transform:scale(.98)}
 .continue-label{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--grey);margin-bottom:3px}
@@ -860,10 +863,10 @@ nav button.sel{color:var(--green-dk)}
 </div>
 
 <nav>
-  <button id="nav-home" class="sel" onclick="go('home','tab');renderHome()"><span class="nic">&#x1F3E0;</span>ホーム</button>
-  <button id="nav-play" onclick="startSession('mix',false)"><span class="nic">&#x25B6;&#xFE0F;</span>プレイ</button>
-  <button id="nav-strength" onclick="go('career','tab');renderCareer()"><span class="nic">&#x1F4CA;</span>実力</button>
-  <button id="nav-others" onclick="renderOthers();go('others','tab')"><span class="nic">&#x22EF;</span>その他</button>
+  <button id="nav-home" class="sel" onclick="go('home','tab');renderHome()"><span class="nic"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>ホーム</button>
+  <button id="nav-play" onclick="startSession('mix',false)"><span class="nic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/></svg></span>プレイ</button>
+  <button id="nav-strength" onclick="go('career','tab');renderCareer()"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg></span>実力</button>
+  <button id="nav-others" onclick="renderOthers();go('others','tab')"><span class="nic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></span>その他</button>
 </nav>
 <!-- ============ OTHERS MENU ============ -->
 <section class="screen" id="scr-others">
@@ -2293,7 +2296,7 @@ function renderHome(){
   const posLabel=S.position?`FOR YOU — ${S.position.split(',').map(p=>p.toUpperCase()).join(' / ')}`:``;
   document.getElementById("home-session-area").innerHTML=
     `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
-    +`<button class="play-session-btn" onclick="startTodaySession()"><span class="play-session-btn-left"><span class="play-session-btn-play">▶</span>今日の３フレーズを練習する</span><span style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:rgba(255,255,255,.55);font-weight:800">⏱ 30秒</span><span class="play-session-btn-arrow">›</span></span></button>`
+    +`<div class="play-session-wrap"><button class="play-session-btn" onclick="startTodaySession()"><span class="play-session-btn-left"><span class="play-session-btn-play">▶</span>今日の３フレーズを練習する</span><span class="play-session-btn-arrow">›</span></button><div class="play-session-hint">⏱ 30秒でできる</div></div>`
     +missionsHtml;
 
   const done=S.doneToday===today();
