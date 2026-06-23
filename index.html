@@ -457,9 +457,53 @@ nav button.sel{color:var(--green-dk)}
 .week-btn{display:block;width:100%;border:none;background:var(--green);color:#fff;border-radius:14px;padding:13px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
 .week-btn:active{transform:translateY(2px);box-shadow:none}
 .week-btn.locked-btn{background:#E2EAE5;color:var(--grey);box-shadow:none;pointer-events:none}
+/* ---- position picker ---- */
+#pos-picker{position:fixed;inset:0;z-index:300;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;color:#fff}
+#pos-picker.hidden{display:none}
+.pos-title{font-size:28px;font-weight:900;text-align:center;margin-bottom:8px;line-height:1.25}
+.pos-sub{font-size:14px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:40px;font-weight:700}
+.pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:320px}
+.pos-btn{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.15);border-radius:20px;padding:24px 16px;color:#fff;font-family:inherit;cursor:pointer;text-align:center;transition:background .15s,border-color .15s}
+.pos-btn:active{transform:scale(.96)}
+.pos-btn.sel{background:rgba(255,220,0,.15);border-color:var(--yellow)}
+.pos-badge{font-size:32px;margin-bottom:8px}
+.pos-name{font-size:18px;font-weight:900;margin-bottom:4px}
+.pos-desc{font-size:11px;color:rgba(255,255,255,.45);font-weight:700;line-height:1.4}
+.pos-confirm{display:block;width:100%;max-width:320px;margin-top:24px;background:var(--yellow);color:var(--ink);border:none;border-radius:18px;padding:18px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer}
+.pos-confirm:disabled{opacity:.3;cursor:default}
+.pos-skip{background:none;border:none;color:rgba(255,255,255,.3);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:16px}
 </style>
 </head>
 <body>
+<!-- ============ POSITION PICKER ============ -->
+<div id="pos-picker" class="hidden">
+  <div class="pos-title">あなたのポジションは？</div>
+  <div class="pos-sub">あなたに最適なフレーズを毎日届けます</div>
+  <div class="pos-grid">
+    <button class="pos-btn" onclick="selectPos('fw')">
+      <div class="pos-badge">⚡</div>
+      <div class="pos-name">FW</div>
+      <div class="pos-desc">フォワード<br>ゴールを決める英語</div>
+    </button>
+    <button class="pos-btn" onclick="selectPos('mf')">
+      <div class="pos-badge">🎯</div>
+      <div class="pos-name">MF</div>
+      <div class="pos-desc">ミッドフィルダー<br>組み立てる英語</div>
+    </button>
+    <button class="pos-btn" onclick="selectPos('df')">
+      <div class="pos-badge">🛡️</div>
+      <div class="pos-name">DF</div>
+      <div class="pos-desc">ディフェンダー<br>守備で使う英語</div>
+    </button>
+    <button class="pos-btn" onclick="selectPos('gk')">
+      <div class="pos-badge">🥅</div>
+      <div class="pos-name">GK</div>
+      <div class="pos-desc">ゴールキーパー<br>指示を出す英語</div>
+    </button>
+  </div>
+  <button class="pos-confirm" id="pos-confirm-btn" disabled onclick="confirmPos()">このポジションで始める</button>
+  <button class="pos-skip" onclick="skipPos()">あとで設定する</button>
+</div>
 <!-- ============ LOGIN ============ -->
 <div id="scr-login">
   <div id="scr-login-bg"></div>
@@ -1784,7 +1828,7 @@ async function doLogin(){
   currentUser=data.user;
   await loadFromSupabase();
   document.getElementById("scr-login").classList.add("hidden");
-  renderHome();
+  maybeShowPosPicker();
 }
 
 async function doLogout(){
@@ -1816,7 +1860,7 @@ async function saveToSupabase(){
     currentUser=session.user;
     await loadFromSupabase();
     document.getElementById("scr-login").classList.add("hidden");
-    renderHome();
+    maybeShowPosPicker();
   }else if(session&&loginExpired()){
     await supa.auth.signOut();
     clearLoginStamp();
@@ -1844,7 +1888,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastSpeakDate:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastSpeakDate:"",position:""};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -1862,6 +1906,38 @@ let _audioPhrases=null;
 function getAudioPhrases(){
   if(!_audioPhrases)_audioPhrases=new Set([...DB.map(d=>d.en),...COACH_DB.map(d=>d.en)]);
   return _audioPhrases;
+}
+/* ---- position personalization ---- */
+const POS_LABELS={fw:"FW フォワード",mf:"MF ミッドフィルダー",df:"DF ディフェンダー",gk:"GK ゴールキーパー"};
+const POS_PHRASES={
+  fw:["Turn!","Time!","Hold it up!","One-two","Overlap","Put a shift in","Win your header!","Square!","Down the line!","Cut it back!","Second ball!"],
+  mf:["Switch it!","Square!","Down the line!","Overlap","One-two","Time!","Turn!","Second ball!","Put a shift in","Squeeze!","Drop!"],
+  df:["Man on!","Track your runner!","Show him inside!","Squeeze!","Drop!","Away!","Stay big!","Win your header!","Second ball!","Keeper's!","Show him inside!"],
+  gk:["Keeper's!","Away!","Stay big!","Drop!","Squeeze!","Track your runner!","Man on!","Show him inside!","Second ball!"]
+};
+let _selectedPos=null;
+function selectPos(p){
+  _selectedPos=p;
+  document.querySelectorAll('.pos-btn').forEach(b=>b.classList.remove('sel'));
+  event.currentTarget.classList.add('sel');
+  document.getElementById('pos-confirm-btn').disabled=false;
+}
+function confirmPos(){
+  if(!_selectedPos)return;
+  S.position=_selectedPos;save();
+  document.getElementById('pos-picker').classList.add('hidden');
+  renderHome();
+}
+function skipPos(){
+  document.getElementById('pos-picker').classList.add('hidden');
+  renderHome();
+}
+function maybeShowPosPicker(){
+  if(!S.position){
+    document.getElementById('pos-picker').classList.remove('hidden');
+  } else {
+    renderHome();
+  }
 }
 function textToAudioSrc(text){
   return "audio/"+text.replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
@@ -2098,8 +2174,9 @@ function renderHome(){
     </div>
   </div>`;
 
+  const posLabel=S.position?`FOR YOU — ${S.position.toUpperCase()}`:`TODAY'S SESSION`;
   document.getElementById("home-session-area").innerHTML=
-    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">TODAY'S SESSION</span><span class="today-session-time">⏱ 30秒・3フレーズ</span></div>${phrasesHtml}</div>`
+    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span><span class="today-session-time">⏱ 30秒・3フレーズ</span></div>${phrasesHtml}</div>`
     +`<button class="play-session-btn" onclick="startTodaySession()">▶&nbsp; 今日のセッションを始める</button>`
     +missionsHtml;
 
@@ -2189,11 +2266,16 @@ function poolFor(cat){
 function todayPhrases(){
   const d=new Date();
   const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
-  const pool=DB.filter(p=>p.lv===1);
-  const arr=[...pool];
-  let s=seed;
-  for(let i=arr.length-1;i>0;i--){s=(s*1664525+1013904223)&0xffffffff;const j=Math.abs(s)%(i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}
-  return arr.slice(0,3);
+  const seededShuffle=(arr,s)=>{const a=[...arr];let x=s;for(let i=a.length-1;i>0;i--){x=(x*1664525+1013904223)&0xffffffff;const j=Math.abs(x)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
+  const pos=S.position;
+  if(pos && POS_PHRASES[pos]){
+    /* ポジション関連フレーズを優先、残りで補完 */
+    const posEnSet=new Set(POS_PHRASES[pos]);
+    const priority=seededShuffle(DB.filter(p=>p.lv===1&&posEnSet.has(p.en)),seed);
+    const rest=seededShuffle(DB.filter(p=>p.lv===1&&!posEnSet.has(p.en)),seed+1);
+    return [...priority,...rest].slice(0,3);
+  }
+  return seededShuffle(DB.filter(p=>p.lv===1),seed).slice(0,3);
 }
 let playerPhrases=[],playerIdx=0,playerReady=false;
 function startTodaySession(){
