@@ -477,6 +477,8 @@ nav button.sel{color:var(--green-dk)}
 .other-card.hero .hero-sub{font-size:10px;font-weight:900;letter-spacing:.12em;color:rgba(255,215,0,.7);margin-bottom:4px}
 .other-card.hero p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.45}
 .other-card.hero:active{transform:scale(.98)}
+.logout-row{display:block;width:100%;margin-top:20px;background:none;border:1px solid #ddd;border-radius:12px;padding:12px;font-size:12px;font-weight:800;color:#bbb;cursor:pointer;font-family:inherit;text-align:center;letter-spacing:.04em}
+.logout-row:active{background:#fafafa}
 /* ---- streak card ---- */
 :root{--sb:#0D2B6E;--sb-mid:#1E4DA8;--sb-lt:#D6E4FF}
 .streak-card{background:linear-gradient(135deg,#1c0800 0%,#2e1200 55%,#1a0900 100%);border-radius:20px;padding:14px 18px;margin-bottom:12px;position:relative;overflow:hidden;border:1px solid rgba(255,140,0,.2);display:flex;align-items:center;gap:14px}
@@ -651,9 +653,8 @@ nav button.sel{color:var(--green-dk)}
 
 <!-- ============ HOME ============ -->
 <section class="screen active" id="scr-home">
-  <div class="brand" style="justify-content:center;position:relative">
+  <div class="brand" style="justify-content:center">
     <div class="logo">TOP <span>BINS</span></div>
-    <button class="login-user" id="logout-btn" onclick="doLogout()" style="position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:11px;padding:6px 12px">ログアウト</button>
   </div>
 
   <div class="home-hero" id="home-hero">
@@ -975,6 +976,7 @@ nav button.sel{color:var(--green-dk)}
       <p>成長記録とトロフィー</p>
     </div>
   </div>
+  <button class="logout-row" onclick="doLogout()">ログアウト</button>
 </section>
 
 <!-- ============ WEEK PROGRAM ============ -->
