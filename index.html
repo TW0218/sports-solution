@@ -320,6 +320,13 @@ nav button.sel{color:var(--green-dk)}
 .home-stat{background:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
 .home-stat .hv{font-size:22px;font-weight:900;margin-bottom:2px}
 .home-stat .hl{font-size:11px;color:var(--grey);font-weight:800}
+/* career stats grid */
+.career-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.cs-item{background:#fff;border-radius:16px;padding:14px 12px;box-shadow:var(--shadow);text-align:center}
+.cs-item-wide{grid-column:1/-1;text-align:left;padding:14px 16px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+.cs-item-wide .cs-lbl{text-align:right;flex:1}
+.cs-val{font-size:20px;font-weight:900;margin-bottom:3px;line-height:1}
+.cs-lbl{font-size:10px;color:var(--grey);font-weight:800;letter-spacing:.04em;line-height:1.4}
 .home-cta-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
 .home-cta{display:flex;align-items:center;gap:14px;background:#fff;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent;font-family:inherit;width:100%;text-align:left}
 .home-cta:active{transform:scale(.98)}
@@ -840,16 +847,7 @@ nav button.sel{color:var(--green-dk)}
   <div class="brand"><div class="logo">MY <span>CAREER</span></div>
     <div class="streak-pill"><span class="fire">🔥</span><span id="streak-num2">0</span></div></div>
   <div id="career-tier-area"></div>
-  <div class="career-head">
-    <div class="club" id="career-club">SUNDAY LEAGUE</div>
-    <h2 id="career-name">無名の挑戦者</h2>
-    <div class="career-stats">
-      <div><div class="num" id="cs-min">0'</div><div class="lbl">通算出場分数</div></div>
-      <div><div class="num" id="cs-caps">0</div><div class="lbl">出場試合数</div></div>
-      <div><div class="num" id="cs-goals">0</div><div class="lbl">通算ゴール</div></div>
-      <div><div class="num" id="cs-words">0</div><div class="lbl">マスター語数</div></div>
-    </div>
-  </div>
+  <!-- career-head removed; stats now in career-tier-area -->
   <div class="section-title">THE PYRAMID — 昇格への道</div>
   <div class="pyramid" id="pyramid"></div>
   <div class="section-title">TROPHY CABINET — トロフィー</div>
@@ -2820,36 +2818,29 @@ function renderCareer(){
       +'<div class="tier-next-track"><div class="tier-next-fill" style="width:'+Math.min(100,Math.round((S.min-t.min)/(next.min-t.min)*100))+'%"></div></div>'
       +'<span class="tier-next-pct">'+Math.min(100,Math.round((S.min-t.min)/(next.min-t.min)*100))+'%</span></div>'
     :'<div class="tier-next-bar"><span class="tier-next-label">JAPAN CALL-UP 達成！</span></div>';
+  const ul=unlockedLv();
+  const lvLabel=LV_NAMES[ul];
+  const lvHint=ul===1?"League Two昇格(900')で★★解放":ul===2?"Championship昇格(3600')で★★★解放":"全語彙解放済み";
   document.getElementById("career-tier-area").innerHTML=
-    '<div class="tier-card" style="margin-bottom:14px">'
+    '<div class="tier-card" style="margin-bottom:14px;min-height:280px">'
     +'<img class="day1-card-img" src="'+t.img+'" alt="">'
     +'<div class="day1-card-overlay"></div>'
     +'<div class="tier-card-body">'
-    +'<div class="day1-eyebrow">'+t.name+'</div>'
+    +'<div class="day1-eyebrow">'+t.name+' — '+t.ja+'</div>'
     +'<div class="tier-card-title">'+t.title+'</div>'
     +'<div class="tier-card-sub">'+t.sub+'</div>'
     +nextBar
     +'</div>'
     +'</div>'
-    +'<div class="home-stats" style="margin-bottom:14px">'
-    +'<div class="home-stat"><div class="hv" style="color:var(--green)">'+r.pitch+'%</div><div class="hl">ピッチ理解率</div></div>'
-    +'<div class="home-stat"><div class="hv" style="color:#D4537E">'+r.locker+'%</div><div class="hl">ロッカー対応度</div></div>'
-    +'<div class="home-stat"><div class="hv">'+calls+'</div><div class="hl">即答できるコール</div></div>'
-    +'<div class="home-stat"><div class="hv">'+S.min+'分</div><div class="hl">総学習時間</div></div>'
+    +'<div class="career-stats-grid">'
+    +'<div class="cs-item"><div class="cs-val">'+S.min+"'</div><div class=\"cs-lbl\">通算出場分数</div></div>"
+    +'<div class="cs-item"><div class="cs-val">'+S.caps+'</div><div class="cs-lbl">出場試合数</div></div>'
+    +'<div class="cs-item"><div class="cs-val">'+S.goals+'</div><div class="cs-lbl">通算ゴール</div></div>'
+    +'<div class="cs-item"><div class="cs-val">'+calls+'</div><div class="cs-lbl">マスター語数</div></div>'
+    +'<div class="cs-item"><div class="cs-val" style="color:var(--green)">'+r.pitch+'%</div><div class="cs-lbl">ピッチ理解率</div></div>'
+    +'<div class="cs-item"><div class="cs-val" style="color:#D4537E">'+r.locker+'%</div><div class="cs-lbl">ロッカー対応度</div></div>'
+    +'<div class="cs-item cs-item-wide"><div class="cs-val" style="color:var(--yellow)">'+lvLabel+'</div><div class="cs-lbl">語彙レベル — '+lvHint+'</div></div>'
     +'</div>';
-  document.getElementById("career-club").textContent=t.name;
-  document.getElementById("career-name").textContent=t.ja;
-  document.getElementById("cs-min").textContent=S.min+"'";
-  document.getElementById("cs-caps").textContent=S.caps;
-  document.getElementById("cs-goals").textContent=S.goals;
-  document.getElementById("cs-words").textContent=Object.values(S.box).filter(v=>v>=2).length;
-  let lvInfo=document.getElementById("lv-info");
-  if(!lvInfo){lvInfo=document.createElement("div");lvInfo.id="lv-info";
-    lvInfo.style.cssText="margin-top:14px;padding-top:12px;border-top:1px solid #2A3B30;font-size:12px;font-weight:800;color:#B9CDC2";
-    document.querySelector(".career-head").appendChild(lvInfo);}
-  const ul=unlockedLv();
-  lvInfo.innerHTML="📚 語彙レベル: <span style='color:var(--yellow)'>"+LV_NAMES[ul]+"</span>"
-    +(ul===1?"<br>League Two昇格(900')で ★★標準 を解放":ul===2?"<br>Championship昇格(3600')で ★★★上級 を解放":"<br>全語彙解放済み — ピッチで見せろ");
   const py=document.getElementById("pyramid");py.innerHTML="";
   [...TIERS].reverse().forEach(x=>{
     const cleared=S.min>=x.min&&x.min<=tierFor(S.min).min;
