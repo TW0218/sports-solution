@@ -292,14 +292,27 @@ nav button.sel{color:var(--green-dk)}
 .ng-card .ng-en{font-size:15px;font-weight:900;text-decoration:line-through;color:#8a2a20;margin-bottom:4px}
 .ng-card .ng-why{font-size:12px;color:#6b2018;line-height:1.6}
 /* ---- new home ---- */
-.home-hero{background:var(--green);border-radius:22px;padding:20px 18px 18px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden}
-.home-hero-label{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--yellow);margin-bottom:6px;position:relative;z-index:1}
-.home-hero h1{font-size:22px;font-weight:900;line-height:1.3;margin-bottom:2px;position:relative;z-index:1}
-.home-hero p{font-size:12px;opacity:.85;position:relative;z-index:1}
-.home-hero-pitch{position:absolute;right:-10px;top:50%;transform:translateY(-50%);opacity:.22;pointer-events:none}
-.pitch-line{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* ---- animated home hero ---- */
+@keyframes hero-shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes hero-glow-pulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes hero-text-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hero-shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes hero-orb{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(12px,-8px) scale(1.1)}66%{transform:translate(-8px,6px) scale(.95)}}
+.home-hero{border-radius:22px;padding:22px 20px 20px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden;
+  background:linear-gradient(-45deg,#050f0a,#0d2416,#091428,#160d28,#1a0910,#0d2416);
+  background-size:400% 400%;animation:hero-shift 10s ease infinite}
+.home-hero-orb{position:absolute;border-radius:50%;pointer-events:none;animation:hero-orb 7s ease-in-out infinite}
+.home-hero-orb.o1{width:180px;height:180px;top:-60px;right:-40px;background:radial-gradient(circle,rgba(80,220,120,.18) 0%,transparent 70%)}
+.home-hero-orb.o2{width:140px;height:140px;bottom:-50px;left:-30px;background:radial-gradient(circle,rgba(100,80,255,.18) 0%,transparent 70%);animation-delay:-3s}
+.home-hero-orb.o3{width:100px;height:100px;top:20px;left:40%;background:radial-gradient(circle,rgba(255,180,0,.12) 0%,transparent 70%);animation-delay:-5s}
+.home-hero-pitch{position:absolute;right:-8px;top:50%;transform:translateY(-50%);opacity:.1;pointer-events:none}
+.pitch-line{fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 @keyframes pitch-draw{to{stroke-dashoffset:0}}
-.pitch-draw{stroke-dasharray:var(--len,400);stroke-dashoffset:var(--len,400);animation:pitch-draw .8s ease forwards}
+.pitch-draw{stroke-dasharray:var(--len,400);stroke-dashoffset:var(--len,400);animation:pitch-draw 1.2s ease forwards}
+.home-hero-eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:10px;position:relative;z-index:1;animation:hero-text-in .6s ease both}
+.home-hero-greeting{font-size:26px;font-weight:900;line-height:1.2;position:relative;z-index:1;animation:hero-text-in .6s .1s ease both;margin-bottom:6px}
+.home-hero-greeting em{font-style:normal;background:linear-gradient(90deg,#FFD700,#fff,#FFD700);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hero-shimmer 3s linear infinite}
+.home-hero-sub{font-size:13px;color:rgba(255,255,255,.55);font-weight:700;position:relative;z-index:1;animation:hero-text-in .6s .2s ease both}
 .home-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
 .home-stat{background:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
 .home-stat .hv{font-size:22px;font-weight:900;margin-bottom:2px}
@@ -586,9 +599,12 @@ nav button.sel{color:var(--green-dk)}
   </div>
 
   <div class="home-hero" id="home-hero">
-    <div class="home-hero-label">SPORTS SOLUTION ENGLISH</div>
-    <h1 id="home-hero-h1">海外移籍初日を<br>乗り切る英語</h1>
-    <p id="home-hero-p">練習中に飛ぶ英語を、5分で身につける</p>
+    <div class="home-hero-orb o1"></div>
+    <div class="home-hero-orb o2"></div>
+    <div class="home-hero-orb o3"></div>
+    <div class="home-hero-eyebrow" id="home-hero-eyebrow">TOP BINS</div>
+    <h1 class="home-hero-greeting" id="home-hero-h1">おかえり</h1>
+    <p class="home-hero-sub" id="home-hero-p">今日も英語でピッチに立て</p>
     <svg class="home-hero-pitch" width="160" height="110" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" id="hero-pitch-svg">
       <!-- center line -->
       <line class="pitch-line pitch-draw" x1="80" y1="4" x2="80" y2="106" style="--len:102;animation-delay:.0s"/>
@@ -2202,8 +2218,38 @@ function renderHome(){
   const ti=TIERS.indexOf(t);
   const next=TIERS[ti+1];
 
-  document.getElementById("home-hero-h1").innerHTML="海外移籍初日を<br>乗り切る英語";
-  document.getElementById("home-hero-p").textContent="練習中に飛ぶ英語を、5分で身につける";
+  /* hero greeting */
+  const posNames=S.position?S.position.split(',').map(p=>p.toUpperCase()).join(' / '):'';
+  let greetingMain,greetingSub,eyebrow;
+  if(S.streak===0){
+    eyebrow='TOP BINS — KICK OFF';
+    greetingMain='さあ、<em>始めよう</em>';
+    greetingSub='海外移籍初日を乗り切る英語を身につけろ';
+  } else if(S.streak<3){
+    eyebrow='TOP BINS'+(posNames?' — '+posNames:'');
+    greetingMain='おかえり<em>！</em>';
+    greetingSub='今日も英語でピッチに立て';
+  } else if(S.streak<7){
+    eyebrow=S.streak+'日連続継続中'+(posNames?' — '+posNames:'');
+    greetingMain='<em>好調</em>だ、続けろ';
+    greetingSub='止まるな。積み上げろ。';
+  } else if(S.streak<30){
+    eyebrow='🔥 '+S.streak+' DAY STREAK'+(posNames?' — '+posNames:'');
+    greetingMain='<em>'+S.streak+'日</em>連続。本物だ。';
+    greetingSub='このまま昇格まで突き進め';
+  } else {
+    eyebrow='🔥 '+S.streak+' DAY STREAK'+(posNames?' — '+posNames:'');
+    greetingMain='<em>伝説</em>になれ。';
+    greetingSub=S.streak+'日連続 — もう誰も止められない';
+  }
+  document.getElementById("home-hero-eyebrow").textContent=eyebrow;
+  document.getElementById("home-hero-h1").innerHTML=greetingMain;
+  document.getElementById("home-hero-p").textContent=greetingSub;
+  /* re-trigger text animations */
+  ['home-hero-eyebrow','home-hero-h1','home-hero-p'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.style.animation='none';el.offsetHeight;el.style.animation='';
+  });
   area.innerHTML=buildStreakCard();
 
   document.getElementById("streak-num").textContent=S.streak;
