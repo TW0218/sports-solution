@@ -471,6 +471,12 @@ nav button.sel{color:var(--green-dk)}
 .other-card h3{font-size:14px;font-weight:900;margin-bottom:3px}
 .other-card p{font-size:11px;color:var(--grey);line-height:1.45}
 .other-card.featured{border-color:var(--yellow)}
+.other-card.hero{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding:20px 20px;background:var(--ink);color:#fff;border:none}
+.other-card.hero .oc-ic{font-size:36px;margin-bottom:0;flex-shrink:0}
+.other-card.hero h3{font-size:17px;font-weight:900;color:#fff;margin-bottom:2px}
+.other-card.hero .hero-sub{font-size:10px;font-weight:900;letter-spacing:.12em;color:rgba(255,215,0,.7);margin-bottom:4px}
+.other-card.hero p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.45}
+.other-card.hero:active{transform:scale(.98)}
 /* ---- streak card ---- */
 :root{--sb:#0D2B6E;--sb-mid:#1E4DA8;--sb-lt:#D6E4FF}
 .streak-card{background:linear-gradient(135deg,#1c0800 0%,#2e1200 55%,#1a0900 100%);border-radius:20px;padding:14px 18px;margin-bottom:12px;position:relative;overflow:hidden;border:1px solid rgba(255,140,0,.2);display:flex;align-items:center;gap:14px}
@@ -917,6 +923,22 @@ nav button.sel{color:var(--green-dk)}
   <div class="quiz-top"><button class="btn-x" onclick="go('home')">&#x2715;</button>
     <div style="font-weight:900;font-size:17px">その他のメニュー</div></div>
   <div class="others-grid">
+    <div class="other-card hero" onclick="openCoach()">
+      <span class="oc-ic">&#x1F4E2;</span>
+      <div>
+        <div class="hero-sub">PITCH VOCAB</div>
+        <h3>英語でどう言う？</h3>
+        <p>日本語→現場英語を即返答</p>
+      </div>
+    </div>
+    <div class="other-card hero" onclick="openCases()">
+      <span class="oc-ic">&#x1F3AC;</span>
+      <div>
+        <div class="hero-sub">CASE STUDY</div>
+        <h3>ケーススタディ</h3>
+        <p>場面別フレーズを学ぶ</p>
+      </div>
+    </div>
     <div class="other-card featured" onclick="renderWeek();go('week')">
       <span class="oc-ic">&#x1F4C5;</span>
       <h3>週間プログラム</h3>
@@ -936,16 +958,6 @@ nav button.sel{color:var(--green-dk)}
       <span class="oc-ic">&#x1F3A7;</span>
       <h3>イヤーテスト</h3>
       <p>音だけで意味を当てる</p>
-    </div>
-    <div class="other-card" onclick="openCoach()">
-      <span class="oc-ic">&#x1F4E2;</span>
-      <h3>ピッチ翻訳</h3>
-      <p>日本語&#x2192;現場英語を即返答</p>
-    </div>
-    <div class="other-card" onclick="openCases()">
-      <span class="oc-ic">&#x1F3AC;</span>
-      <h3>ケーススタディ</h3>
-      <p>場面別フレーズを学ぶ</p>
     </div>
     <div class="other-card" onclick="startSession('comm',false)">
       <span class="oc-ic">&#x1F399;</span>
