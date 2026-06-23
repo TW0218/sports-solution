@@ -336,21 +336,38 @@ nav button.sel{color:var(--green-dk)}
 .quiz-opt-meta{font-size:11px;color:var(--grey);font-weight:700;margin-top:2px}
 .quiz-opt-badge{font-size:14px;font-weight:900;color:var(--green)}
 /* ---- daily missions ---- */
-.missions-card{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:12px}
-.missions-header{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--grey);margin-bottom:12px}
-.mission-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F0F4F1;cursor:pointer}
-.mission-row:last-child{border-bottom:none;padding-bottom:0}
-.mission-row.done{opacity:.5;cursor:default}
-.mission-icon{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
-.mission-icon.pitch{background:#E8F5EE}
-.mission-icon.quiz{background:#FFF8E1}
-.mission-icon.speak{background:#FCE4EC}
-.mission-texts{flex:1}
-.mission-name{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:2px}
-.mission-meta{font-size:11px;color:var(--grey);font-weight:700}
-.mission-status{font-size:13px;font-weight:900}
-.mission-status.done-badge{color:var(--green)}
-.mission-status.arrow{color:var(--grey)}
+.missions-section{margin-bottom:12px}
+.missions-header{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--grey);margin-bottom:10px;padding:0 2px}
+.missions-grid{display:flex;flex-direction:column;gap:10px}
+.mission-card{display:flex;align-items:center;gap:16px;padding:18px 18px;border-radius:20px;cursor:pointer;position:relative;overflow:hidden;border:none;width:100%;font-family:inherit;text-align:left;transition:transform .12s,box-shadow .12s}
+.mission-card:active{transform:scale(.97)}
+.mission-card.quiz-card{background:linear-gradient(135deg,#1a3a1e 0%,#0f2412 100%);box-shadow:0 4px 0 #0a1a0d,0 6px 20px rgba(20,80,30,.25)}
+.mission-card.speak-card{background:linear-gradient(135deg,#1a1040 0%,#0d0824 100%);box-shadow:0 4px 0 #08051a,0 6px 20px rgba(30,20,80,.25)}
+.mission-card.done-card{background:#f5f5f3;box-shadow:none;opacity:.65;cursor:default}
+.mission-card.done-card:active{transform:none}
+.mission-big-icon{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:26px;flex:0 0 auto}
+.mission-card.quiz-card .mission-big-icon{background:rgba(255,255,255,.12)}
+.mission-card.speak-card .mission-big-icon{background:rgba(255,255,255,.12)}
+.mission-card.done-card .mission-big-icon{background:rgba(0,0,0,.06)}
+.mission-body{flex:1;min-width:0}
+.mission-label{font-size:10px;font-weight:900;letter-spacing:.14em;margin-bottom:3px}
+.mission-card.quiz-card .mission-label{color:rgba(100,255,120,.7)}
+.mission-card.speak-card .mission-label{color:rgba(160,140,255,.7)}
+.mission-card.done-card .mission-label{color:var(--grey)}
+.mission-name{font-size:18px;font-weight:900;line-height:1.1;margin-bottom:4px}
+.mission-card.quiz-card .mission-name,.mission-card.speak-card .mission-name{color:#fff}
+.mission-card.done-card .mission-name{color:#999}
+.mission-meta{font-size:11px;font-weight:700}
+.mission-card.quiz-card .mission-meta{color:rgba(255,255,255,.5)}
+.mission-card.speak-card .mission-meta{color:rgba(255,255,255,.5)}
+.mission-card.done-card .mission-meta{color:#bbb}
+.mission-end{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:0 0 auto}
+.mission-arrow{font-size:22px;color:rgba(255,255,255,.35)}
+.mission-done-check{width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:900}
+.mission-progress-pills{display:flex;gap:4px;margin-top:2px}
+.mission-pill{font-size:9px;font-weight:800;padding:2px 7px;border-radius:99px;letter-spacing:.05em}
+.mission-pill.done-pill{background:rgba(100,255,120,.2);color:rgba(100,255,150,.9)}
+.mission-pill.todo-pill{background:rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
 /* ---- today session ---- */
 .today-session-card{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:12px}
 .today-session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -2242,18 +2259,34 @@ function renderHome(){
   const lockerQuizDone=S.lastLockerQuizDate===td;
   const quizAllDone=pitchQuizDone&&lockerQuizDone;
   const speakDone=S.lastSpeakDate===td;
-  const quizMeta=(pitchQuizDone&&lockerQuizDone)?'両方クリア！':pitchQuizDone?'Pitch ✓ / Locker →':lockerQuizDone?'Pitch → / Locker ✓':'Pitch Quiz・Locker Room Quiz';
-  const missionsHtml=`<div class="missions-card">
+  const quizPills=`<div class="mission-progress-pills"><span class="mission-pill ${pitchQuizDone?'done-pill':'todo-pill'}">PITCH</span><span class="mission-pill ${lockerQuizDone?'done-pill':'todo-pill'}">LOCKER</span></div>`;
+  const quizEnd=quizAllDone
+    ?`<div class="mission-done-check">✓</div>`
+    :`<div class="mission-arrow">›</div>${quizPills}`;
+  const speakEnd=speakDone
+    ?`<div class="mission-done-check">✓</div>`
+    :`<div class="mission-arrow">›</div>`;
+  const missionsHtml=`<div class="missions-section">
     <div class="missions-header">TODAY'S MISSIONS</div>
-    <div class="mission-row${quizAllDone?' done':''}" onclick="${quizAllDone?'':'openQuizPicker()'}">
-      <div class="mission-icon quiz">⚽</div>
-      <div class="mission-texts"><div class="mission-name">Quiz</div><div class="mission-meta">${quizMeta}</div></div>
-      <div class="mission-status ${quizAllDone?'done-badge':'arrow'}">${quizAllDone?'✓':'→'}</div>
-    </div>
-    <div class="mission-row${speakDone?' done':''}" onclick="${speakDone?'':'openCatPicker(\'speak\')'}">
-      <div class="mission-icon speak">🎙️</div>
-      <div class="mission-texts"><div class="mission-name">シャドーイング</div><div class="mission-meta">聞いて真似る・3分</div></div>
-      <div class="mission-status ${speakDone?'done-badge':'arrow'}">${speakDone?'✓':'→'}</div>
+    <div class="missions-grid">
+      <button class="mission-card quiz-card${quizAllDone?' done-card':''}" onclick="${quizAllDone?'':'openQuizPicker()'}">
+        <div class="mission-big-icon">⚽</div>
+        <div class="mission-body">
+          <div class="mission-label">DAILY QUIZ</div>
+          <div class="mission-name">Quiz</div>
+          <div class="mission-meta">Pitch Quiz &amp; Locker Room Quiz</div>
+        </div>
+        <div class="mission-end">${quizEnd}</div>
+      </button>
+      <button class="mission-card speak-card${speakDone?' done-card':''}" onclick="${speakDone?'':'openCatPicker(\'speak\')'}">
+        <div class="mission-big-icon">🎙️</div>
+        <div class="mission-body">
+          <div class="mission-label">SHADOWING</div>
+          <div class="mission-name">シャドーイング</div>
+          <div class="mission-meta">聞いて・真似る・3分</div>
+        </div>
+        <div class="mission-end">${speakEnd}</div>
+      </button>
     </div>
   </div>`;
 
