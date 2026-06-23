@@ -778,6 +778,7 @@ nav button.sel{color:var(--green-dk)}
 <section class="screen" id="scr-career">
   <div class="brand"><div class="logo">MY <span>CAREER</span></div>
     <div class="streak-pill"><span class="fire">🔥</span><span id="streak-num2">0</span></div></div>
+  <div id="career-tier-area"></div>
   <div class="career-head">
     <div class="club" id="career-club">SUNDAY LEAGUE</div>
     <h2 id="career-name">無名の挑戦者</h2>
@@ -2201,48 +2202,9 @@ function renderHome(){
   const ti=TIERS.indexOf(t);
   const next=TIERS[ti+1];
 
-  if(isZero){
-    document.getElementById("home-hero-h1").innerHTML="さあ、<br>キックオフだ";
-    document.getElementById("home-hero-p").textContent="初めてのマッチで今の実力を確かめよう";
-    area.innerHTML='<div class="day1-card">'
-      +'<img class="day1-card-img" src="'+t.img+'" alt="">'
-      +'<div class="day1-card-overlay"></div>'
-      +'<div class="day1-card-body">'
-      +'<div class="day1-eyebrow">'+t.name+' — KICK OFF</div>'
-      +'<div class="day1-title">今日が<br>スタートライン</div>'
-      +'<ul class="day1-checklist">'
-      +'<li>ピッチで飛び交うコールを覚える</li>'
-      +'<li>ロッカールームの会話に入れるようになる</li>'
-      +'<li>Sunday League → Japan Call-Up へ昇格する</li>'
-      +'</ul>'
-      +'</div>'
-      +'</div>';
-  } else {
-    document.getElementById("home-hero-h1").innerHTML="海外移籍初日を<br>乗り切る英語";
-    document.getElementById("home-hero-p").textContent="練習中に飛ぶ英語を、5分で身につける";
-    const nextBar=next
-      ?'<div class="tier-next-bar"><span class="tier-next-label">NEXT: '+next.name+'</span>'
-        +'<div class="tier-next-track"><div class="tier-next-fill" style="width:'+Math.min(100,Math.round((S.min-t.min)/(next.min-t.min)*100))+'%"></div></div>'
-        +'<span class="tier-next-pct">'+Math.min(100,Math.round((S.min-t.min)/(next.min-t.min)*100))+'%</span></div>'
-      :'<div class="tier-next-bar"><span class="tier-next-label">JAPAN CALL-UP 達成！</span></div>';
-    area.innerHTML='<div class="tier-card">'
-      +'<img class="day1-card-img" src="'+t.img+'" alt="">'
-      +'<div class="day1-card-overlay"></div>'
-      +'<div class="tier-card-body">'
-      +'<div class="day1-eyebrow">'+t.name+'</div>'
-      +'<div class="tier-card-title">'+t.title+'</div>'
-      +'<div class="tier-card-sub">'+t.sub+'</div>'
-      +nextBar
-      +'</div>'
-      +'</div>'
-      +buildStreakCard()
-      +'<div class="home-stats">'
-      +'<div class="home-stat"><div class="hv" style="color:var(--green)">'+r.pitch+'%</div><div class="hl">ピッチ理解率</div></div>'
-      +'<div class="home-stat"><div class="hv" style="color:#D4537E">'+r.locker+'%</div><div class="hl">ロッカー対応度</div></div>'
-      +'<div class="home-stat"><div class="hv">'+calls+'</div><div class="hl">即答できるコール</div></div>'
-      +'<div class="home-stat"><div class="hv">'+S.min+'分</div><div class="hl">総学習時間</div></div>'
-      +'</div>';
-  }
+  document.getElementById("home-hero-h1").innerHTML="海外移籍初日を<br>乗り切る英語";
+  document.getElementById("home-hero-p").textContent="練習中に飛ぶ英語を、5分で身につける";
+  area.innerHTML=buildStreakCard();
 
   document.getElementById("streak-num").textContent=S.streak;
   requestAnimationFrame(animateStreakCount);
@@ -2723,6 +2685,32 @@ function tierFor(min){let t=TIERS[0];TIERS.forEach(x=>{if(min>=x.min)t=x});retur
 function renderCareer(){
   document.getElementById("streak-num2").textContent=S.streak;
   const t=tierFor(S.min);
+  const ti=TIERS.indexOf(t);
+  const next=TIERS[ti+1];
+  const r=readiness();
+  const calls=Object.values(S.box).filter(v=>v>=2).length;
+  const nextBar=next
+    ?'<div class="tier-next-bar"><span class="tier-next-label">NEXT: '+next.name+'</span>'
+      +'<div class="tier-next-track"><div class="tier-next-fill" style="width:'+Math.min(100,Math.round((S.min-t.min)/(next.min-t.min)*100))+'%"></div></div>'
+      +'<span class="tier-next-pct">'+Math.min(100,Math.round((S.min-t.min)/(next.min-t.min)*100))+'%</span></div>'
+    :'<div class="tier-next-bar"><span class="tier-next-label">JAPAN CALL-UP 達成！</span></div>';
+  document.getElementById("career-tier-area").innerHTML=
+    '<div class="tier-card" style="margin-bottom:14px">'
+    +'<img class="day1-card-img" src="'+t.img+'" alt="">'
+    +'<div class="day1-card-overlay"></div>'
+    +'<div class="tier-card-body">'
+    +'<div class="day1-eyebrow">'+t.name+'</div>'
+    +'<div class="tier-card-title">'+t.title+'</div>'
+    +'<div class="tier-card-sub">'+t.sub+'</div>'
+    +nextBar
+    +'</div>'
+    +'</div>'
+    +'<div class="home-stats" style="margin-bottom:14px">'
+    +'<div class="home-stat"><div class="hv" style="color:var(--green)">'+r.pitch+'%</div><div class="hl">ピッチ理解率</div></div>'
+    +'<div class="home-stat"><div class="hv" style="color:#D4537E">'+r.locker+'%</div><div class="hl">ロッカー対応度</div></div>'
+    +'<div class="home-stat"><div class="hv">'+calls+'</div><div class="hl">即答できるコール</div></div>'
+    +'<div class="home-stat"><div class="hv">'+S.min+'分</div><div class="hl">総学習時間</div></div>'
+    +'</div>';
   document.getElementById("career-club").textContent=t.name;
   document.getElementById("career-name").textContent=t.ja;
   document.getElementById("cs-min").textContent=S.min+"'";
