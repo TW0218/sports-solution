@@ -1916,9 +1916,18 @@ function speakTTS(text,r,cat){
     }else{
       u.rate=r||rate; u.pitch=0.95;
     }
-    speechSynthesis.speak(u);
+    /* iOS: cancel()直後のspeak()がdropされるバグ対策 */
+    setTimeout(()=>{
+      try{ speechSynthesis.speak(u); }catch(e){}
+    }, speechSynthesis.speaking ? 80 : 10);
   }catch(e){}
 }
+/* バックグラウンド復帰後にspeechSynthesisが詰まるiOSバグ対策 */
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible' && speechSynthesis.pending){
+    speechSynthesis.cancel();
+  }
+});
 let AC=null;
 function sfx(type){
   try{
