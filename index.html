@@ -318,6 +318,23 @@ nav button.sel{color:var(--green-dk)}
 .cta-arrow{font-size:18px;color:var(--grey)}
 .more-link{display:block;width:100%;text-align:center;background:none;border:2px solid #E2EAE5;border-radius:14px;padding:11px;font-size:13px;font-weight:800;color:var(--grey);cursor:pointer;font-family:inherit}
 .more-link:active{opacity:.7}
+/* ---- quiz picker sheet ---- */
+#quiz-picker-sheet{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none;opacity:0;transition:opacity .2s}
+#quiz-picker-sheet.open{pointer-events:auto;opacity:1}
+#quiz-picker-sheet::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.quiz-picker-panel{position:relative;background:#fff;border-radius:24px 24px 0 0;padding:20px 18px 40px;display:flex;flex-direction:column;gap:10px;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+#quiz-picker-sheet.open .quiz-picker-panel{transform:translateY(0)}
+.quiz-picker-title{font-size:13px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:4px}
+.quiz-option-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;border:1.5px solid #E8EFEA;cursor:pointer;transition:border-color .15s,background .15s}
+.quiz-option-row:active{background:#f6faf7}
+.quiz-option-row.done-opt{opacity:.55;cursor:default}
+.quiz-opt-icon{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 auto}
+.quiz-opt-icon.pitch{background:#E8F5EE}
+.quiz-opt-icon.locker{background:#FFF3E0}
+.quiz-opt-texts{flex:1}
+.quiz-opt-name{font-size:15px;font-weight:900;color:var(--ink)}
+.quiz-opt-meta{font-size:11px;color:var(--grey);font-weight:700;margin-top:2px}
+.quiz-opt-badge{font-size:14px;font-weight:900;color:var(--green)}
 /* ---- daily missions ---- */
 .missions-card{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:12px}
 .missions-header{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--grey);margin-bottom:12px}
@@ -789,6 +806,29 @@ nav button.sel{color:var(--green-dk)}
   <div class="fb-ja" id="fb-ja"></div>
   <div class="fb-note" id="fb-note"></div>
   <button class="next-btn" id="fb-next" onclick="nextQuestion()">次へ →</button>
+</div>
+
+<!-- ============ QUIZ PICKER SHEET ============ -->
+<div id="quiz-picker-sheet" onclick="closeQuizPicker(event)">
+  <div class="quiz-picker-panel">
+    <div class="quiz-picker-title">QUIZ を選択</div>
+    <div id="qp-pitch" class="quiz-option-row" onclick="startQuizFromPicker('pitch')">
+      <div class="quiz-opt-icon pitch">⚽</div>
+      <div class="quiz-opt-texts">
+        <div class="quiz-opt-name">Pitch Quiz</div>
+        <div class="quiz-opt-meta">ピッチで使う英語・10問</div>
+      </div>
+      <div id="qp-pitch-badge" class="quiz-opt-badge"></div>
+    </div>
+    <div id="qp-locker" class="quiz-option-row" onclick="startQuizFromPicker('locker')">
+      <div class="quiz-opt-icon locker">🪑</div>
+      <div class="quiz-opt-texts">
+        <div class="quiz-opt-name">Locker Room Quiz</div>
+        <div class="quiz-opt-meta">ロッカールームの英語・10問</div>
+      </div>
+      <div id="qp-locker-badge" class="quiz-opt-badge"></div>
+    </div>
+  </div>
 </div>
 
 <nav>
@@ -1864,7 +1904,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastSpeakDate:""},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:""},data.progress);
   }
 }
 
@@ -1908,7 +1948,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastSpeakDate:"",position:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:""};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2198,20 +2238,17 @@ function renderHome(){
 
   /* Daily Missions */
   const td=today();
-  const sessionDone=S.doneToday===td;
-  const quizDone=S.lastQuizDate===td;
+  const pitchQuizDone=S.lastQuizDate===td;
+  const lockerQuizDone=S.lastLockerQuizDate===td;
+  const quizAllDone=pitchQuizDone&&lockerQuizDone;
   const speakDone=S.lastSpeakDate===td;
+  const quizMeta=(pitchQuizDone&&lockerQuizDone)?'両方クリア！':pitchQuizDone?'Pitch ✓ / Locker →':lockerQuizDone?'Pitch → / Locker ✓':'Pitch Quiz・Locker Room Quiz';
   const missionsHtml=`<div class="missions-card">
     <div class="missions-header">TODAY'S MISSIONS</div>
-    <div class="mission-row${sessionDone?' done':''}" onclick="${sessionDone?'':'startTodaySession()'}">
-      <div class="mission-icon pitch">⚡</div>
-      <div class="mission-texts"><div class="mission-name">Today's Session</div><div class="mission-meta">3フレーズ・30秒</div></div>
-      <div class="mission-status ${sessionDone?'done-badge':'arrow'}">${sessionDone?'✓':'→'}</div>
-    </div>
-    <div class="mission-row${quizDone?' done':''}" onclick="${quizDone?'':'startSession(\'pitch\',false)'}">
+    <div class="mission-row${quizAllDone?' done':''}" onclick="${quizAllDone?'':'openQuizPicker()'}">
       <div class="mission-icon quiz">⚽</div>
-      <div class="mission-texts"><div class="mission-name">ピッチクイズ</div><div class="mission-meta">10問・約5分</div></div>
-      <div class="mission-status ${quizDone?'done-badge':'arrow'}">${quizDone?'✓':'→'}</div>
+      <div class="mission-texts"><div class="mission-name">Quiz</div><div class="mission-meta">${quizMeta}</div></div>
+      <div class="mission-status ${quizAllDone?'done-badge':'arrow'}">${quizAllDone?'✓':'→'}</div>
     </div>
     <div class="mission-row${speakDone?' done':''}" onclick="${speakDone?'':'openCatPicker(\'speak\')'}">
       <div class="mission-icon speak">🎙️</div>
@@ -2275,6 +2312,24 @@ function renderWeek(){
 
 /* ================= CATEGORY PICKER ================= */
 let pickMode="quiz";
+function openQuizPicker(){
+  const td=today();
+  const pd=S.lastQuizDate===td;
+  const ld=S.lastLockerQuizDate===td;
+  document.getElementById('qp-pitch-badge').textContent=pd?'✓':'';
+  document.getElementById('qp-locker-badge').textContent=ld?'✓':'';
+  document.getElementById('qp-pitch').classList.toggle('done-opt',pd);
+  document.getElementById('qp-locker').classList.toggle('done-opt',ld);
+  document.getElementById('quiz-picker-sheet').classList.add('open');
+}
+function closeQuizPicker(e){
+  if(e.target===document.getElementById('quiz-picker-sheet'))
+    document.getElementById('quiz-picker-sheet').classList.remove('open');
+}
+function startQuizFromPicker(cat){
+  document.getElementById('quiz-picker-sheet').classList.remove('open');
+  startSession(cat,false);
+}
 function openCatPicker(mode){
   pickMode=mode;
   document.getElementById("pick-title").textContent={quiz:"クイズ",ear:"イヤーテスト",speak:"シャドーイング",cards:"単語カード"}[mode]+" — カテゴリー";
@@ -2517,7 +2572,8 @@ function finishSession(){
   if(S.caps>=10)awardOnce("ten","🔟 通算10試合出場！");
   if(S.min>=14400)awardOnce("cap","🦁 イングランド代表招集！");
   if(goalsNow===Q.length)awardOnce("motm","⭐ MAN OF THE MATCH");
-  S.lastQuizDate=today();
+  if(lastCat==='locker') S.lastLockerQuizDate=today();
+  else S.lastQuizDate=today();
   save();
   document.getElementById("res-goals").textContent=goalsNow;
   document.getElementById("res-miss").textContent=missNow;
