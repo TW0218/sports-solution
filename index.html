@@ -314,7 +314,8 @@ nav button.sel{color:var(--green-dk)}
 .home-hero-eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:10px;position:relative;z-index:1;animation:hero-text-in .6s ease both}
 .home-hero-greeting{font-size:26px;font-weight:900;line-height:1.2;position:relative;z-index:1;animation:hero-text-in .6s .1s ease both;margin-bottom:6px}
 .home-hero-greeting em{font-style:normal;background:linear-gradient(90deg,#FFD700,#fff,#FFD700);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hero-shimmer 3s linear infinite}
-.home-hero-sub{font-size:13px;color:rgba(255,255,255,.55);font-weight:700;position:relative;z-index:1;animation:hero-text-in .6s .2s ease both}
+.home-hero-sub{font-size:13px;color:rgba(255,255,255,.55);font-weight:700;position:relative;z-index:1;animation:hero-text-in .6s .2s ease both;margin-bottom:6px}
+.home-hero-en{font-size:11px;font-weight:800;color:rgba(255,215,0,.6);letter-spacing:.04em;font-style:italic;position:relative;z-index:1;animation:hero-text-in .6s .3s ease both}
 .home-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
 .home-stat{background:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
 .home-stat .hv{font-size:22px;font-weight:900;margin-bottom:2px}
@@ -606,6 +607,7 @@ nav button.sel{color:var(--green-dk)}
     <div class="home-hero-eyebrow" id="home-hero-eyebrow">TOP BINS</div>
     <h1 class="home-hero-greeting" id="home-hero-h1">おかえり</h1>
     <p class="home-hero-sub" id="home-hero-p">今日も英語でピッチに立て</p>
+    <p class="home-hero-en" id="home-hero-en">Get ya boots on, son.</p>
     <svg class="home-hero-pitch" width="160" height="110" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" id="hero-pitch-svg">
       <!-- center line -->
       <line class="pitch-line pitch-draw" x1="80" y1="4" x2="80" y2="106" style="--len:102;animation-delay:.0s"/>
@@ -2220,33 +2222,39 @@ function renderHome(){
 
   /* hero greeting */
   const posNames=S.position?S.position.split(',').map(p=>p.toUpperCase()).join(' / '):'';
-  let greetingMain,greetingSub,eyebrow;
+  let greetingMain,greetingSub,greetingEn,eyebrow;
   if(S.streak===0){
     eyebrow='TOP BINS — KICK OFF';
     greetingMain='さあ、<em>始めよう</em>';
     greetingSub='海外移籍初日を乗り切る英語を身につけろ';
+    greetingEn="Get ya boots on, son. It starts 'ere.";
   } else if(S.streak<3){
     eyebrow='TOP BINS'+(posNames?' — '+posNames:'');
     greetingMain='おかえり<em>！</em>';
     greetingSub='今日も英語でピッチに立て';
+    greetingEn="Oi, you're back on the pitch. Let's 'ave it.";
   } else if(S.streak<7){
     eyebrow=S.streak+'日連続継続中'+(posNames?' — '+posNames:'');
     greetingMain='<em>好調</em>だ、続けろ';
     greetingSub='止まるな。積み上げろ。';
+    greetingEn="You're on a blinder, mate. Don't drop off now.";
   } else if(S.streak<30){
     eyebrow='🔥 '+S.streak+' DAY STREAK'+(posNames?' — '+posNames:'');
     greetingMain='<em>'+S.streak+'日</em>連続。本物だ。';
     greetingSub='このまま昇格まで突き進め';
+    greetingEn=S.streak+" days solid. You ain't messin' about.";
   } else {
     eyebrow='🔥 '+S.streak+' DAY STREAK'+(posNames?' — '+posNames:'');
     greetingMain='<em>伝説</em>になれ。';
     greetingSub=S.streak+'日連続 — もう誰も止められない';
+    greetingEn="Blimey. "+S.streak+" days. Proper legend, innit.";
   }
   document.getElementById("home-hero-eyebrow").textContent=eyebrow;
   document.getElementById("home-hero-h1").innerHTML=greetingMain;
   document.getElementById("home-hero-p").textContent=greetingSub;
+  document.getElementById("home-hero-en").textContent=greetingEn;
   /* re-trigger text animations */
-  ['home-hero-eyebrow','home-hero-h1','home-hero-p'].forEach(id=>{
+  ['home-hero-eyebrow','home-hero-h1','home-hero-p','home-hero-en'].forEach(id=>{
     const el=document.getElementById(id);
     el.style.animation='none';el.offsetHeight;el.style.animation='';
   });
