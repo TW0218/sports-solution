@@ -641,7 +641,11 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .md-result-label.miss{background:rgba(226,73,59,.15);color:#E2493B}
 .md-result-feedback{font-size:13px;color:rgba(238,244,241,.7);font-weight:600;line-height:1.6}
 .md-xp-pop{font-size:13px;font-weight:900;color:var(--green)}
-.md-next-btn{display:block;width:calc(100% - 32px);margin:16px 16px;background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
+.md-next-btn{display:block;width:100%;margin-top:14px;background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);letter-spacing:.04em}
+.md-audio-btn{background:none;border:1px solid var(--border2);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:800;color:var(--green);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;margin-top:8px}
+.md-correct-reveal{margin-top:10px;padding:12px 14px;background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.25);border-radius:12px}
+.md-correct-reveal-label{font-size:10px;font-weight:900;letter-spacing:.08em;color:var(--green);margin-bottom:4px}
+.md-correct-reveal-text{font-size:14px;font-weight:800;color:var(--ink);font-style:italic}
 .md-complete{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;gap:16px;text-align:center;flex:1}
 .md-complete-icon{font-size:56px;line-height:1}
 .md-complete-title{font-size:24px;font-weight:900;color:var(--ink)}
@@ -791,7 +795,6 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
     <div class="md-progress-dots" id="md-dots"></div>
   </div>
   <div class="md-scene-wrap" id="md-scene-wrap"></div>
-  <button class="md-next-btn" id="md-next-btn" style="display:none" onclick="mdNext()">次のシーン ›</button>
 </section>
 
 <!-- ============ COACH'S CALL (ピッチ翻訳) ============ -->
@@ -3414,7 +3417,7 @@ const MATCHDAY_SCENES=[
   {id:19,level:3,setting:"戦術ミーティング。監督が質問を受け付けている。",speaker:"Gaffer",line:"Any questions? I need you all to know your roles inside out.",
    choices:[
     {text:"I have a question. When the other team has the ball, what should I do?",score:25,label:"通じる",feedback:"通じるが、質問が漠然としすぎ。もっと具体的に。"},
-    {text:"Gaffer, when they play out from the back — do we press or hold shape?",score:100,label:"ピッチ英語",feedback:"'Play out from the back'＋'Hold shape'。戦術的な質問で監督の信頼を得る。"},
+    {text:"Gaffer, when they play out from the back, do we press or hold shape?",score:100,label:"ピッチ英語",feedback:"'Play out from the back'＋'Hold shape'。戦術的な質問で監督の信頼を得る。"},
     {text:"OK, I understand my role. No questions.",score:20,label:"通じる",feedback:"質問しない方が安全に思えるが、戦術理解を示す機会を逃している。"}
    ]},
   {id:20,level:3,setting:"PK戦。あなたが最後のキッカー。決めれば優勝。",speaker:"GK（キャプテン）",line:"It's on you, mate. Back yourself.",
@@ -3439,15 +3442,17 @@ const MD_RANK=[
 function mdRankFor(xp){let r=MD_RANK[0];MD_RANK.forEach(x=>{if(xp>=x.min)r=x});return r;}
 function mdXpFor(score){if(score>=80)return 100;if(score>=40)return 40;return 10;}
 
-let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false;
+let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null;
+
+function mdPlaySrc(src){const a=new Audio(src);a.play().catch(()=>{});}
+function mdPlayText(text){mdPlaySrc(textToAudioSrc(text));}
 
 function openMatchday(){
   const td=today();
   if(S.matchdayDate!==td){S.matchdayDate=td;S.matchdayCount=0;save();}
   if(S.matchdayCount>=3){
     go('matchday','push');
-    document.getElementById('md-scene-wrap').innerHTML=`<div class="md-complete"><div class="md-complete-icon">🏆</div><div class="md-complete-title">今日は完了！</div><div class="md-complete-xp">獲得XP: ${mdSessionXP} XP</div><div class="md-complete-sub">明日また新しいシーンで挑戦しよう</div><button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button></div>`;
-    document.getElementById('md-next-btn').style.display='none';
+    document.getElementById('md-scene-wrap').innerHTML=`<div class="md-complete"><div class="md-complete-icon">🏆</div><div class="md-complete-title">今日は完了！</div><div class="md-complete-sub">明日また新しいシーンで挑戦しよう</div><button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button></div>`;
     renderMdDots();
     return;
   }
@@ -3465,54 +3470,79 @@ function shuffleMd(){
 
 function renderMdScene(){
   mdAnswered=false;
-  const scene=mdQueue[mdQueueIdx];
+  mdCurrentScene=mdQueue[mdQueueIdx];
+  const scene=mdCurrentScene;
   const lv=MD_LEVELS[scene.level];
-  const shuffled=[...scene.choices].map((c,i)=>({...c,origIdx:i})).sort(()=>Math.random()-.5);
+  mdCurrentChoices=[...scene.choices].map((c,i)=>({...c,origIdx:i})).sort(()=>Math.random()-.5);
   renderMdDots();
-  document.getElementById('md-next-btn').style.display='none';
+  const lineIsEn=!scene.line.startsWith('（')&&!scene.line.startsWith('(');
+  const speakerCardHtml=`<div class="md-speaker-card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+      <div>
+        <div class="md-speaker-name">${scene.speaker}</div>
+        <div class="md-speaker-line">"${scene.line}"</div>
+      </div>
+      ${lineIsEn?`<button class="md-audio-btn" onclick="mdPlayText('${scene.line.replace(/'/g,"\\'")}')">▶ 聞く</button>`:''}
+    </div>
+  </div>`;
   document.getElementById('md-scene-wrap').innerHTML=`
     <span class="md-level-badge ${lv.cls}">${lv.label}</span>
     <div class="md-setting">${scene.setting}</div>
-    <div class="md-speaker-card">
-      <div class="md-speaker-name">${scene.speaker}</div>
-      <div class="md-speaker-line">"${scene.line}"</div>
-    </div>
+    ${speakerCardHtml}
     <div class="md-choices-label">どう返す？</div>
     <div class="md-choices" id="md-choices">
-      ${shuffled.map((c,i)=>`<button class="md-choice tap-fx" onclick="mdSelect(${i},${c.score},'${encodeURIComponent(c.label)}','${encodeURIComponent(c.feedback)}')">${c.text}</button>`).join('')}
+      ${mdCurrentChoices.map((c,i)=>`<button class="md-choice tap-fx" id="md-ch-${i}" onclick="mdSelect(${i})">${c.text}</button>`).join('')}
     </div>
     <div id="md-result"></div>
   `;
+  if(lineIsEn) setTimeout(()=>mdPlayText(scene.line),400);
 }
 
 function renderMdDots(){
-  const total=3;const done=S.matchdayCount+(mdAnswered?0:0);
-  document.getElementById('md-dots').innerHTML=Array.from({length:total},(_,i)=>{
-    const cls=i<S.matchdayCount?'done':i===mdQueueIdx+S.matchdayCount&&mdAnswered?'active':i===mdQueueIdx?'active':'';
+  document.getElementById('md-dots').innerHTML=Array.from({length:3},(_,i)=>{
+    const cls=i<(S.matchdayCount||0)?'done':i===mdQueueIdx?'active':'';
     return `<div class="md-dot ${cls}"></div>`;
   }).join('');
 }
 
-function mdSelect(idx,score,labelEnc,feedbackEnc){
+function mdSelect(idx){
   if(mdAnswered)return;
   mdAnswered=true;
-  const label=decodeURIComponent(labelEnc);
-  const feedback=decodeURIComponent(feedbackEnc);
+  const chosen=mdCurrentChoices[idx];
+  const score=chosen.score;
+  const label=chosen.label;
+  const feedback=chosen.feedback;
   const xp=mdXpFor(score);
   mdSessionXP+=xp;
   S.totalXP=(S.totalXP||0)+xp;
   save();
 
-  const btns=document.querySelectorAll('.md-choice');
-  btns.forEach((b,i)=>{
+  // Style all buttons
+  mdCurrentChoices.forEach((_,i)=>{
+    const b=document.getElementById(`md-ch-${i}`);
+    if(!b)return;
     b.classList.add('disabled');
-    if(i===idx){
-      b.classList.add(score>=80?'selected-good':score>=40?'selected-ok':'selected-bad');
-    }
+    if(i===idx) b.classList.add(score>=80?'selected-good':score>=40?'selected-ok':'selected-bad');
   });
 
+  // Feedback audio
+  const feedbackLine=score>=80?'Well done, son!':score>=40?'Nearly there, son!':'Keep going, son!';
+  setTimeout(()=>mdPlayText(feedbackLine),300);
+
+  // Correct choice
+  const correct=mdCurrentScene.choices.find(c=>c.score>=80);
+  const isCorrect=score>=80;
+  const correctAudioBtn=`<button class="md-audio-btn" onclick="mdPlayText('${correct.text.replace(/'/g,"\\'")}')">▶ 正解を聞く</button>`;
+
   const scoreCls=score>=80?'great':score>=40?'ok':'miss';
-  const scoreLabel=score>=80?'ピッチ英語！':score>=40?'通じる':'教科書英語';
+  const correctRevealHtml=isCorrect?'':`
+    <div class="md-correct-reveal">
+      <div class="md-correct-reveal-label">✓ ピッチ英語はこれ</div>
+      <div class="md-correct-reveal-text">"${correct.text}"</div>
+      ${correctAudioBtn}
+    </div>`;
+
+  const nextLabel=mdQueueIdx>=2?'結果を見る':'NEXT';
   document.getElementById('md-result').innerHTML=`
     <div class="md-result-card">
       <div class="md-result-score-row">
@@ -3520,11 +3550,13 @@ function mdSelect(idx,score,labelEnc,feedbackEnc){
         <span class="md-result-label ${scoreCls}">${label}</span>
       </div>
       <div class="md-result-feedback">${feedback}</div>
+      ${isCorrect?correctAudioBtn:''}
+      ${correctRevealHtml}
       <div class="md-xp-pop">+${xp} XP</div>
+      <button class="md-next-btn tap-fx" onclick="mdNext()">${nextLabel} ›</button>
     </div>
   `;
-  document.getElementById('md-next-btn').style.display='block';
-  document.getElementById('md-next-btn').textContent=mdQueueIdx>=2?'結果を見る ›':'次のシーン ›';
+  document.getElementById('md-result').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function mdNext(){
@@ -3540,7 +3572,6 @@ function mdNext(){
         <div class="md-complete-sub">現在のランク：${rank.rank}<br>通算 ${S.totalXP} XP</div>
         <button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
       </div>`;
-    document.getElementById('md-next-btn').style.display='none';
     renderMdDots();
   } else {
     renderMdScene();
