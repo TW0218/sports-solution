@@ -642,10 +642,28 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .md-result-feedback{font-size:13px;color:rgba(238,244,241,.7);font-weight:600;line-height:1.6}
 .md-xp-pop{font-size:13px;font-weight:900;color:var(--green)}
 .md-next-btn{display:block;width:100%;margin-top:14px;background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);letter-spacing:.04em}
-.md-audio-btn{background:none;border:1px solid var(--border2);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:800;color:var(--green);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;margin-top:8px}
-.md-correct-reveal{margin-top:10px;padding:12px 14px;background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.25);border-radius:12px}
+/* speaker 3D button */
+.md-sound-btn{background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.4);border-radius:50%;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.4),0 1px 0 rgba(255,255,255,.08) inset,0 0 0 0 rgba(29,158,117,.4);transform:perspective(200px) rotateX(8deg);transition:transform .12s,box-shadow .12s}
+.md-sound-btn:active{transform:perspective(200px) rotateX(12deg) scale(.92);box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.md-sound-btn svg{color:var(--green);filter:drop-shadow(0 0 4px rgba(29,158,117,.6))}
+@keyframes waveA{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:.3;transform:scale(1.1)}}
+@keyframes waveB{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.1;transform:scale(1.15)}}
+.md-wave1{animation:waveA 1.2s ease-in-out infinite}
+.md-wave2{animation:waveB 1.2s ease-in-out .3s infinite}
+.md-sound-btn.playing{box-shadow:0 4px 16px rgba(0,0,0,.4),0 0 14px rgba(29,158,117,.5);animation:soundPulse .6s ease}
+@keyframes soundPulse{0%{transform:perspective(200px) rotateX(8deg) scale(1)}30%{transform:perspective(200px) rotateX(8deg) scale(1.12)}100%{transform:perspective(200px) rotateX(8deg) scale(1)}}
+.md-correct-reveal{margin-top:10px;padding:12px 14px;background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.25);border-radius:12px;display:flex;align-items:center;gap:12px}
+.md-correct-reveal-body{flex:1}
 .md-correct-reveal-label{font-size:10px;font-weight:900;letter-spacing:.08em;color:var(--green);margin-bottom:4px}
 .md-correct-reveal-text{font-size:14px;font-weight:800;color:var(--ink);font-style:italic}
+
+/* celebration */
+.md-celeb-overlay{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;pointer-events:none;animation:celebFade .35s ease 1.5s forwards}
+@keyframes celebFade{to{opacity:0}}
+.md-celeb-text{font-size:44px;font-weight:900;color:#fff;letter-spacing:-.02em;text-shadow:0 0 40px rgba(29,158,117,.9),0 2px 0 rgba(0,0,0,.6);animation:celebZoom .4s cubic-bezier(.175,.885,.32,1.275) forwards}
+@keyframes celebZoom{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+.md-celeb-particle{position:absolute;width:9px;height:9px;border-radius:2px;top:50%;left:50%;margin:-4px;animation:celebP 1.3s ease-out forwards}
+@keyframes celebP{from{opacity:1;transform:translate(0,0) rotate(0deg) scale(1)}to{opacity:0;transform:translate(var(--tx),var(--ty)) rotate(540deg) scale(.4)}}
 .md-complete{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;gap:16px;text-align:center;flex:1}
 .md-complete-icon{font-size:56px;line-height:1}
 .md-complete-title{font-size:24px;font-weight:900;color:var(--ink)}
@@ -3445,7 +3463,53 @@ function mdXpFor(score){if(score>=80)return 100;if(score>=40)return 40;return 10
 let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null;
 
 function mdPlaySrc(src){const a=new Audio(src);a.play().catch(()=>{});}
-function mdPlayText(text){mdPlaySrc(textToAudioSrc(text));}
+function mdPlayText(text,btnEl){
+  if(btnEl){btnEl.classList.add('playing');setTimeout(()=>btnEl.classList.remove('playing'),700);}
+  mdPlaySrc(textToAudioSrc(text));
+}
+function mdSoundBtn(text,extraCls=''){
+  const esc=text.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  return `<button class="md-sound-btn ${extraCls}" onclick="mdPlayText('${esc}',this)" title="音声を再生">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+      <path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor"/>
+      <path d="M15.54 8.46a5 5 0 010 7.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="md-wave1"/>
+      <path d="M19.07 4.93a10 10 0 010 14.14" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="md-wave2"/>
+    </svg>
+  </button>`;
+}
+function mdPlayVictorySound(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [[523,0],[659,.13],[784,.26],[1047,.42]].forEach(([f,d])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.frequency.value=f;o.type='sine';
+      g.gain.setValueAtTime(0,ctx.currentTime+d);
+      g.gain.linearRampToValueAtTime(.22,ctx.currentTime+d+.05);
+      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+d+.38);
+      o.start(ctx.currentTime+d);o.stop(ctx.currentTime+d+.4);
+    });
+  }catch(e){}
+}
+function mdCelebrate(){
+  const ol=document.createElement('div');
+  ol.className='md-celeb-overlay';
+  const colors=['#1D9E75','#FFC400','#fff','#4CAF50','#FFD700','#3ecf8e','#E2493B'];
+  let pts='';
+  for(let i=0;i<28;i++){
+    const a=(i/28)*360+Math.random()*10;
+    const d=70+Math.random()*130;
+    const tx=Math.cos(a*Math.PI/180)*d;
+    const ty=Math.sin(a*Math.PI/180)*d-(40+Math.random()*60);
+    const c=colors[i%colors.length];
+    const dl=(Math.random()*.2).toFixed(2);
+    pts+=`<div class="md-celeb-particle" style="background:${c};--tx:${tx.toFixed(0)}px;--ty:${ty.toFixed(0)}px;animation-delay:${dl}s"></div>`;
+  }
+  ol.innerHTML=`<div class="md-celeb-text">GET IN! ⚽</div>${pts}`;
+  document.body.appendChild(ol);
+  mdPlayVictorySound();
+  setTimeout(()=>ol.remove(),2200);
+}
 
 function openMatchday(){
   const td=today();
@@ -3477,12 +3541,12 @@ function renderMdScene(){
   renderMdDots();
   const lineIsEn=!scene.line.startsWith('（')&&!scene.line.startsWith('(');
   const speakerCardHtml=`<div class="md-speaker-card">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-      <div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+      <div style="flex:1">
         <div class="md-speaker-name">${scene.speaker}</div>
         <div class="md-speaker-line">"${scene.line}"</div>
       </div>
-      ${lineIsEn?`<button class="md-audio-btn" onclick="mdPlayText('${scene.line.replace(/'/g,"\\'")}')">▶ 聞く</button>`:''}
+      ${lineIsEn?mdSoundBtn(scene.line):''}
     </div>
   </div>`;
   document.getElementById('md-scene-wrap').innerHTML=`
@@ -3525,21 +3589,22 @@ function mdSelect(idx){
     if(i===idx) b.classList.add(score>=80?'selected-good':score>=40?'selected-ok':'selected-bad');
   });
 
-  // Feedback audio
+  // Feedback audio + celebration
   const feedbackLine=score>=80?'Well done, son!':score>=40?'Nearly there, son!':'Keep going, son!';
-  setTimeout(()=>mdPlayText(feedbackLine),300);
+  if(score>=80){setTimeout(()=>mdCelebrate(),150);setTimeout(()=>mdPlayText(feedbackLine),600);}
+  else{setTimeout(()=>mdPlayText(feedbackLine),300);}
 
   // Correct choice
   const correct=mdCurrentScene.choices.find(c=>c.score>=80);
   const isCorrect=score>=80;
-  const correctAudioBtn=`<button class="md-audio-btn" onclick="mdPlayText('${correct.text.replace(/'/g,"\\'")}')">▶ 正解を聞く</button>`;
-
   const scoreCls=score>=80?'great':score>=40?'ok':'miss';
-  const correctRevealHtml=isCorrect?'':`
+  const correctRevealHtml=isCorrect?`<div style="display:flex;align-items:center;gap:8px;margin-top:8px">${mdSoundBtn(correct.text)}<span style="font-size:11px;color:var(--grey);font-weight:700">正解を聞く</span></div>`:`
     <div class="md-correct-reveal">
-      <div class="md-correct-reveal-label">✓ ピッチ英語はこれ</div>
-      <div class="md-correct-reveal-text">"${correct.text}"</div>
-      ${correctAudioBtn}
+      ${mdSoundBtn(correct.text)}
+      <div class="md-correct-reveal-body">
+        <div class="md-correct-reveal-label">✓ ピッチ英語はこれ</div>
+        <div class="md-correct-reveal-text">"${correct.text}"</div>
+      </div>
     </div>`;
 
   const nextLabel=mdQueueIdx>=2?'結果を見る':'NEXT';
@@ -3550,7 +3615,6 @@ function mdSelect(idx){
         <span class="md-result-label ${scoreCls}">${label}</span>
       </div>
       <div class="md-result-feedback">${feedback}</div>
-      ${isCorrect?correctAudioBtn:''}
       ${correctRevealHtml}
       <div class="md-xp-pop">+${xp} XP</div>
       <button class="md-next-btn tap-fx" onclick="mdNext()">${nextLabel} ›</button>
