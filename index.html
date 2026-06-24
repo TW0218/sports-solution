@@ -585,6 +585,69 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .pos-confirm:disabled{opacity:.25;cursor:default}
 .pos-skip{background:none;border:none;color:rgba(255,255,255,.25);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:14px}
 .onboard-back{background:none;border:none;color:rgba(255,255,255,.35);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:20px;align-self:flex-start}
+
+/* ===== MATCHDAY HOME CARD ===== */
+.matchday-home-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#0d2e1a 0%,#1a3d22 50%,#0d2416 100%);border:1px solid rgba(29,158,117,.35);border-radius:18px;padding:18px 18px 16px;cursor:pointer;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}
+.matchday-home-card::before{content:'MATCHDAY';position:absolute;right:-8px;top:-8px;font-size:60px;font-weight:900;color:rgba(29,158,117,.06);letter-spacing:-.02em;line-height:1;pointer-events:none}
+.matchday-home-eyebrow{display:flex;align-items:center;gap:8px}
+.matchday-home-badge{background:var(--green);color:#fff;font-size:10px;font-weight:900;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
+.matchday-home-count{font-size:11px;color:var(--grey);font-weight:700}
+.matchday-home-title{font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-.01em;line-height:1.2}
+.matchday-home-sub{font-size:12px;color:rgba(238,244,241,.5);font-weight:600}
+.matchday-home-footer{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.matchday-home-xp{display:flex;align-items:center;gap:6px}
+.matchday-xp-bar-wrap{width:100px;height:5px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden}
+.matchday-xp-bar{height:100%;background:var(--green);border-radius:999px;transition:width .4s ease}
+.matchday-xp-label{font-size:10px;color:var(--grey);font-weight:700}
+.matchday-home-go{font-size:13px;font-weight:900;color:var(--green)}
+.matchday-done-badge{background:rgba(29,158,117,.2);border:1px solid rgba(29,158,117,.4);color:var(--green);font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px}
+
+/* ===== MATCHDAY SCREEN ===== */
+#scr-matchday{display:flex;flex-direction:column;min-height:100%;background:var(--bg)}
+.md-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.md-top-label{font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--grey)}
+.md-progress-dots{display:flex;gap:6px}
+.md-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);transition:background .3s}
+.md-dot.done{background:var(--green)}
+.md-dot.active{background:var(--green);box-shadow:0 0 6px var(--green)}
+.md-scene-wrap{padding:0 16px;flex:1;display:flex;flex-direction:column;gap:16px}
+.md-level-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:900;letter-spacing:.08em;padding:4px 10px;border-radius:999px;margin-bottom:4px}
+.md-level-badge.lv1{background:rgba(29,158,117,.15);color:var(--green)}
+.md-level-badge.lv2{background:rgba(255,196,0,.12);color:#FFC400}
+.md-level-badge.lv3{background:rgba(226,73,59,.12);color:#E2493B}
+.md-setting{font-size:13px;color:rgba(238,244,241,.55);font-weight:600;line-height:1.6;border-left:2px solid rgba(255,255,255,.12);padding-left:10px}
+.md-speaker-card{background:var(--white);border:1px solid var(--border2);border-radius:16px;padding:16px 18px}
+.md-speaker-name{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:6px}
+.md-speaker-line{font-size:18px;font-weight:800;color:var(--ink);line-height:1.4;font-style:italic}
+.md-speaker-play{background:none;border:none;color:var(--green);cursor:pointer;font-size:18px;float:right;margin-top:-2px}
+.md-choices-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--grey)}
+.md-choices{display:flex;flex-direction:column;gap:10px}
+.md-choice{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:15px 16px;font-size:15px;font-weight:700;color:var(--ink);text-align:left;cursor:pointer;font-family:inherit;transition:border-color .15s,background .15s;width:100%}
+.md-choice:active{background:var(--card2)}
+.md-choice.selected-good{background:rgba(29,158,117,.12);border-color:var(--green)}
+.md-choice.selected-ok{background:rgba(255,196,0,.1);border-color:#FFC400}
+.md-choice.selected-bad{background:rgba(226,73,59,.1);border-color:#E2493B}
+.md-choice.disabled{opacity:.4;cursor:default}
+.md-result-card{background:var(--card2);border:1px solid var(--border2);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.md-result-score-row{display:flex;align-items:center;gap:10px}
+.md-result-score{font-size:28px;font-weight:900}
+.md-result-score.great{color:var(--green)}
+.md-result-score.ok{color:#FFC400}
+.md-result-score.miss{color:#E2493B}
+.md-result-label{font-size:11px;font-weight:900;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
+.md-result-label.great{background:rgba(29,158,117,.2);color:var(--green)}
+.md-result-label.ok{background:rgba(255,196,0,.15);color:#FFC400}
+.md-result-label.miss{background:rgba(226,73,59,.15);color:#E2493B}
+.md-result-feedback{font-size:13px;color:rgba(238,244,241,.7);font-weight:600;line-height:1.6}
+.md-xp-pop{font-size:13px;font-weight:900;color:var(--green)}
+.md-next-btn{display:block;width:calc(100% - 32px);margin:16px 16px;background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk)}
+.md-complete{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;gap:16px;text-align:center;flex:1}
+.md-complete-icon{font-size:56px;line-height:1}
+.md-complete-title{font-size:24px;font-weight:900;color:var(--ink)}
+.md-complete-xp{font-size:15px;color:var(--green);font-weight:800}
+.md-complete-sub{font-size:13px;color:var(--grey);font-weight:600}
+.md-complete-btn{background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px 40px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);margin-top:8px}
 </style>
 </head>
 <body>
@@ -718,6 +781,17 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   </div>
 
   <div id="home-session-area"></div>
+</section>
+
+<!-- ============ MATCHDAY MODE ============ -->
+<section class="screen" id="scr-matchday">
+  <div class="md-top">
+    <button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
+    <div class="md-top-label">MATCHDAY MODE</div>
+    <div class="md-progress-dots" id="md-dots"></div>
+  </div>
+  <div class="md-scene-wrap" id="md-scene-wrap"></div>
+  <button class="md-next-btn" id="md-next-btn" style="display:none" onclick="mdNext()">次のシーン ›</button>
 </section>
 
 <!-- ============ COACH'S CALL (ピッチ翻訳) ============ -->
@@ -2048,7 +2122,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2398,9 +2472,35 @@ function renderHome(){
   const posBadges=S.position?S.position.split(',').map(p=>`<span class="pos-shirt-badge ${p}">${p.toUpperCase()}</span>`).join(''):'';
   const madeName=S.name?S.name:'YOU';
   const posLabel=`<span class="made-for-text">Made for ${madeName}</span>${posBadges}`;
+  /* Matchday card */
+  const td2=today();
+  if(S.matchdayDate!==td2)S.matchdayCount=0;
+  const mdDone=S.matchdayCount>=3;
+  const mdCount=S.matchdayCount||0;
+  const rank=mdRankFor(S.totalXP||0);
+  const xpToNext=rank.next===Infinity?'MAX':rank.next-(S.totalXP||0);
+  const xpPct=rank.next===Infinity?100:Math.min(100,Math.round(((S.totalXP||0)-rank.min)/(rank.next-rank.min)*100));
+  const matchdayCardHtml=`<div class="matchday-home-card tap-fx" onclick="openMatchday()">
+    <div class="matchday-home-eyebrow">
+      <span class="matchday-home-badge">MATCHDAY MODE</span>
+      ${mdDone?`<span class="matchday-done-badge">✓ 今日は完了</span>`:`<span class="matchday-home-count">${mdCount}/3 完了</span>`}
+    </div>
+    <div class="matchday-home-title">現場英語で<br>判断しろ。</div>
+    <div class="matchday-home-sub">シーンに入り、3択で返す。サッカー現場英語。</div>
+    <div class="matchday-home-footer">
+      <div class="matchday-home-xp">
+        <span class="matchday-xp-label">${rank.rank}</span>
+        <div class="matchday-xp-bar-wrap"><div class="matchday-xp-bar" style="width:${xpPct}%"></div></div>
+        <span class="matchday-xp-label">${S.totalXP||0} XP</span>
+      </div>
+      <span class="matchday-home-go">${mdDone?'明日また ›':'プレイ ›'}</span>
+    </div>
+  </div>`;
+
   document.getElementById("home-session-area").innerHTML=
     `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
     +`<button class="play-session-btn tap-fx" onclick="startTodaySession()"><span class="play-session-btn-play">▶</span><span class="play-session-btn-center"><span class="play-session-btn-text">今日の３フレーズを練習する</span><span class="play-session-btn-hint">⏱ 30秒</span></span><span class="play-session-btn-arrow">›</span></button>`
+    +matchdayCardHtml
     +missionsHtml;
 
   const done=S.doneToday===today();
@@ -3198,6 +3298,252 @@ async function askAICase(){
   }catch(e){
     openCases();
     toast("⚠️ AI接続不可（公開時はAPIプロキシが必要）");
+  }
+}
+
+/* ================= MATCHDAY MODE ================= */
+const MATCHDAY_SCENES=[
+  {id:1,level:1,setting:"移籍初日のロッカールーム。チームメイトが話しかけてきた。",speaker:"Tyler（ベテランFW）",line:"Oi mate, where you from? You settling in alright?",
+   choices:[
+    {text:"Yes. I come from Japan. Nice to meet you.",score:30,label:"通じる",feedback:"伝わるけど堅い。初日から壁を作ってしまう印象。"},
+    {text:"Yeah, all good! Tokyo, mate. Still finding me feet.",score:100,label:"ピッチ英語",feedback:"完璧。'finding me feet'（慣れてきてる）は現場の自然な表現。"},
+    {text:"I am from Japan. I am very happy to be here.",score:15,label:"教科書英語",feedback:"丁寧すぎてロッカールームでは浮く。もっとカジュアルに。"}
+   ]},
+  {id:2,level:1,setting:"練習中。監督があなたのプレスを要求している。",speaker:"Gaffer（監督）",line:"Press from the front! Don't let 'em play out the back!",
+   choices:[
+    {text:"I understand. I will press now.",score:30,label:"通じる",feedback:"意味は通じるが、練習中にこんなに長く言う時間はない。"},
+    {text:"Got it, gaffer!",score:100,label:"ピッチ英語",feedback:"これ。短く、即座に。'Got it'はピッチの基本返答。"},
+    {text:"Yes, I will do my best to press the defenders.",score:10,label:"教科書英語",feedback:"長すぎる。ピッチでは一瞬で返す。"}
+   ]},
+  {id:3,level:1,setting:"試合中。フリーになった。チームメイトにパスを要求したい。",speaker:"状況",line:"（あなたはフリー。チームメイトがボールを持っている）",
+   choices:[
+    {text:"Please pass the ball to me!",score:20,label:"教科書英語",feedback:"通じるが、試合中には長すぎる。"},
+    {text:"MAN ON! MAN ON!",score:15,label:"別の意味",feedback:"それは'後ろに相手がいる！'という警告の言葉。"},
+    {text:"YES! HERE! GIVE!",score:100,label:"ピッチ英語",feedback:"完璧。フリーのときは'Yes!'または'Here!'一言で十分。"}
+   ]},
+  {id:4,level:1,setting:"ハーフタイム。0-2で負けていて監督が激怒している。",speaker:"Gaffer",line:"That first half was a bloody disgrace! What was that?!",
+   choices:[
+    {text:"I am sorry, coach. We will do better.",score:40,label:"通じる",feedback:"悪くないが少し弱い。前向きな意志表示が欲しい。"},
+    {text:"We'll sort it out, gaffer. Second half's ours.",score:100,label:"ピッチ英語",feedback:"'Sort it out'（立て直す）＋'Second half's ours'で気概を見せる。完璧。"},
+    {text:"Yes, the first half was not good. I apologize.",score:20,label:"教科書英語",feedback:"謝るだけでは弱い。ロッカールームでは前向きな意志表示が大事。"}
+   ]},
+  {id:5,level:1,setting:"味方がスルーパスを出してあなたが抜け出した。",speaker:"状況",line:"（チームメイトの絶妙なパスで1対1になった）",
+   choices:[
+    {text:"Good pass! Thank you very much!",score:25,label:"通じる",feedback:"伝わるが、試合中に'Thank you very much'は長すぎる。"},
+    {text:"THAT'S IT! LOVELY BALL!",score:100,label:"ピッチ英語",feedback:"'Lovely ball!'はイギリスサッカーの定番称賛表現。"},
+    {text:"Nice pass, my friend!",score:30,label:"通じる",feedback:"悪くないが'my friend'は不自然。'mate'の方がピッチらしい。"}
+   ]},
+  {id:6,level:1,setting:"ゴール後。チームメイトが全員駆け寄ってきた。",speaker:"チームメイト",line:"YESSS!! (全員が駆け寄ってくる)",
+   choices:[
+    {text:"I am so happy! Thank you everyone!",score:20,label:"教科書英語",feedback:"喜びは伝わるが、テンション感が合っていない。"},
+    {text:"GET IN THERE!! LET'S GO LADS!!",score:100,label:"ピッチ英語",feedback:"完璧。'GET IN!'はゴール後の定番。'Lads'でチーム感も出る。"},
+    {text:"Yes! I scored! Very good!",score:15,label:"教科書英語",feedback:"個人プレー感が強すぎる。チームで喜ぶ表現が欲しい。"}
+   ]},
+  {id:7,level:1,setting:"交代を告げられた。監督がタッチライン越しにサインを出している。",speaker:"Gaffer",line:"You're coming off! Warm down, well done son.",
+   choices:[
+    {text:"OK coach. I will go now. Thank you.",score:35,label:"通じる",feedback:"通じるが少し硬い。"},
+    {text:"Cheers gaffer!",score:100,label:"ピッチ英語",feedback:"'Cheers'は感謝＋了解の意味。一言で自然に交代できる。"},
+    {text:"Understood. I will leave the field now.",score:10,label:"教科書英語",feedback:"フォーマルすぎる。試合中に'leave the field'は不自然。"}
+   ]},
+  {id:8,level:2,setting:"練習中のミーティング。監督が素早い展開を求めている。",speaker:"Gaffer",line:"When we win it back, get it wide QUICK. Don't sit on it.",
+   choices:[
+    {text:"I understand. I will play wide.",score:35,label:"通じる",feedback:"意味は通じるが、戦術理解を示す表現が足りない。"},
+    {text:"Yeah, switch it early. Got you, gaffer.",score:100,label:"ピッチ英語",feedback:"'Switch it early'で戦術理解を示し、'Got you'で確認。"},
+    {text:"Yes, I will quickly move the ball to the side of the field.",score:10,label:"教科書英語",feedback:"説明が長すぎる。戦術話は短く返すのがプロ。"}
+   ]},
+  {id:9,level:2,setting:"試合中。チームメイトがボールを受けようとしている。背後に相手が迫っている。",speaker:"状況",line:"（チームメイトが後ろを向いてボールを受けようとしている）",
+   choices:[
+    {text:"Be careful! Someone is behind you!",score:30,label:"通じる",feedback:"長すぎる。試合中に'someone is behind you'と言う時間はない。"},
+    {text:"MAN ON! TURN!",score:100,label:"ピッチ英語",feedback:"'Man on!'＋'Turn!'でワンツー。これがピッチの標準コール。"},
+    {text:"Watch out! Defender!",score:45,label:"通じる",feedback:"悪くないが、'Man on!'の方がサッカー現場では伝わりが早い。"}
+   ]},
+  {id:10,level:2,setting:"FK前。GKが壁の指示を出している。あなたは壁に入る。",speaker:"GK（キーパー）",line:"WALL! Four man wall! Tighten up!",
+   choices:[
+    {text:"OK, I will stand in the wall.",score:30,label:"通じる",feedback:"意味は通じるが、返事が遅すぎる印象。"},
+    {text:"ON IT!",score:100,label:"ピッチ英語",feedback:"完璧。'On it!'は'やります'の最速表現。動きながら言える。"},
+    {text:"Yes, I understand. I will go into the wall.",score:10,label:"教科書英語",feedback:"長すぎる。FK前に説明する時間はない。"}
+   ]},
+  {id:11,level:2,setting:"審判がファウルを取らなかった。明らかな接触があったのに。",speaker:"Referee",line:"（笛を吹かない）",
+   choices:[
+    {text:"Excuse me, referee. I think that was a foul.",score:35,label:"通じる",feedback:"丁寧だが効果薄。審判への抗議はもっとダイレクトに。"},
+    {text:"REF! Come on! He got me!",score:100,label:"ピッチ英語",feedback:"'He got me!'は接触があったことを伝える定番表現。"},
+    {text:"That is a foul! You must give foul!",score:20,label:"教科書英語",feedback:"文法が崩れていて、かつピッチ表現ではない。"}
+   ]},
+  {id:12,level:2,setting:"チームメイトがPKを外して肩を落としている。",speaker:"状況",line:"（チームメイトがPKをポストに当てて崩れ落ちた）",
+   choices:[
+    {text:"Don't worry. It's OK. Next time.",score:50,label:"通じる",feedback:"悪くないが、少しよそよそしい。"},
+    {text:"Heads up, mate. We got this together.",score:100,label:"ピッチ英語",feedback:"'Heads up'で顔を上げさせ、'We got this'でチームを鼓舞。完璧。"},
+    {text:"It is not your fault. Please cheer up.",score:20,label:"教科書英語",feedback:"'Please cheer up'は少し子供っぽい。ピッチではもっとシンプルに。"}
+   ]},
+  {id:13,level:2,setting:"プレー中に足首を痛めた。タッチラインの監督に伝えたい。",speaker:"状況",line:"（足首に痛みを感じながらプレーしている）",
+   choices:[
+    {text:"Coach! My ankle hurts! I need to come off!",score:50,label:"通じる",feedback:"通じるが、'I need to come off'は少し直接的すぎる印象。"},
+    {text:"Gaffer! I've rolled me ankle, might need to come off.",score:100,label:"ピッチ英語",feedback:"'Rolled me ankle'がピッチの自然な表現。状況説明が的確。"},
+    {text:"Excuse me coach, I have a pain in my ankle.",score:25,label:"教科書英語",feedback:"痛みの深刻さが伝わりにくい。'I've done me ankle'の方が早い。"}
+   ]},
+  {id:14,level:2,setting:"コーナーキック前。ニアポストへのフリックを要求したい。",speaker:"状況",line:"（CKを蹴る前にチームメイトに指示を出したい）",
+   choices:[
+    {text:"Please run to the near post when I kick.",score:30,label:"通じる",feedback:"通じるが長い。CK前に言える時間は数秒しかない。"},
+    {text:"Near post! Flick it on!",score:100,label:"ピッチ英語",feedback:"'Near post'＋'Flick it on'。戦術が一言で伝わる。"},
+    {text:"Go to the front of the goal!",score:20,label:"教科書英語",feedback:"'Front of the goal'は曖昧。Near/Far postで明確に。"}
+   ]},
+  {id:15,level:3,setting:"残り5分。1点リードでキャプテンとしてチームに声をかける。",speaker:"状況",line:"（全員が疲れている。集中を保たせたい）",
+   choices:[
+    {text:"Come on everyone! We can win! Stay focused!",score:45,label:"通じる",feedback:"気持ちは伝わるが、戦術的な指示がない。"},
+    {text:"Dig in, lads! See it out! Keep it tight!",score:100,label:"ピッチ英語",feedback:"'Dig in'=踏ん張れ、'See it out'=逃げ切れ、'Keep it tight'=締めろ。完璧な終盤指示。"},
+    {text:"We must defend carefully for five more minutes.",score:20,label:"教科書英語",feedback:"長すぎて緊張感に合わない。終盤の声かけはシンプルに。"}
+   ]},
+  {id:16,level:3,setting:"試合後。相手チームの選手がユニフォームの交換を求めてきた。",speaker:"相手選手",line:"Swap shirts, yeah? You were class today, mate.",
+   choices:[
+    {text:"Yes, I want to exchange shirts with you. Thank you.",score:30,label:"通じる",feedback:"通じるが、せっかく褒められたのにそっけない返し。"},
+    {text:"Deffo, cheers mate. You lot were tidy as well.",score:100,label:"ピッチ英語",feedback:"'Deffo'=もちろん、'You lot were tidy'=お前らも良かった。自然な試合後交流。"},
+    {text:"OK. Here is my shirt. Thank you for the game.",score:25,label:"通じる",feedback:"悪くないが、会話が続かない。試合後の関係構築の機会を逃している。"}
+   ]},
+  {id:17,level:3,setting:"試合後インタビュー。決勝ゴールを決めた後。",speaker:"記者",line:"You scored the winner today. How do you feel?",
+   choices:[
+    {text:"I am very happy. I worked very hard for this.",score:25,label:"教科書英語",feedback:"通じるが、メディアで使うには印象が薄い。"},
+    {text:"Over the moon, mate. But it's all about the three points.",score:100,label:"ピッチ英語",feedback:"'Over the moon'=最高に嬉しい＋'three points'=チームの勝利を強調。インタビューの定番。"},
+    {text:"Yes, the goal was good. My team helped me.",score:20,label:"教科書英語",feedback:"謙虚すぎてコメントとして弱い。もっと感情を表現して。"}
+   ]},
+  {id:18,level:3,setting:"監督との面談。日本でのプレースタイルについて聞かれた。",speaker:"Gaffer",line:"Tell me about your game back home. What are you about?",
+   choices:[
+    {text:"I played in Japan for 5 years. I am a fast player.",score:30,label:"通じる",feedback:"通じるが、自分の強みをアピールしきれていない。"},
+    {text:"I'm a high-energy runner. I press hard and I'm good in tight spaces.",score:100,label:"ピッチ英語",feedback:"'High-energy'や'tight spaces'（狭いスペース）はプロの自己PR表現。"},
+    {text:"In Japan I was a very famous player. I scored many goals.",score:10,label:"教科書英語",feedback:"自慢に聞こえる上に具体性がない。戦術的な強みを伝える方が効果的。"}
+   ]},
+  {id:19,level:3,setting:"戦術ミーティング。監督が質問を受け付けている。",speaker:"Gaffer",line:"Any questions? I need you all to know your roles inside out.",
+   choices:[
+    {text:"I have a question. When the other team has the ball, what should I do?",score:25,label:"通じる",feedback:"通じるが、質問が漠然としすぎ。もっと具体的に。"},
+    {text:"Gaffer, when they play out from the back — do we press or hold shape?",score:100,label:"ピッチ英語",feedback:"'Play out from the back'＋'Hold shape'。戦術的な質問で監督の信頼を得る。"},
+    {text:"OK, I understand my role. No questions.",score:20,label:"通じる",feedback:"質問しない方が安全に思えるが、戦術理解を示す機会を逃している。"}
+   ]},
+  {id:20,level:3,setting:"PK戦。あなたが最後のキッカー。決めれば優勝。",speaker:"GK（キャプテン）",line:"It's on you, mate. Back yourself.",
+   choices:[
+    {text:"OK. I will try my best. I am a little nervous.",score:20,label:"教科書英語",feedback:"正直だが、緊張を言葉にするとチームメイトも不安になる。"},
+    {text:"Born ready. Let's do this.",score:100,label:"ピッチ英語",feedback:"'Born ready'で自信を示し、'Let's do this'でチームを巻き込む。これ。"},
+    {text:"Don't worry, I will score.",score:40,label:"通じる",feedback:"自信は伝わるが、少し子供っぽい表現。"}
+   ]}
+];
+
+const MD_LEVELS={1:{label:"BEGINNER",cls:"lv1"},2:{label:"INTERMEDIATE",cls:"lv2"},3:{label:"ADVANCED",cls:"lv3"}};
+const MD_XP_TABLE={100:100,50:40,0:10};
+const MD_RANK=[
+  {min:0,rank:"Academy Player",next:100},
+  {min:100,rank:"U18 Prospect",next:300},
+  {min:300,rank:"Reserve Team",next:600},
+  {min:600,rank:"First Team",next:1000},
+  {min:1000,rank:"League Starter",next:2000},
+  {min:2000,rank:"Champions League",next:Infinity}
+];
+
+function mdRankFor(xp){let r=MD_RANK[0];MD_RANK.forEach(x=>{if(xp>=x.min)r=x});return r;}
+function mdXpFor(score){if(score>=80)return 100;if(score>=40)return 40;return 10;}
+
+let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false;
+
+function openMatchday(){
+  const td=today();
+  if(S.matchdayDate!==td){S.matchdayDate=td;S.matchdayCount=0;save();}
+  if(S.matchdayCount>=3){
+    go('matchday','push');
+    document.getElementById('md-scene-wrap').innerHTML=`<div class="md-complete"><div class="md-complete-icon">🏆</div><div class="md-complete-title">今日は完了！</div><div class="md-complete-xp">獲得XP: ${mdSessionXP} XP</div><div class="md-complete-sub">明日また新しいシーンで挑戦しよう</div><button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button></div>`;
+    document.getElementById('md-next-btn').style.display='none';
+    renderMdDots();
+    return;
+  }
+  mdQueue=shuffleMd().slice(0,3);
+  mdQueueIdx=0;mdSessionXP=0;
+  go('matchday','push');
+  renderMdScene();
+}
+
+function shuffleMd(){
+  const arr=[...MATCHDAY_SCENES];
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+function renderMdScene(){
+  mdAnswered=false;
+  const scene=mdQueue[mdQueueIdx];
+  const lv=MD_LEVELS[scene.level];
+  const shuffled=[...scene.choices].map((c,i)=>({...c,origIdx:i})).sort(()=>Math.random()-.5);
+  renderMdDots();
+  document.getElementById('md-next-btn').style.display='none';
+  document.getElementById('md-scene-wrap').innerHTML=`
+    <span class="md-level-badge ${lv.cls}">${lv.label}</span>
+    <div class="md-setting">${scene.setting}</div>
+    <div class="md-speaker-card">
+      <div class="md-speaker-name">${scene.speaker}</div>
+      <div class="md-speaker-line">"${scene.line}"</div>
+    </div>
+    <div class="md-choices-label">どう返す？</div>
+    <div class="md-choices" id="md-choices">
+      ${shuffled.map((c,i)=>`<button class="md-choice tap-fx" onclick="mdSelect(${i},${c.score},'${encodeURIComponent(c.label)}','${encodeURIComponent(c.feedback)}')">${c.text}</button>`).join('')}
+    </div>
+    <div id="md-result"></div>
+  `;
+}
+
+function renderMdDots(){
+  const total=3;const done=S.matchdayCount+(mdAnswered?0:0);
+  document.getElementById('md-dots').innerHTML=Array.from({length:total},(_,i)=>{
+    const cls=i<S.matchdayCount?'done':i===mdQueueIdx+S.matchdayCount&&mdAnswered?'active':i===mdQueueIdx?'active':'';
+    return `<div class="md-dot ${cls}"></div>`;
+  }).join('');
+}
+
+function mdSelect(idx,score,labelEnc,feedbackEnc){
+  if(mdAnswered)return;
+  mdAnswered=true;
+  const label=decodeURIComponent(labelEnc);
+  const feedback=decodeURIComponent(feedbackEnc);
+  const xp=mdXpFor(score);
+  mdSessionXP+=xp;
+  S.totalXP=(S.totalXP||0)+xp;
+  save();
+
+  const btns=document.querySelectorAll('.md-choice');
+  btns.forEach((b,i)=>{
+    b.classList.add('disabled');
+    if(i===idx){
+      b.classList.add(score>=80?'selected-good':score>=40?'selected-ok':'selected-bad');
+    }
+  });
+
+  const scoreCls=score>=80?'great':score>=40?'ok':'miss';
+  const scoreLabel=score>=80?'ピッチ英語！':score>=40?'通じる':'教科書英語';
+  document.getElementById('md-result').innerHTML=`
+    <div class="md-result-card">
+      <div class="md-result-score-row">
+        <div class="md-result-score ${scoreCls}">${score}pt</div>
+        <span class="md-result-label ${scoreCls}">${label}</span>
+      </div>
+      <div class="md-result-feedback">${feedback}</div>
+      <div class="md-xp-pop">+${xp} XP</div>
+    </div>
+  `;
+  document.getElementById('md-next-btn').style.display='block';
+  document.getElementById('md-next-btn').textContent=mdQueueIdx>=2?'結果を見る ›':'次のシーン ›';
+}
+
+function mdNext(){
+  S.matchdayCount++;save();
+  mdQueueIdx++;
+  if(mdQueueIdx>=3){
+    const rank=mdRankFor(S.totalXP||0);
+    document.getElementById('md-scene-wrap').innerHTML=`
+      <div class="md-complete">
+        <div class="md-complete-icon">⚽</div>
+        <div class="md-complete-title">セッション完了！</div>
+        <div class="md-complete-xp">+${mdSessionXP} XP 獲得</div>
+        <div class="md-complete-sub">現在のランク：${rank.rank}<br>通算 ${S.totalXP} XP</div>
+        <button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
+      </div>`;
+    document.getElementById('md-next-btn').style.display='none';
+    renderMdDots();
+  } else {
+    renderMdScene();
   }
 }
 
