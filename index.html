@@ -311,26 +311,28 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 @keyframes hero-text-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes hero-shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
 @keyframes hero-orb{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(12px,-8px) scale(1.1)}66%{transform:translate(-8px,6px) scale(.95)}}
-.home-hero{border-radius:22px;padding:22px 20px 20px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden;
-  background:linear-gradient(-45deg,#050f0a,#0d2416,#091428,#160d28,#1a0910,#0d2416);
-  background-size:400% 400%;animation:hero-shift 10s ease infinite}
-.home-hero-orb{position:absolute;border-radius:50%;pointer-events:none;animation:hero-orb 7s ease-in-out infinite}
-.home-hero-orb.o1{width:180px;height:180px;top:-60px;right:-40px;background:radial-gradient(circle,rgba(80,220,120,.18) 0%,transparent 70%)}
-.home-hero-orb.o2{width:140px;height:140px;bottom:-50px;left:-30px;background:radial-gradient(circle,rgba(100,80,255,.18) 0%,transparent 70%);animation-delay:-3s}
-.home-hero-orb.o3{width:100px;height:100px;top:20px;left:40%;background:radial-gradient(circle,rgba(255,180,0,.12) 0%,transparent 70%);animation-delay:-5s}
-.home-hero-pitch{position:absolute;right:-8px;top:50%;transform:translateY(-50%);opacity:.1;pointer-events:none}
-.pitch-line{fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-@keyframes pitch-draw{to{stroke-dashoffset:0}}
-.pitch-draw{stroke-dasharray:var(--len,400);stroke-dashoffset:var(--len,400);animation:pitch-draw 1.2s ease forwards}
-.home-hero-eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:10px;position:relative;z-index:1;animation:hero-text-in .6s ease both}
-.home-hero-greeting{font-size:26px;font-weight:900;line-height:1.2;position:relative;z-index:1;animation:hero-text-in .6s .1s ease both;margin-bottom:6px}
-.home-hero-greeting em{font-style:normal;background:linear-gradient(90deg,#FFD700,#fff,#FFD700);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hero-shimmer 3s linear infinite}
-.home-hero-sub{font-size:13px;color:rgba(255,255,255,.55);font-weight:700;position:relative;z-index:1;animation:hero-text-in .6s .2s ease both;margin-bottom:6px}
-.home-hero-en{font-size:11px;font-weight:800;color:rgba(255,215,0,.6);letter-spacing:.04em;font-style:italic;position:relative;z-index:1;animation:hero-text-in .6s .3s ease both}
-.home-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
-.home-stat{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
-.home-stat .hv{font-size:22px;font-weight:900;margin-bottom:2px}
-.home-stat .hl{font-size:11px;color:var(--grey);font-weight:800}
+/* ===== UNIFIED HERO CARD ===== */
+.home-unified-card{background:linear-gradient(135deg,#1c0800 0%,#2e1200 55%,#1a0900 100%);border:1px solid rgba(255,140,0,.2);border-radius:22px;padding:18px 18px 16px;margin-bottom:12px;position:relative;overflow:hidden;color:#fff}
+.home-unified-card::before{content:'';position:absolute;top:-40px;left:-10px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,110,0,.18) 0%,transparent 70%);pointer-events:none}
+.home-unified-card::after{content:'';position:absolute;bottom:-30px;right:-10px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,60,0,.1) 0%,transparent 70%);pointer-events:none}
+.huc-eyebrow{font-size:10px;font-weight:900;letter-spacing:.16em;color:rgba(255,255,255,.4);margin-bottom:12px;position:relative;z-index:1}
+.huc-main{display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;position:relative;z-index:1}
+.huc-fire{font-size:28px;line-height:1;margin-bottom:2px}
+.huc-num{font-size:52px;font-weight:900;line-height:1;color:#FFD700;letter-spacing:-.03em;font-family:'Barlow','Noto Sans JP',sans-serif}
+.huc-unit{font-size:11px;font-weight:900;letter-spacing:.12em;color:rgba(255,215,0,.6);margin-bottom:8px}
+.huc-greeting{font-size:17px;font-weight:900;color:#fff;margin-bottom:14px;position:relative;z-index:1;line-height:1.3}
+.huc-greeting em{font-style:normal;background:linear-gradient(90deg,#FFD700,#fff,#FFD700);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hero-shimmer 3s linear infinite}
+.huc-bottom{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.huc-dots{display:flex;gap:5px;align-items:center}
+.huc-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15)}
+.huc-dot.done{background:#FF6B00}
+.huc-dot.today-done{background:#FFD700;box-shadow:0 0 6px #FFD700}
+.huc-dot.today-pending{width:24px;border-radius:999px;background:rgba(255,255,255,.1);font-size:7px;font-weight:900;color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;letter-spacing:.04em}
+.huc-right{display:flex;align-items:center;gap:8px}
+.huc-ticket{font-size:11px;font-weight:800;color:rgba(255,200,100,.7)}
+.huc-cd{font-size:10px;font-weight:800;color:rgba(255,255,255,.3)}
+/* career stats grid */
+.career-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 /* career stats grid */
 .career-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .cs-item{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px 12px;box-shadow:var(--shadow);text-align:center}
@@ -759,54 +761,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
     <div class="logo">TOP <span>BINS</span></div>
   </div>
 
-  <div class="home-hero" id="home-hero">
-    <div class="home-hero-orb o1"></div>
-    <div class="home-hero-orb o2"></div>
-    <div class="home-hero-orb o3"></div>
-    <div class="home-hero-eyebrow" id="home-hero-eyebrow">TOP BINS</div>
-    <h1 class="home-hero-greeting" id="home-hero-h1">おかえり</h1>
-    <p class="home-hero-sub" id="home-hero-p">今日も英語でピッチに立て</p>
-    <p class="home-hero-en" id="home-hero-en">Get ya boots on, son.</p>
-    <svg class="home-hero-pitch" width="160" height="110" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" id="hero-pitch-svg">
-      <!-- center line -->
-      <line class="pitch-line pitch-draw" x1="80" y1="4" x2="80" y2="106" style="--len:102;animation-delay:.0s"/>
-      <!-- center circle -->
-      <circle class="pitch-line pitch-draw" cx="80" cy="55" r="22" style="--len:138;animation-delay:.15s"/>
-      <!-- center spot -->
-      <circle class="pitch-line" cx="80" cy="55" r="2" fill="#fff" opacity=".22"/>
-      <!-- goal line (right) -->
-      <line class="pitch-line pitch-draw" x1="156" y1="4" x2="156" y2="106" style="--len:102;animation-delay:.3s"/>
-      <!-- penalty area -->
-      <rect class="pitch-line pitch-draw" x="112" y="28" width="44" height="54" style="--len:196;animation-delay:.45s"/>
-      <!-- goal area -->
-      <rect class="pitch-line pitch-draw" x="138" y="39" width="18" height="32" style="--len:100;animation-delay:.6s"/>
-      <!-- penalty spot -->
-      <circle class="pitch-line" cx="130" cy="55" r="2" fill="#fff" opacity=".22"/>
-      <!-- penalty arc -->
-      <path class="pitch-line pitch-draw" d="M112,43 A22,22 0 0,0 112,67" style="--len:48;animation-delay:.75s"/>
-    </svg>
-  </div>
-
-  <div id="home-stats-area">
-    <div class="home-stats">
-      <div class="home-stat">
-        <div class="hv" id="h-pitch-rate" style="color:var(--green)">0%</div>
-        <div class="hl">ピッチ理解率</div>
-      </div>
-      <div class="home-stat">
-        <div class="hv" id="h-locker-rate" style="color:#D4537E">0%</div>
-        <div class="hl">ロッカー対応度</div>
-      </div>
-      <div class="home-stat">
-        <div class="hv" id="h-calls">0</div>
-        <div class="hl">即答できるコール</div>
-      </div>
-      <div class="home-stat">
-        <div class="hv" id="h-streak">0日</div>
-        <div class="hl">連続学習</div>
-      </div>
-    </div>
-  </div>
+  <div id="home-hero-area"></div>
 
   <div id="home-session-area"></div>
 </section>
@@ -2365,28 +2320,45 @@ function weekUnlocked(n){
   if(n===4)return r.survival>=70;
   return false;
 }
-function buildStreakCard(){
+function buildUnifiedHeroCard(){
   const todayStr=today();
   const done=S.doneToday===todayStr;
   const hist=S.history||[];
+  const posNames=S.position?S.position.split(',').map(p=>p.toUpperCase()).join(' / '):'';
+  const eyebrow='TOP BINS'+(posNames?' — '+posNames:'');
+
+  let greeting;
+  if(S.streak===0) greeting='さあ、<em>始めよう</em>';
+  else if(S.streak<3) greeting='<em>おかえり</em>！今日も続けろ';
+  else if(S.streak<7) greeting='<em>好調</em>だ、続けろ！';
+  else if(S.streak<30) greeting='<em>'+S.streak+'日</em>連続。本物だ。';
+  else greeting='<em>伝説</em>になれ。'+S.streak+'日連続。';
+
   const dots=[];
   for(let i=6;i>=1;i--){
     const d=new Date(Date.now()-864e5*i).toISOString().slice(0,10);
-    if(hist.includes(d)) dots.push('<div class="streak-dot done" style="animation-delay:'+(0.05*(6-i))+'s">🔥</div>');
-    else dots.push('<div class="streak-dot empty" style="animation-delay:'+(0.05*(6-i))+'s">—</div>');
+    dots.push(`<div class="huc-dot ${hist.includes(d)?'done':''}"></div>`);
   }
-  const todayDot=done
-    ?'<div class="streak-dot today-done" style="animation-delay:.3s">🔥</div>'
-    :'<div class="streak-dot today-pending" style="animation-delay:.3s">今日</div>';
-  dots.push(todayDot);
-  const countdownHtml=!done?'<span class="streak-countdown" id="streak-cd"></span>':'';
-  const ticketHtml=S.tickets>0?'<span class="streak-ticket">🎫 復活チケット ×'+S.tickets+'</span>':'';
-  return '<div class="streak-card">'
-    +'<div class="streak-left"><span class="streak-fire">🔥</span><span class="streak-big" id="streak-big-num">0</span><span class="streak-unit">DAY STREAK</span></div>'
-    +'<div class="streak-right"><div class="streak-dots">'+dots.join('')+'</div>'
-    +(ticketHtml||countdownHtml?'<div class="streak-card-footer">'+ticketHtml+countdownHtml+'</div>':'')
-    +'</div>'
-    +'</div>';
+  dots.push(done
+    ?'<div class="huc-dot today-done"></div>'
+    :'<div class="huc-dot today-pending">今日</div>');
+
+  const ticketHtml=S.tickets>0?`<span class="huc-ticket">🎫×${S.tickets}</span>`:'';
+  const cdHtml=!done?`<span class="huc-cd" id="streak-cd"></span>`:'';
+
+  return `<div class="home-unified-card">
+    <div class="huc-eyebrow">${eyebrow}</div>
+    <div class="huc-main">
+      <span class="huc-fire">🔥</span>
+      <span class="huc-num" id="streak-big-num">0</span>
+      <span class="huc-unit">DAY STREAK</span>
+    </div>
+    <div class="huc-greeting">${greeting}</div>
+    <div class="huc-bottom">
+      <div class="huc-dots">${dots.join('')}</div>
+      <div class="huc-right">${ticketHtml}${cdHtml}</div>
+    </div>
+  </div>`;
 }
 function animateStreakCount(){
   const el=document.getElementById('streak-big-num');
@@ -2407,52 +2379,8 @@ function animateStreakCount(){
 function renderHome(){
   const r=readiness();
   const calls=Object.values(S.box).filter(v=>v>=2).length;
-  const isZero=r.pitch===0&&r.locker===0&&calls===0&&S.streak===0;
-  const area=document.getElementById("home-stats-area");
-  const t=tierFor(S.min);
-  const ti=TIERS.indexOf(t);
-  const next=TIERS[ti+1];
 
-  /* hero greeting */
-  const posNames=S.position?S.position.split(',').map(p=>p.toUpperCase()).join(' / '):'';
-  let greetingMain,greetingSub,greetingEn,eyebrow;
-  if(S.streak===0){
-    eyebrow='TOP BINS — KICK OFF';
-    greetingMain='さあ、<em>始めよう</em>';
-    greetingSub='海外移籍初日を乗り切る英語を身につけろ';
-    greetingEn="Get ya boots on, son. It starts 'ere.";
-  } else if(S.streak<3){
-    eyebrow='TOP BINS'+(posNames?' — '+posNames:'');
-    greetingMain='おかえり<em>！</em>';
-    greetingSub='今日も英語でピッチに立て';
-    greetingEn="Oi, you're back on the pitch. Let's 'ave it.";
-  } else if(S.streak<7){
-    eyebrow=S.streak+'日連続継続中'+(posNames?' — '+posNames:'');
-    greetingMain='<em>好調</em>だ、続けろ';
-    greetingSub='止まるな。積み上げろ。';
-    greetingEn="You're on a blinder, mate. Don't drop off now.";
-  } else if(S.streak<30){
-    eyebrow='🔥 '+S.streak+' DAY STREAK'+(posNames?' — '+posNames:'');
-    greetingMain='<em>'+S.streak+'日</em>連続。本物だ。';
-    greetingSub='このまま昇格まで突き進め';
-    greetingEn=S.streak+" days solid. You ain't messin' about.";
-  } else {
-    eyebrow='🔥 '+S.streak+' DAY STREAK'+(posNames?' — '+posNames:'');
-    greetingMain='<em>伝説</em>になれ。';
-    greetingSub=S.streak+'日連続 — もう誰も止められない';
-    greetingEn="Blimey. "+S.streak+" days. Proper legend, innit.";
-  }
-  document.getElementById("home-hero-eyebrow").textContent=eyebrow;
-  document.getElementById("home-hero-h1").innerHTML=greetingMain;
-  document.getElementById("home-hero-p").textContent=greetingSub;
-  document.getElementById("home-hero-en").textContent=greetingEn;
-  /* re-trigger text animations */
-  ['home-hero-eyebrow','home-hero-h1','home-hero-p','home-hero-en'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.style.animation='none';el.offsetHeight;el.style.animation='';
-  });
-  area.innerHTML=buildStreakCard();
-
+  document.getElementById("home-hero-area").innerHTML=buildUnifiedHeroCard();
   requestAnimationFrame(animateStreakCount);
 
   /* Today's Session card */
