@@ -2496,7 +2496,7 @@ function renderHome(){
   /* Matchday card */
   const td2=today();
   if(S.matchdayDate!==td2)S.matchdayCount=0;
-  const mdDone=S.matchdayCount>=3;
+  const mdDone=S.matchdayCount>=1;
   const mdCount=S.matchdayCount||0;
   const rank=mdRankFor(S.totalXP||0);
   const xpToNext=rank.next===Infinity?'MAX':rank.next-(S.totalXP||0);
@@ -2504,7 +2504,7 @@ function renderHome(){
   const matchdayCardHtml=`<div class="matchday-home-card tap-fx" onclick="openMatchday()">
     <div class="matchday-home-eyebrow">
       <span class="matchday-home-badge">MATCHDAY MODE</span>
-      ${mdDone?`<span class="matchday-done-badge">✓ 今日は完了</span>`:`<span class="matchday-home-count">${mdCount}/3 完了</span>`}
+      ${mdDone?`<span class="matchday-done-badge">✓ 今日は完了</span>`:`<span class="matchday-home-count">${mdDone?1:0}/1 完了</span>`}
     </div>
     <div class="matchday-home-title">現場英語で<br>判断しろ。</div>
     <div class="matchday-home-sub">シーンに入り、3択で返す。サッカー現場英語。</div>
@@ -3514,13 +3514,13 @@ function mdCelebrate(){
 function openMatchday(){
   const td=today();
   if(S.matchdayDate!==td){S.matchdayDate=td;S.matchdayCount=0;save();}
-  if(S.matchdayCount>=3){
+  if(S.matchdayCount>=1){
     go('matchday','push');
     document.getElementById('md-scene-wrap').innerHTML=`<div class="md-complete"><div class="md-complete-icon">🏆</div><div class="md-complete-title">今日は完了！</div><div class="md-complete-sub">明日また新しいシーンで挑戦しよう</div><button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button></div>`;
     renderMdDots();
     return;
   }
-  mdQueue=shuffleMd().slice(0,3);
+  mdQueue=shuffleMd().slice(0,1);
   mdQueueIdx=0;mdSessionXP=0;
   go('matchday','push');
   renderMdScene();
@@ -3563,10 +3563,7 @@ function renderMdScene(){
 }
 
 function renderMdDots(){
-  document.getElementById('md-dots').innerHTML=Array.from({length:3},(_,i)=>{
-    const cls=i<(S.matchdayCount||0)?'done':i===mdQueueIdx?'active':'';
-    return `<div class="md-dot ${cls}"></div>`;
-  }).join('');
+  document.getElementById('md-dots').innerHTML=`<div class="md-dot ${(S.matchdayCount||0)>=1?'done':'active'}"></div>`;
 }
 
 function mdSelect(idx){
@@ -3607,7 +3604,7 @@ function mdSelect(idx){
       </div>
     </div>`;
 
-  const nextLabel=mdQueueIdx>=2?'結果を見る':'NEXT';
+  const nextLabel='結果を見る';
   document.getElementById('md-result').innerHTML=`
     <div class="md-result-card">
       <div class="md-result-score-row">
@@ -3626,7 +3623,7 @@ function mdSelect(idx){
 function mdNext(){
   S.matchdayCount++;save();
   mdQueueIdx++;
-  if(mdQueueIdx>=3){
+  if(mdQueueIdx>=1){
     const rank=mdRankFor(S.totalXP||0);
     document.getElementById('md-scene-wrap').innerHTML=`
       <div class="md-complete">
