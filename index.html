@@ -601,6 +601,12 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .matchday-xp-label{font-size:10px;color:var(--grey);font-weight:700}
 .matchday-home-go{font-size:13px;font-weight:900;color:var(--green)}
 .matchday-done-badge{background:rgba(29,158,117,.2);border:1px solid rgba(29,158,117,.4);color:var(--green);font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px}
+.matchday-ticket-display{display:flex;align-items:center;gap:3px}
+.md-ticket-pip{font-size:14px;transition:opacity .2s}
+.md-ticket-pip.empty{opacity:.2;filter:grayscale(1)}
+.md-ticket-earn-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--ink)}
+.md-ticket-earn-row:last-of-type{border-bottom:none}
+.md-ticket-earn-reward{font-size:13px;font-weight:900;color:var(--green)}
 
 /* ===== MATCHDAY SCREEN ===== */
 #scr-matchday.active{display:flex;flex-direction:column;min-height:100%;background:var(--bg)}
@@ -2099,7 +2105,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:""},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0},data.progress);
   }
 }
 
@@ -2143,7 +2149,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2509,12 +2515,11 @@ function renderHome(){
     <div class="matchday-home-title">現場英語で<br>判断しろ。</div>
     <div class="matchday-home-sub">シーンに入り、3択で返す。サッカー現場英語。</div>
     <div class="matchday-home-footer">
-      <div class="matchday-home-xp">
-        <span class="matchday-xp-label">${rank.rank}</span>
-        <div class="matchday-xp-bar-wrap"><div class="matchday-xp-bar" style="width:${xpPct}%"></div></div>
-        <span class="matchday-xp-label">${S.totalXP||0} XP</span>
+      <div class="matchday-ticket-display">
+        ${Array.from({length:MD_TICKET_MAX},(_,i)=>`<span class="md-ticket-pip ${i<(S.matchTickets||0)?'full':'empty'}">🎟️</span>`).join('')}
+        <span class="matchday-xp-label" style="margin-left:4px">${S.matchTickets||0}/${MD_TICKET_MAX}枚</span>
       </div>
-      <span class="matchday-home-go">${mdDone?'明日また ›':'プレイ ›'}</span>
+      <span class="matchday-home-go">${(S.matchTickets||0)>0?'プレイ ›':'チケット不足'}</span>
     </div>
   </div>`;
 
@@ -2827,6 +2832,7 @@ function finishSession(){
     S.history.push(t);
     if(S.history.length>30)S.history=S.history.slice(-30);
     if(S.streak%7===0&&S.streak>prevStreak){S.tickets=(S.tickets||0)+1;toast("復活チケット獲得！🎫");}
+  earnMatchTicket();
   }
   if(S.streak>=7)awardOnce("week","📅 週間MVP！7日連続出場");
   if(S.streak>=30)awardOnce("month","🏅 月間MVP！30日連続");
@@ -2890,6 +2896,7 @@ function gradeCard(known){
   S.box[c.en]=known?Math.min(3,(S.box[c.en]||0)+1):0;
   const mastered=Object.values(S.box).filter(v=>v>=2).length;
   if(mastered>=50)awardOnce("fifty","📖 50語マスター達成！");
+  if(known){S.cardsSinceTicket=(S.cardsSinceTicket||0)+1;if(S.cardsSinceTicket>=5){S.cardsSinceTicket=0;earnMatchTicket();}}
   save();
   sfx(known?"good":"bad");
   ci++;
@@ -2946,7 +2953,7 @@ function toggleRec(){
 function stopRec(){recording=false;document.getElementById("mic-btn").classList.remove("rec");try{recog&&recog.stop()}catch(e){}}
 function nextSpeak(){
   si++;
-  if(si>=spDeck.length){S.lastSpeakDate=today();save();toast("シャドーイング完了！🎙️");go("home");renderHome();return;}
+  if(si>=spDeck.length){S.lastSpeakDate=today();save();earnMatchTicket();toast("シャドーイング完了！🎙️");go("home");renderHome();return;}
   renderSpeak();
 }
 
@@ -3462,6 +3469,12 @@ function mdXpFor(score){if(score>=80)return 100;if(score>=40)return 40;return 10
 
 let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null;
 
+const MD_TICKET_MAX=3;
+function earnMatchTicket(){
+  if((S.matchTickets||0)>=MD_TICKET_MAX)return;
+  S.matchTickets=(S.matchTickets||0)+1;save();
+  toast(`🎟️ MATCH TICKET +1（残り${S.matchTickets}枚）`);
+}
 function mdPlaySrc(src){const a=new Audio(src);a.play().catch(()=>{});}
 function mdPlayText(text,btnEl){
   if(btnEl){btnEl.classList.add('playing');setTimeout(()=>btnEl.classList.remove('playing'),700);}
@@ -3512,14 +3525,25 @@ function mdCelebrate(){
 }
 
 function openMatchday(){
-  const td=today();
-  if(S.matchdayDate!==td){S.matchdayDate=td;S.matchdayCount=0;save();}
-  if(S.matchdayCount>=1){
-    go('matchday','push');
-    document.getElementById('md-scene-wrap').innerHTML=`<div class="md-complete"><div class="md-complete-icon">🏆</div><div class="md-complete-title">今日は完了！</div><div class="md-complete-sub">明日また新しいシーンで挑戦しよう</div><button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button></div>`;
-    renderMdDots();
+  go('matchday','push');
+  if((S.matchTickets||0)<=0){
+    document.getElementById('md-scene-wrap').innerHTML=`
+      <div class="md-complete">
+        <div class="md-complete-icon">🎟️</div>
+        <div class="md-complete-title">チケットがありません</div>
+        <div class="md-complete-sub" style="text-align:left;max-width:280px">
+          <div style="margin-bottom:12px;color:rgba(238,244,241,.6)">以下をクリアして獲得：</div>
+          <div class="md-ticket-earn-row"><span>📝 Daily Quiz 完了</span><span class="md-ticket-earn-reward">🎟️ +1</span></div>
+          <div class="md-ticket-earn-row"><span>🎙️ シャドーイング完了</span><span class="md-ticket-earn-reward">🎟️ +1</span></div>
+          <div class="md-ticket-earn-row"><span>🃏 単語カード 5枚正解</span><span class="md-ticket-earn-reward">🎟️ +1</span></div>
+          <div style="font-size:10px;color:var(--grey);margin-top:10px">最大${MD_TICKET_MAX}枚まで保持できます</div>
+        </div>
+        <button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
+      </div>`;
+    document.getElementById('md-dots').innerHTML='';
     return;
   }
+  S.matchTickets--;save();
   mdQueue=shuffleMd().slice(0,1);
   mdQueueIdx=0;mdSessionXP=0;
   go('matchday','push');
