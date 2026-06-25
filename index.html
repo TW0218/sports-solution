@@ -3249,6 +3249,7 @@ async function toggleRec(){
     showSpeakNext();
   };
   _spMediaRec.start(100);
+  _startVAD(stream,()=>_stopSpRec());
   recording=true;
   document.getElementById("mic-btn").classList.add("rec");
   document.getElementById("sp-heard").textContent="🎙️ 聞き取り中… 話してみて";
@@ -4051,6 +4052,35 @@ function renderQuizDaily(){
 }
 function startQuizDaily(cat){go('home','pop');startSession(cat,false);}
 
+/* ================= VAD（無音検出）================= */
+function _startVAD(stream, stopFn){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const src=ctx.createMediaStreamSource(stream);
+    const an=ctx.createAnalyser();
+    an.fftSize=512;
+    src.connect(an);
+    const buf=new Uint8Array(an.frequencyBinCount);
+    let silenceMs=0,voiceDetected=false,prevTick=Date.now(),done=false;
+    const startTime=Date.now();
+    const tick=()=>{
+      if(done)return;
+      an.getByteFrequencyData(buf);
+      const avg=buf.reduce((s,v)=>s+v,0)/buf.length;
+      const now=Date.now();
+      const dt=now-prevTick; prevTick=now;
+      if(avg>12){voiceDetected=true;silenceMs=0;}
+      else if(voiceDetected){silenceMs+=dt;}
+      // 発話後700ms無音 or 最大4秒で停止
+      if((voiceDetected&&silenceMs>700)||(now-startTime>4000)){
+        done=true;ctx.close();stopFn();return;
+      }
+      requestAnimationFrame(tick);
+    };
+    setTimeout(()=>requestAnimationFrame(tick),300);
+    return ()=>{done=true;try{ctx.close();}catch(e){}};
+  }catch(e){return ()=>{};}
+}
 /* ================= SPEAKING DRILL ================= */
 let drillDeck=[],drillIdx=0,drillMissCount=0,drillCat='mix';
 const OPENAI_KEY=['sk-proj-MSaC5TcJ4tiYX','f3VjeaVS0NqZbvOyE0Si','HIwxwkC08fbOFZRZKvQO','EUAoNOzt3iR_vM4MN5gG','2T3BlbkFJ-VO3HUNRsp3','VvOaAuu8ZdpOmMle-Qv_','Va4Qg2kA9NV-dWwWHWTW','FjFsI-eWMyBspm0QaWt9dQA'].join('');
@@ -4195,6 +4225,7 @@ async function startDrillRec(){
     }
   };
   _drillMediaRec.start(100);
+  _startVAD(stream,()=>_stopDrillRec());
   _drillRecording=true;
   drillStartMs=Date.now();
   if(micBtn){micBtn.classList.add('rec');micBtn.textContent='■';}
