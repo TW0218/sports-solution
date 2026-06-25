@@ -3084,6 +3084,24 @@ function buildUnifiedHeroCard(){
     </div>
   </div>`;
 }
+let _mdCountdownTimer=null;
+function _startMdCountdown(){
+  if(_mdCountdownTimer)clearInterval(_mdCountdownTimer);
+  function _tick(){
+    const el=document.getElementById('md-card-countdown');
+    if(!el){clearInterval(_mdCountdownTimer);_mdCountdownTimer=null;return;}
+    const now=new Date();
+    const midnight=new Date(now);midnight.setHours(24,0,0,0);
+    const diff=midnight-now;
+    if(diff<=0){clearInterval(_mdCountdownTimer);_mdCountdownTimer=null;renderHome();return;}
+    const h=String(Math.floor(diff/3600000)).padStart(2,'0');
+    const m=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    const s=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+    el.textContent=`${h}:${m}:${s}`;
+  }
+  _tick();
+  _mdCountdownTimer=setInterval(_tick,1000);
+}
 function animateStreakCount(){
   const el=document.getElementById('streak-big-num');
   if(!el)return;
@@ -3159,14 +3177,14 @@ function renderHome(){
   const posBadges=S.position?S.position.split(',').map(p=>`<span class="pos-shirt-badge ${p}">${p.toUpperCase()}</span>`).join(''):'';
   const madeName=S.name?S.name:'YOU';
   const posLabel=`<span class="made-for-text">Made for ${madeName}</span>${posBadges}`;
-  /* Matchday card — B案: TODAY'S MATCH シーンプレビュー */
+  /* Matchday card — TODAY'S MATCH シーンプレビュー */
   const ticketsEarned=S.matchTickets||0;
   const hasTickets=ticketsEarned>0;
   // 今日の日付からシーンを決定論的に選択（毎日変わる）
   const _mdDateSeed=parseInt(td.replace(/-/g,''))%MATCHDAY_SCENES.length;
   const _mdPreview=MATCHDAY_SCENES[_mdDateSeed];
-  // シーン設定文を短縮（最大22字）
-  const _mdSettingShort=_mdPreview.setting.length>22?_mdPreview.setting.slice(0,22)+'…':_mdPreview.setting;
+  // シーン設定文を短縮（最大20字）
+  const _mdSettingShort=_mdPreview.setting.length>20?_mdPreview.setting.slice(0,20)+'…':_mdPreview.setting;
   // チケットアイコンSVG
   const _ticketSvg=`<svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg>`;
   const matchdayCardHtml=`<div class="matchday-home-card" onclick="openMatchday()">
@@ -3176,14 +3194,17 @@ function renderHome(){
     </div>
     <div class="md-card-scene">
       <div class="md-card-scene-setting">${_mdSettingShort}</div>
-      <div class="md-card-scene-line${hasTickets?'':' locked-line'}">"${_mdPreview.line}"</div>
+      <div class="md-card-scene-line">"${_mdPreview.line}"</div>
     </div>
     <div class="md-card-footer">
       ${hasTickets
-        ?`<span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.4)">チケット ${ticketsEarned}枚保持中</span>
+        ?`<span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.35)">チケット ${ticketsEarned}枚保持中</span>
            <button class="md-card-play-btn" onclick="event.stopPropagation();openMatchday()">▶ 試合に出る</button>`
-        :`<span class="md-card-no-ticket-hint">ミッションをクリアして獲得</span>
-           <span style="font-size:12px;font-weight:900;color:rgba(255,255,255,.2)">🔒</span>`
+        :`<div style="display:flex;flex-direction:column;gap:3px">
+             <span style="font-size:10px;font-weight:900;letter-spacing:.06em;color:rgba(226,73,59,.85)">あと <span id="md-card-countdown">--:--:--</span> で消える</span>
+             <span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.3)">ミッションをクリアして参戦</span>
+           </div>
+           <button class="md-card-play-btn" style="opacity:.35;cursor:default" disabled>▶ 試合に出る</button>`
       }
     </div>
   </div>`;
@@ -3223,6 +3244,9 @@ function renderHome(){
       ${matchdayCardHtml}
       ${aiRoleplayCardHtml}
     </div>`+missionsHtml;
+
+  // チケットなし時のカウントダウン起動
+  if(!(S.matchTickets>0))_startMdCountdown();
 
   const done=S.doneToday===today();
   if(!done){
