@@ -721,19 +721,29 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .feature-dot{height:6px;border-radius:3px;background:rgba(255,255,255,.18);transition:width .25s,background .25s;width:6px}
 .feature-dot.active{width:18px;background:var(--green)}
 
-/* ===== MATCHDAY HOME CARD ===== */
-@keyframes mdCardGlow{0%,100%{box-shadow:0 4px 24px rgba(0,0,0,.5),0 0 0 0 rgba(29,158,117,.0),inset 0 1px 0 rgba(29,158,117,.1)}50%{box-shadow:0 4px 32px rgba(0,0,0,.55),0 0 28px 2px rgba(29,158,117,.18),inset 0 1px 0 rgba(29,158,117,.2)}}
-@keyframes mdBorderPulse{0%,100%{border-color:rgba(29,158,117,.35)}50%{border-color:rgba(29,158,117,.75)}}
-.matchday-home-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#0d2e1a 0%,#1a3d22 50%,#0d2416 100%);border:1px solid rgba(29,158,117,.35);border-radius:18px;padding:18px 18px 16px;cursor:pointer;display:flex;flex-direction:column;gap:10px;animation:mdCardGlow 3s ease-in-out infinite,mdBorderPulse 3s ease-in-out infinite}
-.matchday-home-card::before{content:'MATCHDAY';position:absolute;right:-8px;top:-8px;font-size:60px;font-weight:900;color:rgba(29,158,117,.06);letter-spacing:-.02em;line-height:1;pointer-events:none}
-.matchday-home-eyebrow{display:flex;align-items:center;gap:8px}
-.matchday-home-badge{background:var(--green);color:#fff;font-size:10px;font-weight:900;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
-.matchday-home-count{font-size:11px;color:var(--grey);font-weight:700}
-.matchday-home-title{font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-.01em;line-height:1.2}
-.matchday-home-sub{font-size:12px;color:rgba(238,244,241,.5);font-weight:600}
-.matchday-home-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px}
-.matchday-home-xp{display:none}
-.matchday-home-go{font-size:13px;font-weight:900;color:var(--green)}
+/* ===== MATCHDAY HOME CARD (B案) ===== */
+@keyframes mdCardGlow{0%,100%{box-shadow:0 7px 0 rgba(0,0,0,.5),0 4px 32px rgba(0,0,0,.5),0 0 0 0 rgba(29,158,117,0)}50%{box-shadow:0 7px 0 rgba(0,0,0,.45),0 4px 40px rgba(0,0,0,.5),0 0 36px 2px rgba(29,158,117,.2)}}
+@keyframes mdBorderPulse{0%,100%{border-color:rgba(29,158,117,.3)}50%{border-color:rgba(29,158,117,.7)}}
+.matchday-home-card{position:relative;overflow:hidden;background:linear-gradient(160deg,#071a0e 0%,#0e2d18 60%,#071a0e 100%);border:1px solid rgba(29,158,117,.3);border-radius:20px;padding:0;cursor:pointer;display:flex;flex-direction:column;animation:mdCardGlow 3s ease-in-out infinite,mdBorderPulse 3s ease-in-out infinite;transform:translateY(-3px);transition:transform .12s,box-shadow .12s}
+.matchday-home-card:active{transform:translateY(2px)!important;box-shadow:0 1px 0 rgba(0,0,0,.4)!important;animation:none}
+/* 背景装飾 */
+.matchday-home-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(29,158,117,.18) 0%,transparent 70%);pointer-events:none}
+.matchday-home-card::after{content:'';position:absolute;bottom:-40px;left:-20px;width:160px;height:160px;background:radial-gradient(circle,rgba(29,158,117,.08) 0%,transparent 70%);pointer-events:none}
+/* ヘッダー部 */
+.md-card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;position:relative;z-index:1}
+.matchday-home-badge{background:var(--green);color:#fff;font-size:10px;font-weight:900;letter-spacing:.1em;padding:3px 10px;border-radius:999px}
+.md-card-ticket{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:900;color:#fff}
+.md-card-ticket-num{font-size:18px;font-weight:900;color:#FFD700;line-height:1}
+/* シーンプレビュー部 */
+.md-card-scene{padding:0 16px 14px;position:relative;z-index:1;border-bottom:1px solid rgba(29,158,117,.15)}
+.md-card-scene-setting{font-size:11px;font-weight:800;color:rgba(29,158,117,.8);letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.md-card-scene-line{font-size:17px;font-weight:900;color:#fff;line-height:1.4;font-style:italic}
+.md-card-scene-line.locked-line{color:rgba(255,255,255,.18);filter:blur(4px);user-select:none}
+/* フッター部 */
+.md-card-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;position:relative;z-index:1}
+.md-card-no-ticket-hint{font-size:11px;font-weight:800;color:rgba(255,255,255,.35)}
+.md-card-play-btn{background:var(--green);color:#fff;border:none;border-radius:999px;padding:8px 18px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);transition:transform .08s,box-shadow .08s;white-space:nowrap}
+.md-card-play-btn:active{transform:translateY(2px);box-shadow:none}
 .matchday-done-badge{background:rgba(29,158,117,.2);border:1px solid rgba(29,158,117,.4);color:var(--green);font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px}
 /* ROLEPLAY card */
 .ai-roleplay-card{position:relative;overflow:hidden;border-radius:18px;padding:18px 18px 16px;cursor:pointer;display:flex;flex-direction:column;gap:10px}
@@ -3149,27 +3159,32 @@ function renderHome(){
   const posBadges=S.position?S.position.split(',').map(p=>`<span class="pos-shirt-badge ${p}">${p.toUpperCase()}</span>`).join(''):'';
   const madeName=S.name?S.name:'YOU';
   const posLabel=`<span class="made-for-text">Made for ${madeName}</span>${posBadges}`;
-  /* Matchday card */
+  /* Matchday card — B案: TODAY'S MATCH シーンプレビュー */
   const ticketsEarned=S.matchTickets||0;
-  const playsToday=S.matchdayCount||0;
   const hasTickets=ticketsEarned>0;
-  // チケット獲得状況（どのミッションが未達か一目で分かる）
-  const earnSources=[
-    {label:'実戦フレーズ',       done:speakDone},
-    {label:'PITCHフレーズ',      done:pitchQuizDone},
-    {label:'LOCKER ROOMフレーズ',done:lockerQuizDone},
-    {label:'単語カード15枚',     done:(S.cardsSinceTicket||0)>=15},
-  ];
-  const earnHints=earnSources.map(e=>`<span class="md-earn-chip ${e.done?'done':''}">${e.done?'✓ ':'+1 '}${e.label}</span>`).join('');
-  const matchdayCardHtml=`<div class="matchday-home-card tap-fx" onclick="openMatchday()">
-    <div class="matchday-home-eyebrow">
-      <span class="matchday-home-badge">MATCHDAY MODE</span>
+  // 今日の日付からシーンを決定論的に選択（毎日変わる）
+  const _mdDateSeed=parseInt(td.replace(/-/g,''))%MATCHDAY_SCENES.length;
+  const _mdPreview=MATCHDAY_SCENES[_mdDateSeed];
+  // シーン設定文を短縮（最大22字）
+  const _mdSettingShort=_mdPreview.setting.length>22?_mdPreview.setting.slice(0,22)+'…':_mdPreview.setting;
+  // チケットアイコンSVG
+  const _ticketSvg=`<svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg>`;
+  const matchdayCardHtml=`<div class="matchday-home-card" onclick="openMatchday()">
+    <div class="md-card-header">
+      <span class="matchday-home-badge">TODAY'S MATCH</span>
+      <div class="md-card-ticket">${_ticketSvg} <span class="md-card-ticket-num">${ticketsEarned}</span> 枚</div>
     </div>
-    <div class="matchday-home-title">現場英語で<br>判断しろ。</div>
-    <div class="matchday-home-sub">シーンに入り、3択で返す。サッカー現場英語。</div>
-    <div class="matchday-home-footer">
-      <div class="md-earn-row">${earnHints}</div>
-      <span class="matchday-home-go">${hasTickets?`<svg viewBox="0 0 24 24" style="width:.9em;height:.9em;vertical-align:-.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> ${ticketsEarned}枚 プレイ ›`:'ミッションをクリアして獲得'}</span>
+    <div class="md-card-scene">
+      <div class="md-card-scene-setting">${_mdSettingShort}</div>
+      <div class="md-card-scene-line${hasTickets?'':' locked-line'}">"${_mdPreview.line}"</div>
+    </div>
+    <div class="md-card-footer">
+      ${hasTickets
+        ?`<span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.4)">チケット ${ticketsEarned}枚保持中</span>
+           <button class="md-card-play-btn" onclick="event.stopPropagation();openMatchday()">▶ 試合に出る</button>`
+        :`<span class="md-card-no-ticket-hint">ミッションをクリアして獲得</span>
+           <span style="font-size:12px;font-weight:900;color:rgba(255,255,255,.2)">🔒</span>`
+      }
     </div>
   </div>`;
 
