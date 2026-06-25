@@ -80,6 +80,10 @@ body{
 .cel-flash-line{width:80px;height:3px;background:linear-gradient(90deg,transparent,#FFD700,transparent);position:relative;z-index:1;margin:10px 0;animation:celFlashIn .4s .3s both}
 .cel-msg{font-size:15px;color:rgba(255,255,255,.65);font-weight:700;margin-top:6px;position:relative;z-index:1;text-align:center;padding:0 32px;line-height:1.5;animation:celLabelIn .4s .35s both}
 .cel-hint{font-size:11px;font-weight:800;letter-spacing:.12em;color:rgba(255,255,255,.18);position:relative;z-index:1;margin-top:32px;animation:celLabelIn .4s .5s both}
+/* ---------- XP pop ---------- */
+#xp-pop{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);pointer-events:none;font-size:26px;font-weight:900;font-family:Barlow,sans-serif;color:#FFD700;text-shadow:0 0 14px rgba(255,215,0,.7);opacity:0;z-index:9999;white-space:nowrap;letter-spacing:.02em}
+@keyframes xpFloat{0%{opacity:1;transform:translateX(-50%) translateY(0) scale(.9)}40%{opacity:1;transform:translateX(-50%) translateY(-36px) scale(1.35)}100%{opacity:0;transform:translateX(-50%) translateY(-68px) scale(1)}}
+.xp-anim{animation:xpFloat .75s cubic-bezier(.22,1,.36,1) forwards}
 /* ---------- 3D tap card effect ---------- */
 @keyframes cardReady{0%,100%{box-shadow:0 6px 0 rgba(0,0,0,.5),0 2px 20px rgba(0,0,0,.4)}50%{box-shadow:0 8px 0 rgba(0,0,0,.45),0 4px 28px rgba(0,0,0,.35)}}
 .mission-card-3d:not(.done-card){box-shadow:0 5px 0 rgba(0,0,0,.45),0 2px 16px rgba(0,0,0,.35);transform:translateY(-2px);border-radius:16px;transition:transform .1s,box-shadow .1s}
@@ -1293,6 +1297,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 </section>
 
 <div id="toast"></div>
+<div id="xp-pop">+1</div>
 </div>
 
 
@@ -2620,6 +2625,16 @@ function sfx(type){
     o.connect(g);g.connect(AC.destination);
     if(type==="good"){o.frequency.setValueAtTime(660,t);o.frequency.setValueAtTime(880,t+.09);g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}
     else if(type==="bad"){o.type="sawtooth";o.frequency.setValueAtTime(180,t);o.frequency.exponentialRampToValueAtTime(90,t+.25);g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}
+    else if(type==="xp"){
+      o.type="sine";o.frequency.setValueAtTime(1047,t);o.frequency.setValueAtTime(1319,t+.07);
+      g.gain.setValueAtTime(.13,t);g.gain.exponentialRampToValueAtTime(.001,t+.22);
+      o.start(t);o.stop(t+.25);
+      const o2=AC.createOscillator(),g2=AC.createGain();
+      o2.connect(g2);g2.connect(AC.destination);
+      o2.type="sine";o2.frequency.setValueAtTime(1568,t+.13);
+      g2.gain.setValueAtTime(.09,t+.13);g2.gain.exponentialRampToValueAtTime(.001,t+.32);
+      o2.start(t+.13);o2.stop(t+.35);
+    }
     else if(type==="whistle"){o.frequency.setValueAtTime(2400,t);g.gain.setValueAtTime(.08,t);g.gain.setValueAtTime(0,t+.12);g.gain.setValueAtTime(.08,t+.2);g.gain.exponentialRampToValueAtTime(.001,t+.55);o.start(t);o.stop(t+.6);}
   }catch(e){}
 }
@@ -2949,6 +2964,14 @@ function go(id, dir){
     doSwitch();
   }
 }
+function showXPPop(){
+  sfx('xp');
+  const el=document.getElementById('xp-pop');
+  if(!el)return;
+  el.classList.remove('xp-anim');
+  void el.offsetWidth;
+  el.classList.add('xp-anim');
+}
 function toast(msg){
   const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"),2200);
@@ -2975,6 +2998,7 @@ function weekUnlocked(n){
 function buildUnifiedHeroCard(){
   const todayStr=today();
   const done=S.doneToday===todayStr;
+  const mastered=Object.values(S.box).filter(v=>v>=2).length;
   const hist=S.history||[];
   const posNames=S.position?S.position.split(',').map(p=>p.toUpperCase()).join(' / '):'';
   const eyebrow='TOP BINS'+(posNames?' — '+posNames:'');
@@ -3030,6 +3054,7 @@ function buildUnifiedHeroCard(){
       </div>
     </div>
     <div class="huc-bottom">
+      <div style="font-size:12px;font-weight:900;color:var(--green);letter-spacing:.03em">${mastered}<span style="font-size:10px;color:var(--grey);font-weight:800;margin-left:3px">語マスター中</span></div>
       <div class="huc-right">${ticketHtml}${cdHtml}</div>
     </div>
   </div>`;
@@ -3505,7 +3530,7 @@ function checkBuild(){
 }
 function answerResult(ok){
   if(curItem){if(curItem.c==="pitch"){S.pitchTotal++;if(ok)S.pitchRight++;}else if(curItem.c==="locker"){S.lockerTotal++;if(ok)S.lockerRight++;}}
-  if(ok){goalsNow++;S.goals++;sfx("good");
+  if(ok){goalsNow++;S.goals++;sfx("good");showXPPop();
     awardOnce("first","⚽ 初ゴール！");
   }else{missNow++;sfx("bad");}
   const f=document.getElementById("feedback");
@@ -3635,6 +3660,7 @@ function selectCardAnswer(idx){
     else if(i===idx)btn.classList.add('wrong');
   });
   sfx(isCorrect?'good':'bad');
+  if(isCorrect)showXPPop();
   // スコア更新
   S.box[correct.en]=isCorrect?Math.min(3,(S.box[correct.en]||0)+1):0;
   const mastered=Object.values(S.box).filter(v=>v>=2).length;
