@@ -340,7 +340,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 /* bottom row */
 .huc-bottom{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
 .huc-dots{display:flex;gap:5px;align-items:center}
-.huc-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15)}
+.huc-dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.15)}
 .huc-dot.done{background:#FF6B00}
 .huc-dot.today-done{background:#FFD700;box-shadow:0 0 6px #FFD700}
 .huc-dot.today-pending{width:24px;border-radius:999px;background:rgba(255,255,255,.1);font-size:7px;font-weight:900;color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;letter-spacing:.04em}
@@ -398,6 +398,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .mission-card.done-card{opacity:.5;cursor:default}
 .mission-card.done-card:active{background:transparent}
 .mission-big-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 auto}
+.mission-card.phrase-card .mission-big-icon{background:rgba(255,215,0,.12)}
 .mission-card.quiz-card .mission-big-icon{background:rgba(29,158,117,.15)}
 .mission-card.speak-card .mission-big-icon{background:rgba(103,58,183,.2)}
 .mission-card.done-card .mission-big-icon{background:var(--card2)}
@@ -2450,9 +2451,22 @@ function renderHome(){
   const speakEnd=speakDone
     ?`<div class="mission-done-check">✓</div>`
     :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
+  const phraseDone=S.doneToday===td;
+  const phraseEnd=phraseDone
+    ?`<div class="mission-done-check">✓</div>`
+    :`<span class="mission-time-hint">30秒</span><div class="mission-arrow">›</div>`;
   const missionsHtml=`<div class="missions-section">
-    <div class="missions-header"><span class="missions-header-icon">🎯</span>TODAY'S MISSIONS</div>
+    <div class="missions-header">TODAY'S MISSIONS</div>
     <div class="missions-grid">
+      <button class="mission-card phrase-card${phraseDone?' done-card':''}" onclick="${phraseDone?'':'startTodaySession()'}">
+        <div class="mission-big-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+        <div class="mission-body">
+          <div class="mission-label">PHRASES</div>
+          <div class="mission-name-row"><span class="mission-name">今日の３フレーズ</span></div>
+          <div style="font-size:11px;color:${phraseDone?'#bbb':'rgba(255,255,255,.45)'};font-weight:700;margin-top:2px">読んで・聞いて・覚える</div>
+        </div>
+        <div class="mission-end">${phraseEnd}</div>
+      </button>
       <button class="mission-card quiz-card${quizAllDone?' done-card':''}" onclick="${quizAllDone?'':'openQuizPicker()'}">
         <div class="mission-big-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
         <div class="mission-body">
@@ -2502,9 +2516,7 @@ function renderHome(){
   </div>`;
 
   document.getElementById("home-session-area").innerHTML=
-    `<div class="today-session-card"><div class="today-session-header"><span class="today-session-label">${posLabel}</span></div><div class="today-session-title">今日の３フレーズ</div>${phrasesHtml}</div>`
-    +`<button class="play-session-btn tap-fx" onclick="startTodaySession()"><span class="play-session-btn-play">▶</span><span class="play-session-btn-center"><span class="play-session-btn-text">今日の３フレーズを練習する</span><span class="play-session-btn-hint">⏱ 30秒</span></span><span class="play-session-btn-arrow">›</span></button>`
-    +matchdayCardHtml
+    matchdayCardHtml
     +missionsHtml;
 
   const done=S.doneToday===today();
