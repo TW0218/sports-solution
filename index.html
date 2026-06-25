@@ -925,6 +925,39 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .rp-finish-label{font-size:14px;font-weight:900;color:var(--ink);letter-spacing:.04em}
 .rp-finish-sub{font-size:13px;color:var(--grey);font-weight:600;line-height:1.6}
 .rp-finish-btn{background:#DC3232;color:#fff;border:none;border-radius:16px;padding:14px 40px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;margin-top:12px}
+/* ===== MATCH SCREEN PITCH DESIGN ===== */
+#scr-match{background:linear-gradient(180deg,#020e04 0%,#041208 40%,#061a0c 100%);padding:0}
+.match-pitch-wrap{flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:100%}
+.match-pitch-bg{position:absolute;inset:0;pointer-events:none;opacity:.13}
+.match-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:48px 24px 32px;flex:1;justify-content:center}
+.match-eyebrow{font-size:11px;font-weight:900;letter-spacing:.22em;color:rgba(255,255,255,.28);margin-bottom:8px;text-align:center}
+.match-heading{font-size:52px;font-weight:900;color:#fff;letter-spacing:-.03em;line-height:1;margin-bottom:4px;font-family:Barlow,sans-serif;text-align:center}
+.match-heading span{color:var(--green)}
+.match-date-str{font-size:13px;font-weight:800;color:rgba(255,255,255,.3);margin-bottom:32px;text-align:center;letter-spacing:.04em}
+.match-scene-card{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 20px;margin-bottom:28px;backdrop-filter:blur(4px)}
+.match-scene-setting{font-size:11px;font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:10px;text-transform:uppercase}
+.match-scene-line{font-size:18px;font-weight:800;color:rgba(255,255,255,.9);line-height:1.6;font-style:italic}
+.match-ticket-row{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.match-ticket-num{font-size:38px;font-weight:900;color:#FFC400;font-family:Barlow,sans-serif;line-height:1}
+.match-ticket-meta{display:flex;flex-direction:column;gap:1px}
+.match-ticket-label{font-size:12px;font-weight:900;color:rgba(255,196,0,.5);letter-spacing:.08em}
+.match-ticket-sub{font-size:11px;color:rgba(255,255,255,.25);font-weight:700}
+.match-cta-btn{width:100%;background:linear-gradient(135deg,#1D9E75 0%,#0d7a5a 100%);color:#fff;border:none;border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.05em;box-shadow:0 6px 32px rgba(29,158,117,.45),0 0 0 1px rgba(29,158,117,.3);transition:transform .1s}
+.match-cta-btn:active{transform:scale(.97)}
+.match-demo-btn{width:100%;background:#FFC400;color:#1a1000;border:none;border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.05em;box-shadow:0 6px 24px rgba(255,196,0,.3)}
+.match-disabled-btn{width:100%;background:rgba(255,255,255,.05);color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:default;letter-spacing:.05em}
+.match-countdown{font-size:12px;font-weight:900;color:rgba(226,73,59,.75);text-align:center;margin-bottom:10px;letter-spacing:.04em}
+.match-earn-hint{font-size:12px;font-weight:800;color:rgba(255,255,255,.25);text-align:center;margin-bottom:16px}
+.match-demo-label{font-size:12px;font-weight:800;color:rgba(255,196,0,.65);text-align:center;margin-bottom:10px}
+/* TRAIN画面のROLEPLAYカード */
+.train-rp-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#1a0505 0%,#2a0808 50%,#1f0606 100%);border:1px solid rgba(220,50,50,.3);border-radius:18px;padding:20px;cursor:pointer;margin-top:4px}
+.train-rp-card.locked{background:linear-gradient(135deg,#0e1219,#141b22);border-color:rgba(255,255,255,.08);cursor:default}
+.train-rp-card::before{content:'ROLEPLAY';position:absolute;right:-6px;top:-6px;font-size:54px;font-weight:900;color:rgba(220,50,50,.05);letter-spacing:-.02em;line-height:1;pointer-events:none;font-family:Barlow,sans-serif}
+.train-rp-eyebrow{font-size:10px;font-weight:900;letter-spacing:.14em;color:rgba(220,80,80,.7);margin-bottom:8px}
+.train-rp-title{font-size:22px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:6px;font-family:Barlow,sans-serif}
+.train-rp-sub{font-size:12px;color:rgba(255,255,255,.4);line-height:1.5;margin-bottom:12px}
+.train-rp-footer{display:flex;justify-content:space-between;align-items:center}
+.train-rp-go{font-size:13px;font-weight:900;color:rgba(220,80,80,.8)}
 .rp-choice-btn{width:100%;background:var(--white);border:1.5px solid var(--border2);border-radius:14px;padding:15px 18px;font-size:15px;font-weight:900;font-family:Barlow,sans-serif;color:var(--ink);cursor:pointer;text-align:left;letter-spacing:.02em}
 .rp-choice-btn:active{background:rgba(29,158,117,.15);border-color:var(--green)}
 .rp-speak-prompt{background:linear-gradient(135deg,#0d2416,#162e1e);border:1px solid var(--border2);border-radius:18px;padding:24px 20px;text-align:center;margin-bottom:8px}
@@ -1293,12 +1326,11 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 <!-- ============ MATCH SCREEN ============ -->
 <section class="screen" id="scr-match">
-  <div class="brand" style="justify-content:center"><div class="logo">TOP <span>BINS</span></div></div>
-  <div id="match-area"></div>
+  <div id="match-area" style="flex:1;display:flex;flex-direction:column"></div>
 </section>
 <!-- ============ ROLEPLAY ============ -->
 <section class="screen" id="scr-roleplay">
-  <div class="quiz-top"><button class="btn-x" onclick="go('match','pop');renderMatch()">✕</button>
+  <div class="quiz-top"><button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
     <div style="font-weight:900;font-size:17px">ROLEPLAY</div></div>
   <div style="flex:1;overflow-y:auto;padding-bottom:32px" id="rp-menu-body"></div>
 </section>
@@ -2991,7 +3023,7 @@ function go(id, dir){
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.getElementById("scr-"+id).classList.add("active");
     document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-    const nv={home:"nav-train",cards:"nav-train",play:"nav-train",player:"nav-train",quiz:"nav-train",result:"nav-train",drill:"nav-train",speak:"nav-train",pick:"nav-train","quiz-daily":"nav-train",match:"nav-match",matchday:"nav-match",roleplay:"nav-match","rp-scene":"nav-match",grow:"nav-grow",career:"nav-grow",week:"nav-grow",cases:"nav-grow",case:"nav-grow",coach:"nav-grow",fav:"nav-grow"}[id];
+    const nv={home:"nav-train",cards:"nav-train",play:"nav-train",player:"nav-train",quiz:"nav-train",result:"nav-train",drill:"nav-train",speak:"nav-train",pick:"nav-train","quiz-daily":"nav-train",roleplay:"nav-train","rp-scene":"nav-train",match:"nav-match",matchday:"nav-match",grow:"nav-grow",career:"nav-grow",week:"nav-grow",cases:"nav-grow",case:"nav-grow",coach:"nav-grow",fav:"nav-grow"}[id];
     if(nv)document.getElementById(nv).classList.add("sel");
     document.getElementById("feedback").classList.remove("show");
     window.scrollTo(0,0);
@@ -3203,7 +3235,27 @@ function renderHome(){
     ${quizAllDone&&speakDone&&cardDone?`<div class="share-today-wrap"><button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button></div>`:''}
   </div>`;
 
-  document.getElementById("home-session-area").innerHTML=missionsHtml;
+  const mdTotal=S.matchdayTotal||0;
+  const rpFull=mdTotal>=MD_UNLOCK;
+  const rpPreview=!rpFull&&mdTotal>=MD_PREVIEW;
+  const rpUnlocked=rpFull||rpPreview;
+  const rpCardHtml=rpUnlocked
+    ?`<div class="train-rp-card tap-fx" onclick="openRoleplay()">
+        <div class="train-rp-eyebrow">${rpFull?'ROLEPLAY — UNLOCKED':'ROLEPLAY — PREVIEW'}</div>
+        <div class="train-rp-title">声で返せ。<br>現場英語。</div>
+        <div class="train-rp-sub">${rpFull?'6カテゴリ・全シーン解放中':'1カテゴリ解放中。あと'+(MD_UNLOCK-mdTotal)+'回で完全解放。'}</div>
+        <div class="train-rp-footer"><span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.25)">${rpFull?'選んで → 声に出す':'試合中の状況'}</span><span class="train-rp-go">入る ›</span></div>
+      </div>`
+    :`<div class="train-rp-card locked">
+        <div class="train-rp-eyebrow" style="color:rgba(255,255,255,.25)">ROLEPLAY — LOCKED</div>
+        <div class="train-rp-title" style="color:rgba(255,255,255,.3)">声で返せ。<br>現場英語。</div>
+        <div class="train-rp-sub">MATCHDAYを${MD_PREVIEW}回クリアで解放</div>
+        <div style="margin-top:8px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:900;color:rgba(255,255,255,.2);margin-bottom:4px"><span>${mdTotal} / ${MD_PREVIEW}</span><span>あと${MD_PREVIEW-mdTotal}回</span></div>
+          <div style="height:3px;background:rgba(255,255,255,.08);border-radius:99px"><div style="height:100%;width:${Math.min(100,Math.round(mdTotal/MD_PREVIEW*100))}%;background:rgba(255,255,255,.2);border-radius:99px"></div></div>
+        </div>
+      </div>`;
+  document.getElementById("home-session-area").innerHTML=missionsHtml+rpCardHtml;
 
   const done=S.doneToday===today();
   if(!done){
@@ -3226,60 +3278,55 @@ function renderMatch(){
   const ticketsEarned=S.matchTickets||0;
   const hasTickets=ticketsEarned>0;
   const _mdDateSeed=parseInt(td.replace(/-/g,''))%MATCHDAY_SCENES.length;
-  const _mdPreview=MATCHDAY_SCENES[_mdDateSeed];
-  const _mdSettingShort=_mdPreview.setting.length>20?_mdPreview.setting.slice(0,20)+'…':_mdPreview.setting;
-  const _ticketSvg=`<svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg>`;
-  const matchdayCardHtml=`<div class="matchday-home-card" onclick="openMatchday()">
-    <div class="md-card-header">
-      <span class="matchday-home-badge">TODAY'S MATCH</span>
-      <div class="md-card-ticket">${_ticketSvg} <span class="md-card-ticket-num">${ticketsEarned}</span> 枚</div>
-    </div>
-    <div class="md-card-scene">
-      <div class="md-card-scene-setting">${_mdSettingShort}</div>
-      <div class="md-card-scene-line">"${_mdPreview.line}"</div>
-    </div>
-    <div class="md-card-footer">
-      ${hasTickets
-        ?`<span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.35)">チケット ${ticketsEarned}枚保持中</span>
-           <button class="md-card-play-btn" onclick="event.stopPropagation();openMatchday()">▶ 試合に出る</button>`
-        :!S.matchdayDemoDone
-        ?`<span style="font-size:11px;font-weight:800;color:rgba(255,196,0,.7)">1問だけ無料で体験</span>
-           <button class="md-card-play-btn" style="background:#FFC400;color:#1a1a00" onclick="event.stopPropagation();openMatchdayDemo()">▶ DEMO を試す</button>`
-        :`<div style="display:flex;flex-direction:column;gap:3px">
-             <span style="font-size:10px;font-weight:900;letter-spacing:.06em;color:rgba(226,73,59,.85)">あと <span id="md-card-countdown">--:--:--</span> で消える</span>
-             <span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.3)">ミッションをクリアして参戦</span>
-           </div>
-           <button class="md-card-play-btn" style="opacity:.35;cursor:default" disabled>▶ 試合に出る</button>`
-      }
-    </div>
-  </div>`;
-  const mdTotal=S.matchdayTotal||0;
-  const rpFull=mdTotal>=MD_UNLOCK;
-  const rpPreview=!rpFull&&mdTotal>=MD_PREVIEW;
-  const aiRoleplayCardHtml=rpFull
-    ?`<div class="ai-roleplay-card unlocked tap-fx" onclick="openRoleplay()">
-        <div class="ai-rp-eyebrow"><span class="ai-rp-badge-unlocked">ROLEPLAY</span><span style="font-size:11px;font-weight:800;color:rgba(255,80,80,.8)">UNLOCKED</span></div>
-        <div class="ai-rp-title-unlocked">本番ピッチに<br>立て。</div>
-        <div class="ai-rp-sub">シーン別AIと実戦対話。声で返せ。</div>
-        <div class="ai-rp-footer"><span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.3)">6カテゴリ・全シーン</span><span class="ai-rp-go">入る ›</span></div>
-      </div>`
-    :rpPreview
-    ?`<div class="ai-roleplay-card unlocked tap-fx" onclick="openRoleplay()" style="border-color:rgba(255,196,0,.3)">
-        <div class="ai-rp-eyebrow"><span class="ai-rp-badge-unlocked" style="background:rgba(255,196,0,.15);color:#FFC400">ROLEPLAY</span><span style="font-size:11px;font-weight:800;color:#FFC400">PREVIEW</span></div>
-        <div class="ai-rp-title-unlocked">本番ピッチに<br>立て。</div>
-        <div class="ai-rp-sub">1カテゴリ解放中。あと${MD_UNLOCK-mdTotal}回で完全解放。</div>
-        <div class="ai-rp-footer"><span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.3)">試合中の状況 — 解放中</span><span class="ai-rp-go">試す ›</span></div>
-      </div>`
-    :`<div class="ai-roleplay-card locked" onclick="toast('あと${MD_PREVIEW-mdTotal}回でROLEPLAYプレビュー解放！')">
-        <div class="ai-rp-eyebrow"><span class="ai-rp-badge-locked">ROLEPLAY</span><span class="ai-rp-lock"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></div>
-        <div class="ai-rp-title-locked">本番ピッチに<br>立て。</div>
-        <div class="ai-rp-sub">MATCHDAY ${MD_PREVIEW}回クリアでプレビュー解放</div>
-        <div class="ai-rp-progress-wrap">
-          <div class="ai-rp-progress-label"><span>${mdTotal} / ${MD_PREVIEW} 回</span><span>あと${MD_PREVIEW-mdTotal}回</span></div>
-          <div class="ai-rp-progress-track"><div class="ai-rp-progress-fill" style="width:${Math.round(mdTotal/MD_PREVIEW*100)}%"></div></div>
+  const scene=MATCHDAY_SCENES[_mdDateSeed];
+  const d=new Date();
+  const dateStr=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+  const pitchSvg=`<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+    <rect width="400" height="260" fill="none"/>
+    <rect x="2" y="2" width="396" height="256" rx="4" fill="none" stroke="white" stroke-width="1.5"/>
+    <line x1="200" y1="2" x2="200" y2="258" stroke="white" stroke-width="1.5"/>
+    <circle cx="200" cy="130" r="40" fill="none" stroke="white" stroke-width="1.5"/>
+    <circle cx="200" cy="130" r="3" fill="white"/>
+    <rect x="2" y="85" width="52" height="90" fill="none" stroke="white" stroke-width="1.5"/>
+    <rect x="2" y="105" width="22" height="50" fill="none" stroke="white" stroke-width="1.5"/>
+    <rect x="346" y="85" width="52" height="90" fill="none" stroke="white" stroke-width="1.5"/>
+    <rect x="376" y="105" width="22" height="50" fill="none" stroke="white" stroke-width="1.5"/>
+    <circle cx="65" cy="130" r="3" fill="white"/>
+    <circle cx="335" cy="130" r="3" fill="white"/>
+    <path d="M2 2 a8 8 0 0 1 8 8" fill="none" stroke="white" stroke-width="1.5"/>
+    <path d="M390 2 a8 8 0 0 0 -8 8" fill="none" stroke="white" stroke-width="1.5"/>
+    <path d="M2 258 a8 8 0 0 0 8 -8" fill="none" stroke="white" stroke-width="1.5"/>
+    <path d="M390 258 a8 8 0 0 1 -8 -8" fill="none" stroke="white" stroke-width="1.5"/>
+  </svg>`;
+  const ctaHtml=hasTickets
+    ?`<button class="match-cta-btn" onclick="openMatchday()">▶ 試合に出る</button>`
+    :!S.matchdayDemoDone
+    ?`<div class="match-demo-label">1問だけ無料で体験できる</div>
+      <button class="match-demo-btn" onclick="openMatchdayDemo()">▶ DEMO を試す</button>`
+    :`<div class="match-countdown">あと <span id="md-card-countdown">--:--:--</span> でリセット</div>
+      <div class="match-earn-hint">ミッションをクリアしてチケットを獲得</div>
+      <button class="match-disabled-btn" disabled>▶ 試合に出る</button>`;
+  document.getElementById('match-area').innerHTML=`
+    <div class="match-pitch-wrap">
+      <div class="match-pitch-bg">${pitchSvg}</div>
+      <div class="match-content">
+        <div class="match-eyebrow">TODAY'S MATCH</div>
+        <div class="match-heading">MATCH<span>DAY</span></div>
+        <div class="match-date-str">${dateStr}</div>
+        <div class="match-scene-card">
+          <div class="match-scene-setting">${scene.setting}</div>
+          <div class="match-scene-line">"${scene.line}"</div>
         </div>
-      </div>`;
-  document.getElementById('match-area').innerHTML=`<div class="home-feature-stack">${matchdayCardHtml}${aiRoleplayCardHtml}</div>`;
+        <div class="match-ticket-row">
+          <div class="match-ticket-num">${ticketsEarned}</div>
+          <div class="match-ticket-meta">
+            <div class="match-ticket-label">TICKETS</div>
+            <div class="match-ticket-sub">最大${MD_TICKET_MAX}枚まで保持</div>
+          </div>
+        </div>
+        ${ctaHtml}
+      </div>
+    </div>`;
   if(!hasTickets)_startMdCountdown();
 }
 function renderGrow(){
