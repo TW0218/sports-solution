@@ -748,6 +748,50 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .md-complete-xp{font-size:15px;color:var(--green);font-weight:800}
 .md-complete-sub{font-size:13px;color:var(--grey);font-weight:600}
 .md-complete-btn{background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px 40px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);margin-top:8px}
+/* ===== AI ROLEPLAY ===== */
+.rp-cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0 24px}
+.rp-cat-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px 12px;cursor:pointer;transition:border-color .15s,transform .1s;position:relative;overflow:hidden}
+.rp-cat-card:active{transform:scale(.97)}
+.rp-cat-card::before{content:'';position:absolute;inset:0;opacity:.07;border-radius:16px}
+.rp-cat-icon{font-size:24px;margin-bottom:8px}
+.rp-cat-name{font-size:12px;font-weight:900;color:var(--ink);margin-bottom:3px;line-height:1.3}
+.rp-cat-npc{font-size:10px;font-weight:700;color:var(--grey);line-height:1.4}
+.rp-cat-count{font-size:10px;font-weight:800;color:var(--green);margin-top:6px}
+.rp-intro{padding:0 18px;font-size:12px;color:var(--grey);font-weight:700;line-height:1.6;margin-bottom:4px}
+.rp-topbar{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.rp-prog{flex:1}
+.rp-prog-track{height:4px;background:rgba(220,50,50,.18);border-radius:999px;overflow:hidden;margin-bottom:5px}
+.rp-prog-fill{height:100%;background:linear-gradient(90deg,#DC3232,#FF6B00);border-radius:999px;transition:width .35s}
+.rp-prog-meta{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:rgba(255,255,255,.3)}
+.rp-situation-card{background:var(--white);border:1px solid var(--border);border-radius:22px;padding:18px;margin:8px 0 0}
+.rp-section-lbl{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:6px}
+.rp-situation-text{font-size:14px;font-weight:700;color:var(--ink);line-height:1.6}
+.rp-npc-card{background:var(--card2);border:1px solid rgba(220,50,50,.25);border-radius:18px;padding:16px;margin:10px 0 0}
+.rp-npc-who{font-size:10px;font-weight:900;letter-spacing:.1em;color:rgba(220,80,80,.8);margin-bottom:8px}
+.rp-npc-line{font-size:17px;font-weight:800;color:var(--ink);line-height:1.55;font-style:italic}
+.rp-npc-play-btn{margin-top:10px;background:rgba(220,50,50,.15);border:1px solid rgba(220,50,50,.3);color:#DC3232;border-radius:99px;padding:6px 16px;font-size:12px;font-weight:900;cursor:pointer;font-family:inherit}
+.rp-mic-section{text-align:center;padding:20px 0 8px}
+.rp-timer{font-size:30px;font-weight:900;color:#DC3232;font-variant-numeric:tabular-nums;min-height:38px;letter-spacing:-.02em}
+.rp-mic-big{width:76px;height:76px;border-radius:50%;background:#DC3232;border:none;font-size:28px;cursor:pointer;color:#fff;box-shadow:0 4px 18px rgba(220,50,50,.45);display:flex;align-items:center;justify-content:center;margin:0 auto;font-family:inherit}
+.rp-mic-big.rec{animation:rpMicPulse .8s ease-in-out infinite}
+@keyframes rpMicPulse{0%,100%{box-shadow:0 4px 18px rgba(220,50,50,.4)}50%{box-shadow:0 0 0 18px rgba(220,50,50,.1),0 4px 18px rgba(220,50,50,.4)}}
+.rp-hint{font-size:11px;color:rgba(255,255,255,.28);font-weight:800;margin-top:8px}
+.rp-result-wrap{padding:16px 0 0;display:flex;flex-direction:column;align-items:center}
+.rp-score-num{font-size:64px;font-weight:900;line-height:1;color:#DC3232}
+.rp-score-sub{font-size:10px;font-weight:900;letter-spacing:.14em;color:rgba(255,255,255,.3);margin-bottom:12px}
+.rp-metrics{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+.rp-metric{background:var(--card2);border-radius:12px;padding:8px 14px;text-align:center;min-width:68px}
+.rp-metric-val{font-size:18px;font-weight:900;color:var(--ink)}
+.rp-metric-lbl{font-size:9px;font-weight:800;color:var(--grey);letter-spacing:.06em;margin-top:2px}
+.rp-heard{font-size:13px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:12px;text-align:center;line-height:1.5;width:100%}
+.rp-actions{display:flex;gap:10px;width:100%}
+.rp-btn-retry{flex:1;background:var(--card2);border:1px solid var(--border);color:var(--ink);border-radius:14px;padding:14px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer}
+.rp-btn-next{flex:2;background:#DC3232;color:#fff;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer}
+.rp-finish-wrap{display:flex;flex-direction:column;align-items:center;padding:40px 0;text-align:center;gap:12px}
+.rp-finish-score{font-size:64px;font-weight:900;color:#DC3232;line-height:1}
+.rp-finish-label{font-size:14px;font-weight:900;color:var(--ink);letter-spacing:.04em}
+.rp-finish-sub{font-size:13px;color:var(--grey);font-weight:600;line-height:1.6}
+.rp-finish-btn{background:#DC3232;color:#fff;border:none;border-radius:16px;padding:14px 40px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;margin-top:12px}
 </style>
 </head>
 <body>
@@ -1066,15 +1110,13 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 <section class="screen" id="scr-roleplay">
   <div class="quiz-top"><button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
     <div style="font-weight:900;font-size:17px">AI ROLEPLAY</div></div>
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center">
-    <div style="font-size:48px;margin-bottom:20px">🎙️</div>
-    <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:8px">Coming Soon</div>
-    <div style="font-size:14px;color:var(--grey);line-height:1.7;margin-bottom:32px">シーン別AIロールプレイを準備中。<br>声で、反射で、現場英語を磨け。</div>
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:18px;padding:20px;width:100%;text-align:left">
-      <div style="font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:12px">実装予定のシーン</div>
-      ${['監督との会話','ロッカールーム','メディカルスタッフ','空港・ホテル','エージェント会話','メディア対応'].map(s=>`<div style="font-size:13px;font-weight:800;color:var(--ink);padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px"><span style="color:var(--green)">›</span>${s}</div>`).join('')}
-    </div>
-  </div>
+  <div style="flex:1;overflow-y:auto;padding-bottom:32px" id="rp-menu-body"></div>
+</section>
+
+<!-- ============ AI ROLEPLAY SCENE ============ -->
+<section class="screen" id="scr-rp-scene">
+  <div id="rp-scene-top"></div>
+  <div id="rp-scene-body" style="flex:1;overflow-y:auto"></div>
 </section>
 
 <!-- ============ SPEAKING DRILL ============ -->
@@ -2417,7 +2459,7 @@ function go(id, dir){
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.getElementById("scr-"+id).classList.add("active");
     document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home",fav:"nav-others",drill:"nav-others",roleplay:"nav-home"}[id];
+    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home",fav:"nav-others",drill:"nav-others",roleplay:"nav-home","rp-scene":"nav-home"}[id];
     if(nv)document.getElementById(nv).classList.add("sel");
     document.getElementById("feedback").classList.remove("show");
     window.scrollTo(0,0);
@@ -3638,7 +3680,243 @@ function mdXpFor(score){if(score>=80)return 100;if(score>=40)return 40;return 10
 let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null;
 
 const MD_TICKET_MAX=3;
-function openRoleplay(){go('roleplay');}
+/* ================= AI ROLEPLAY DATA ================= */
+const RP_CATEGORIES=[
+  {id:'pitch',   label:'試合中の状況',   npc:'On the pitch / Captain',     icon:'⚽', color:'#1D9E75'},
+  {id:'manager', label:'監督との会話',   npc:'Manager / Gaffer',           icon:'📋', color:'#FF6B00'},
+  {id:'medical', label:'メディカル',     npc:'Doctor / Physio',            icon:'🏥', color:'#4A90D9'},
+  {id:'locker',  label:'ロッカールーム', npc:'Teammates',                  icon:'🪑', color:'#9B59B6'},
+  {id:'media',   label:'メディア対応',   npc:'Reporter / Journalist',      icon:'🎤', color:'#E2493B'},
+  {id:'agent',   label:'エージェント',   npc:'Agent',                      icon:'💼', color:'#FFC400'},
+  {id:'daily',   label:'日常',           npc:'Airport / Hotel / Club staff',icon:'✈️', color:'#7A9488'},
+];
+const ROLEPLAY_SCENES=[
+  // PITCH
+  {cat:'pitch',title:'走り込め',situation:'攻撃中。スペースへの走り込みを要求される場面。',npc:'Captain',line:"Get in behind! Don't be a ball-watcher, make the run!",keys:['yes','on it','going','right']},
+  {cat:'pitch',title:'マークしろ',situation:'守備中。マークを外しそうな場面で警告される。',npc:'Teammate',line:"Oi! Pick him up and stay tight! He's in behind you!",keys:['got him','on him','yes','sorry']},
+  {cat:'pitch',title:'壁を作れ',situation:'フリーキック。壁の位置を指示される。',npc:'Captain',line:"Wall! Five man wall! Hold your position!",keys:['got it','yes boss','okay','holding']},
+  {cat:'pitch',title:'ボールを要求',situation:'フリーな状況でボールを要求する。',npc:'Teammate',line:"YES! HERE! Give it now, I have space!",keys:['yes','here','now','space','come on']},
+  {cat:'pitch',title:'逃げ切れ',situation:'終盤リード中。守備を固める場面。',npc:'Captain',line:"Drop deep lads! See it out! Keep it tight!",keys:['yes','got it','dropping','holding','tight']},
+  // MANAGER
+  {cat:'manager',title:'プレスが足りない',situation:'ハーフタイム。チームは1点ビハインド。プレスへの指摘。',npc:'Gaffer',line:"You're not pressing high enough. What's going on out there?",keys:['sorry gaffer','we will','pressing harder','got it']},
+  {cat:'manager',title:'ボールを早く動かせ',situation:'試合前。個人への戦術指示。',npc:'Gaffer',line:"When we win it back, get it wide quick. Don't sit on it. Got it?",keys:['yes gaffer','understood','got it','will do']},
+  {cat:'manager',title:'交代',situation:'試合中。ベンチに下げられる場面。',npc:'Gaffer',line:"You're coming off. Warm down. Well done, son.",keys:['thanks gaffer','okay','yes']},
+  {cat:'manager',title:'練習後のフィードバック',situation:'練習後。個人フィードバックを受ける。',npc:'Gaffer',line:"Good session today. But I need more from you in tight spaces. Work on it.",keys:['will do','yes gaffer','understood','thank you']},
+  {cat:'manager',title:'戦術確認',situation:'ミーティング。戦術の質問を受ける。',npc:'Gaffer',line:"Any questions? I need you all to know your roles inside out.",keys:['no','clear','all good','understood']},
+  // MEDICAL
+  {cat:'medical',title:'足首の痛み',situation:'試合中、足首をひねった。メディカルスタッフが確認。',npc:'Physio',line:"What happened? Can you walk it off?",keys:['twisted','my ankle','hurts','think so','not sure']},
+  {cat:'medical',title:'ハムの確認',situation:'試合前。ハムストリングの張りを確認される。',npc:'Doctor',line:"How's the hamstring feeling today? Any tightness?",keys:['fine','tight','little','okay','good']},
+  {cat:'medical',title:'頭部衝突',situation:'頭部衝突後。コンカッションプロトコル。',npc:'Doctor',line:"Did you lose consciousness at all? Any blurred vision?",keys:['no','not sure','bit dizzy','fine','clear']},
+  {cat:'medical',title:'続行か交代か',situation:'試合中。続行可能か正直に聞かれる。',npc:'Physio',line:"Be honest with me — can you carry on or do you need to come off?",keys:['can carry on','think so','not sure','need off','okay']},
+  {cat:'medical',title:'翌日の練習',situation:'怪我後。翌日のプランを告げられる。',npc:'Doctor',line:"You're not training tomorrow. Ice it tonight and we reassess in the morning.",keys:['okay','understood','thank you','will do']},
+  // LOCKER
+  {cat:'locker',title:'馴染んでる？',situation:'新加入。チームメイトに話しかけられる。',npc:'Teammate',line:"Oi mate, where you from? You settling in alright?",keys:['yeah','good','great','settling in','loving it']},
+  {cat:'locker',title:'シャツ交換',situation:'試合後。相手選手からシャツ交換を求められる。',npc:'Opponent',line:"Swap shirts? You were class today, mate.",keys:['yeah sure','love to','cheers','definitely','of course']},
+  {cat:'locker',title:'ハーフタイムの鼓舞',situation:'ハーフタイム。チームを鼓舞する場面。',npc:'Teammate',line:"That first half was a disgrace. Second half — we go again, yeah?",keys:['yeah','let us go','come on','for sure','absolutely']},
+  {cat:'locker',title:'得点後の喜び',situation:'ゴール後。チームメイトが興奮している。',npc:'Teammate',line:"GET IN!! That's what I'm talking about! Come on lads!",keys:['yes','come on','let us go','get in']},
+  {cat:'locker',title:'緊張してる？',situation:'試合前。緊張しているあなたに声をかけてくれる。',npc:'Teammate',line:"You nervous? Mate, you've trained for this. Back yourself.",keys:['little bit','yeah','no','feel good','ready']},
+  // MEDIA
+  {cat:'media',title:'決勝ゴール後',situation:'試合後インタビュー。チームが勝利、決勝ゴールを決めた。',npc:'Reporter',line:"You scored the winner today. How do you feel?",keys:['amazing','great','team effort','delighted','brilliant']},
+  {cat:'media',title:'敗戦後',situation:'試合後インタビュー。敗戦直後。',npc:'Reporter',line:"A tough result tonight. What went wrong out there?",keys:['disappointing','credit to them','we need','not good enough','bounce back']},
+  {cat:'media',title:'移籍の噂',situation:'移籍の噂についてコメントを求められる。',npc:'Reporter',line:"There's been a lot of speculation about your future. Can you comment on that?",keys:['focused','happy here','not thinking about','no comment','just focused']},
+  {cat:'media',title:'チームの調子',situation:'チームの好調についてコメントを求められる。',npc:'Reporter',line:"The team looks to be hitting form at the right time. Would you agree?",keys:['yes','definitely','feel good','great time','hopefully']},
+  {cat:'media',title:'個人の難しい時期',situation:'個人の苦しい時期についての質問。',npc:'Reporter',line:"You've had a difficult few weeks personally. How have you kept your focus?",keys:['family','teammates','manager','stayed focused','working hard']},
+  // AGENT
+  {cat:'agent',title:'オファーの打診',situation:'エージェントがクラブからのオファーを持ってきた。',npc:'Agent',line:"There's an offer on the table. Championship club, decent wages. Worth considering?",keys:['tell me more','what club','interested','not sure','depends']},
+  {cat:'agent',title:'契約更新の交渉',situation:'クラブとの契約更新交渉。条件が良くない。',npc:'Agent',line:"The club wants to extend, but the terms aren't great. What are your priorities?",keys:['playing time','wages','ambition','first team','want more']},
+  {cat:'agent',title:'キャリアプラン',situation:'将来のキャリアプランについて聞かれる。',npc:'Agent',line:"You're 26 now. Where do you see yourself in three years?",keys:['top flight','europe','champions league','first team','want to']},
+  {cat:'agent',title:'ローンの検討',situation:'出場機会が少ない。ローンを提案される。',npc:'Agent',line:"You're not getting enough minutes. Do you want me to push for a loan?",keys:['yes','need to play','think so','open to it','maybe']},
+  {cat:'agent',title:'ドイツからのオファー',situation:'ドイツクラブからのオファーが届いた。',npc:'Agent',line:"There's interest from Germany. Good money, good lifestyle. Open to it?",keys:['open to it','tell me more','depends on club','maybe','interesting']},
+  // DAILY
+  {cat:'daily',title:'空港チェックイン',situation:'アウェー遠征。空港のチェックインカウンターで。',npc:'Airport Staff',line:"Good morning. Can I see your passport and booking reference please?",keys:['of course','here you go','sure','one moment','yes']},
+  {cat:'daily',title:'ホテルチェックイン',situation:'チームの宿泊先ホテルにチェックイン。',npc:'Hotel Staff',line:"Welcome. You have a reservation for two nights? Can I take your name?",keys:['yes','my name is','reservation under','two nights','correct']},
+  {cat:'daily',title:'クラブハウスの案内',situation:'新クラブ。施設の説明を受ける。',npc:'Club Staff',line:"The gym opens at seven. Physio room is down the hall on the left.",keys:['thanks','got it','perfect','great','okay']},
+  {cat:'daily',title:'バスの中で',situation:'アウェー遠征バス内。チームメイトと会話。',npc:'Teammate',line:"Oi, you're in my seat mate! Only joking — sit wherever, long journey ahead.",keys:['haha','sorry mate','all good','cheers','no worries']},
+  {cat:'daily',title:'食事の確認',situation:'クラブのシェフが食事制限を確認。',npc:'Chef',line:"The chef's asking — any dietary requirements we should know about?",keys:['no','nothing','all good','not really','just halal']},
+];
+
+/* ================= AI ROLEPLAY LOGIC ================= */
+let rpCat=null,rpScenes=[],rpIdx=0,rpTotalScore=0;
+let rpRecog=null,rpTimerInterval=null,rpStartMs=0,rpGotResult=false,rpRecording=false;
+
+function openRoleplay(){
+  renderRoleplayMenu();
+  go('roleplay');
+}
+
+function renderRoleplayMenu(){
+  const body=document.getElementById('rp-menu-body');
+  if(!body)return;
+  const html=`
+    <p class="rp-intro">シーンを選んで、声で現場英語を磨け。<br>各カテゴリ5シーン連続チャレンジ。</p>
+    <div class="rp-cat-grid">
+      ${RP_CATEGORIES.map((c,i)=>{
+        const done=ROLEPLAY_SCENES.filter(s=>s.cat===c.id).length;
+        return `<div class="rp-cat-card tap-fx" onclick="startRoleplay('${c.id}')" style="border-color:${c.color}22">
+          <div class="rp-cat-icon">${c.icon}</div>
+          <div class="rp-cat-name">${c.label}</div>
+          <div class="rp-cat-npc">${c.npc}</div>
+          <div class="rp-cat-count">${done} SCENES</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  body.innerHTML=html;
+}
+
+function startRoleplay(catId){
+  rpCat=catId;
+  rpScenes=ROLEPLAY_SCENES.filter(s=>s.cat===catId);
+  rpIdx=0;rpTotalScore=0;
+  go('rp-scene');
+  renderRPScene();
+}
+
+function renderRPScene(){
+  const scene=rpScenes[rpIdx];
+  const cat=RP_CATEGORIES.find(c=>c.id===rpCat);
+  const pct=Math.round(rpIdx/rpScenes.length*100);
+  document.getElementById('rp-scene-top').innerHTML=`
+    <div class="rp-topbar">
+      <button class="btn-x" onclick="go('roleplay','pop');renderRoleplayMenu()">✕</button>
+      <div class="rp-prog">
+        <div class="rp-prog-track"><div class="rp-prog-fill" style="width:${pct}%"></div></div>
+        <div class="rp-prog-meta"><span>${cat?cat.label:''}</span><span>${rpIdx+1} / ${rpScenes.length}</span></div>
+      </div>
+    </div>`;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div class="rp-situation-card">
+      <div class="rp-section-lbl">SITUATION</div>
+      <div class="rp-situation-text">${scene.situation}</div>
+    </div>
+    <div class="rp-npc-card">
+      <div class="rp-npc-who">${scene.npc.toUpperCase()}</div>
+      <div class="rp-npc-line">"${scene.line}"</div>
+      <button class="rp-npc-play-btn" onclick="rpPlayLine()">▶ 聞く</button>
+    </div>
+    <div class="rp-mic-section">
+      <div class="rp-timer" id="rp-timer">00.0</div>
+      <button class="rp-mic-big" id="rp-mic-btn" onclick="toggleRPRec()">🎙️</button>
+      <div class="rp-hint">タップして返答 → もう一度タップで停止</div>
+    </div>`;
+  rpPlayLine();
+}
+
+function rpPlayLine(){
+  const scene=rpScenes[rpIdx];
+  const src=textToAudioSrc(scene.line);
+  const a=new Audio(src);
+  a.play().catch(()=>{});
+}
+
+function toggleRPRec(){
+  if(rpRecording){stopRPRec();return;}
+  startRPRec();
+}
+
+function startRPRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast('音声認識非対応');return;}
+  rpRecog=new SR();
+  rpRecog.lang='en-US';rpRecog.interimResults=false;rpRecog.maxAlternatives=1;
+  rpGotResult=false;rpRecording=true;
+  rpStartMs=Date.now();
+  const btn=document.getElementById('rp-mic-btn');
+  if(btn){btn.textContent='■';btn.classList.add('rec');}
+  const timer=document.getElementById('rp-timer');
+  rpTimerInterval=setInterval(()=>{
+    if(!timer)return;
+    const el=(Date.now()-rpStartMs)/1000;
+    timer.textContent=el.toFixed(1).padStart(4,'0');
+  },100);
+  rpRecog.onresult=e=>{
+    rpGotResult=true;
+    const heard=e.results[0][0].transcript;
+    const ms=Date.now()-rpStartMs;
+    clearInterval(rpTimerInterval);rpRecording=false;
+    showRPResult(heard,ms);
+  };
+  rpRecog.onend=()=>{
+    clearInterval(rpTimerInterval);rpRecording=false;
+    const btn2=document.getElementById('rp-mic-btn');
+    if(btn2){btn2.textContent='🎙️';btn2.classList.remove('rec');}
+    if(!rpGotResult)showRPResult('',Date.now()-rpStartMs);
+  };
+  rpRecog.onerror=()=>{clearInterval(rpTimerInterval);rpRecording=false;};
+  rpTimerInterval=setInterval(()=>{
+    const el=(Date.now()-rpStartMs)/1000;
+    const t=document.getElementById('rp-timer');
+    if(t)t.textContent=el.toFixed(1).padStart(4,'0');
+    if(el>=8){stopRPRec();}
+  },100);
+  rpRecog.start();
+}
+
+function stopRPRec(){
+  if(rpRecog)try{rpRecog.stop();}catch(e){}
+  rpRecording=false;
+  clearInterval(rpTimerInterval);
+  const btn=document.getElementById('rp-mic-btn');
+  if(btn){btn.textContent='🎙️';btn.classList.remove('rec');}
+}
+
+function showRPResult(heard,timeMs){
+  const scene=rpScenes[rpIdx];
+  const keys=scene.keys||[];
+  const heardL=(heard||'').toLowerCase();
+  const hit=keys.filter(k=>heardL.includes(k)).length;
+  const keyScore=keys.length>0?Math.round(hit/keys.length*100):0;
+  const speedBonus=timeMs>0&&timeMs<2500?30:timeMs<4500?15:0;
+  const speedLabel=timeMs>0&&timeMs<2500?'A':timeMs<4500?'B':'C';
+  const total=Math.min(100,Math.round(keyScore*0.7+speedBonus));
+  rpTotalScore+=total;
+  const grade=total>=80?'EXCELLENT':total>=50?'GOOD':'KEEP GOING';
+  const isLast=rpIdx>=rpScenes.length-1;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div class="rp-result-wrap">
+      <div class="rp-score-num">${total}</div>
+      <div class="rp-score-sub">SCORE</div>
+      <div class="rp-metrics">
+        <div class="rp-metric"><div class="rp-metric-val">${keyScore}%</div><div class="rp-metric-lbl">KEYWORDS</div></div>
+        <div class="rp-metric"><div class="rp-metric-val">${speedLabel}</div><div class="rp-metric-lbl">SPEED</div></div>
+        <div class="rp-metric"><div class="rp-metric-val">${grade}</div><div class="rp-metric-lbl">GRADE</div></div>
+      </div>
+      ${heard?`<div class="rp-heard">あなた: "${heard}"</div>`:'<div class="rp-heard">認識できませんでした</div>'}
+      <div style="background:var(--card2);border:1px solid rgba(220,50,50,.2);border-radius:14px;padding:12px 16px;margin:0 0 16px;width:100%;box-sizing:border-box;text-align:left">
+        <div style="font-size:10px;font-weight:900;color:rgba(220,80,80,.7);letter-spacing:.08em;margin-bottom:6px">CORRECT RESPONSE</div>
+        <div style="font-size:14px;font-weight:800;color:var(--ink);font-style:italic;line-height:1.5">"${scene.line}"</div>
+      </div>
+    </div>
+    <div class="rp-actions">
+      <button class="rp-btn-retry" onclick="renderRPScene()">もう一度</button>
+      <button class="rp-btn-next" onclick="${isLast?'finishRoleplay()':'nextRP()'}">${isLast?'結果を見る':'NEXT →'}</button>
+    </div>`;
+}
+
+function nextRP(){
+  rpIdx++;
+  renderRPScene();
+}
+
+function finishRoleplay(){
+  const avg=Math.round(rpTotalScore/rpScenes.length);
+  const cat=RP_CATEGORIES.find(c=>c.id===rpCat);
+  const grade=avg>=80?'EXCELLENT':avg>=60?'GREAT':avg>=40?'GOOD':'KEEP GOING';
+  document.getElementById('rp-scene-top').innerHTML=`
+    <div class="rp-topbar">
+      <button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
+      <div style="font-weight:900;font-size:15px">AI ROLEPLAY 完了</div>
+    </div>`;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div class="rp-finish-wrap">
+      <div style="font-size:36px">${cat?cat.icon:'🎙️'}</div>
+      <div class="rp-finish-label">${cat?cat.label:''} COMPLETE</div>
+      <div class="rp-finish-score">${avg}</div>
+      <div style="font-size:12px;font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.3)">AVERAGE SCORE</div>
+      <div style="font-size:22px;font-weight:900;color:#DC3232;margin:4px 0">${grade}</div>
+      <div class="rp-finish-sub">${rpScenes.length}シーン完了。<br>声で現場を制す — 続けることが力になる。</div>
+      <button class="rp-finish-btn" onclick="go('roleplay','pop');renderRoleplayMenu()">カテゴリ選択に戻る</button>
+    </div>`;
+}
 function earnMatchTicket(){
   if((S.matchTickets||0)>=MD_TICKET_MAX)return;
   S.matchTickets=(S.matchTickets||0)+1;save();
