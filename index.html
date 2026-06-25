@@ -467,6 +467,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .mission-card.phrase-card .mission-big-icon{background:rgba(255,215,0,.12)}
 .mission-card.quiz-card .mission-big-icon{background:rgba(29,158,117,.15)}
 .mission-card.speak-card .mission-big-icon{background:rgba(103,58,183,.2)}
+.mission-card.locker-card .mission-big-icon{background:rgba(255,196,0,.12)}
 .mission-card.done-card .mission-big-icon{background:var(--card2)}
 .mission-body{flex:1;min-width:0}
 .mission-label{font-size:9px;font-weight:900;letter-spacing:.14em;color:var(--grey);margin-bottom:2px}
@@ -3111,33 +3112,38 @@ function renderHome(){
   const lockerQuizDone=S.lastLockerQuizDate===td;
   const quizAllDone=pitchQuizDone&&lockerQuizDone;
   const speakDone=S.lastSpeakDate===td;
-  const quizPills=`<div class="mission-progress-pills"><span class="mission-pill ${pitchQuizDone?'done-pill':'todo-pill'}">PITCH</span><span class="mission-pill ${lockerQuizDone?'done-pill':'todo-pill'}">LOCKER</span></div>`;
-  const quizEnd=quizAllDone
+  const pitchEnd=pitchQuizDone
     ?`<div class="mission-done-check">✓</div>`
-    :`<span class="mission-time-hint">5分</span><div class="mission-arrow">›</div>`;
+    :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
+  const lockerEnd=lockerQuizDone
+    ?`<div class="mission-done-check">✓</div>`
+    :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
   const speakEnd=speakDone
     ?`<div class="mission-done-check">✓</div>`
     :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
-  const phraseDone=S.doneToday===td;
-  const phraseEnd=phraseDone
-    ?`<div class="mission-done-check">✓</div>`
-    :`<span class="mission-time-hint">30秒</span><div class="mission-arrow">›</div>`;
   const missionsHtml=`<div class="missions-section">
     <div class="missions-header">TODAY'S MISSIONS</div>
     <div class="missions-grid">
-      <button class="mission-card quiz-card mission-card-3d${quizAllDone?' done-card':''}" onclick="${quizAllDone?'':'openQuizPicker()'}">
-        <div class="mission-big-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-        <div class="mission-body">
-          <div class="mission-name-row"><span class="mission-name">DAILY QUIZ</span>${quizPills}</div>
-        </div>
-        <div class="mission-end">${quizEnd}</div>
-      </button>
       <button class="mission-card speak-card mission-card-3d${speakDone?' done-card':''}" onclick="${speakDone?'':'startDrill(\'mix\')'}">
         <div class="mission-big-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg></div>
         <div class="mission-body">
           <div class="mission-name-row"><span class="mission-name">今日の実戦フレーズ</span></div>
         </div>
         <div class="mission-end">${speakEnd}</div>
+      </button>
+      <button class="mission-card quiz-card mission-card-3d${pitchQuizDone?' done-card':''}" onclick="${pitchQuizDone?'':'startSession(\'pitch\',false)'}">
+        <div class="mission-big-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20M2 12h20"/><path d="M12 2C9 7 8 10 8 12s1 5 4 10M12 2c3 5 4 8 4 10s-1 5-4 10"/></svg></div>
+        <div class="mission-body">
+          <div class="mission-name-row"><span class="mission-name">PITCH PHRASE</span></div>
+        </div>
+        <div class="mission-end">${pitchEnd}</div>
+      </button>
+      <button class="mission-card locker-card mission-card-3d${lockerQuizDone?' done-card':''}" onclick="${lockerQuizDone?'':'startSession(\'locker\',false)'}">
+        <div class="mission-big-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFC400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="12" y1="15" x2="12" y2="18"/></svg></div>
+        <div class="mission-body">
+          <div class="mission-name-row"><span class="mission-name">LOCKER ROOM</span></div>
+        </div>
+        <div class="mission-end">${lockerEnd}</div>
       </button>
     </div>
     ${quizAllDone&&speakDone?`<div class="share-today-wrap"><button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button></div>`:''}
