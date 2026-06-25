@@ -4184,19 +4184,21 @@ function showDrillSpeak(){
     <div class="drill-tagline">チームに行く前に、AI相手に100回ミスしておく</div>`;
 }
 
-let _drillRecording=false,_drillVADCancel=null;
+let _drillRecording=false,_drillVADCancel=null,_drillProcessing=false;
 function toggleDrillRec(){
-  _resumeAudioCtx(); // iOSでAudioContextをジェスチャー内でunlock
+  _resumeAudioCtx();
+  if(_drillProcessing)return; // 認識中はタップ無効
   if(_drillRecording){_stopDrillRec();return;}
   startDrillRec();
 }
 function _stopDrillRec(){
   if(!_drillRecording)return;
   _drillRecording=false;
+  _drillProcessing=true; // 認識完了まで新規録音ブロック
   if(_drillVADCancel){_drillVADCancel();_drillVADCancel=null;}
   clearInterval(drillTimerInterval);
   const micBtn=document.getElementById('drill-mic-btn');
-  if(micBtn){micBtn.textContent='🎙️';micBtn.classList.remove('rec');}
+  if(micBtn){micBtn.textContent='⏳';micBtn.classList.remove('rec');micBtn.disabled=true;}
   if(_drillMediaRec&&_drillMediaRec.state!=='inactive'){_drillMediaRec.stop();}
 }
 function _warmUpMic(){}
@@ -4263,9 +4265,11 @@ async function startDrillRec(){
     if(h)h.textContent='認識中...';
     try{
       const text=await _transcribeAudio(blob,actualMime);
+      _drillProcessing=false;
       showDrillResult(text,elapsed);
     }catch(e){
       _dbg(`エラー: ${e.message}`);
+      _drillProcessing=false;
       const errMsg=e.message.includes('small')?'音声が短すぎます。もう一度タップして話してください。':'認識エラー: '+e.message;
       if(h)h.textContent=errMsg;
       toast(errMsg.slice(0,40));
