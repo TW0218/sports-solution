@@ -324,19 +324,6 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .huc-unit{font-size:10px;font-weight:900;letter-spacing:.12em;color:rgba(255,215,0,.6);margin-bottom:7px}
 .huc-greeting{font-size:16px;font-weight:900;color:#fff;line-height:1.3}
 .huc-greeting em{font-style:normal;background:linear-gradient(90deg,#FFD700,#fff,#FFD700);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hero-shimmer 3s linear infinite}
-/* streak ring */
-.huc-ring-col{flex-shrink:0;position:relative;width:88px;height:88px}
-.huc-ring-col svg{position:absolute;inset:0;overflow:visible}
-.huc-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
-.huc-ring-label{font-size:18px;font-weight:900;color:#FFD700;font-family:'Barlow',sans-serif;line-height:1}
-.huc-ring-sub{font-size:8px;font-weight:900;letter-spacing:.08em;color:rgba(255,215,0,.5);line-height:1}
-.huc-ring-goal{font-size:9px;font-weight:800;color:rgba(255,255,255,.3);line-height:1;margin-top:1px}
-@keyframes ringIn{from{stroke-dashoffset:var(--ring-full)}to{stroke-dashoffset:var(--ring-to)}}
-@keyframes ringGlow{0%,100%{filter:drop-shadow(0 0 3px rgba(255,215,0,.5))}50%{filter:drop-shadow(0 0 8px rgba(255,215,0,.9))}}
-.huc-ring-progress{animation:ringIn .9s cubic-bezier(.4,0,.2,1) forwards,ringGlow 2.4s ease-in-out 1s infinite}
-.huc-ring-track{opacity:.12}
-.huc-ring-spin{animation:ringSpinSlow 12s linear infinite;transform-origin:44px 44px}
-@keyframes ringSpinSlow{to{transform:rotate(360deg)}}
 /* bottom row */
 .huc-bottom{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
 .huc-week{flex:1;min-width:0}
@@ -410,10 +397,9 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .qd-card.locker .qd-card-go{color:#FFC400}
 .qd-done-stamp{position:absolute;top:14px;right:14px;font-size:11px;font-weight:900;color:#fff;background:var(--green);border-radius:999px;padding:4px 10px;letter-spacing:.04em}
 /* ---- MATCHDAY plays row ---- */
-.md-plays-row{display:flex;align-items:center;gap:6px}
-.md-play-pip{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(29,158,117,.5);background:transparent;transition:background .2s,border-color .2s}
-.md-play-pip.earned{border-color:rgba(29,158,117,.6);background:rgba(29,158,117,.18)}
-.md-play-pip.cleared{border-color:var(--green);background:var(--green);box-shadow:0 0 5px rgba(29,158,117,.5)}
+.md-earn-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.md-earn-chip{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;border:1px solid rgba(29,158,117,.3);color:var(--grey);background:transparent;white-space:nowrap}
+.md-earn-chip.done{color:var(--green);border-color:rgba(29,158,117,.5);background:rgba(29,158,117,.08)}
 .md-plays-label{font-size:11px;font-weight:800;color:var(--grey)}
 /* ---- daily missions ---- */
 .missions-section{background:var(--white);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
@@ -687,7 +673,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .matchday-home-count{font-size:11px;color:var(--grey);font-weight:700}
 .matchday-home-title{font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-.01em;line-height:1.2}
 .matchday-home-sub{font-size:12px;color:rgba(238,244,241,.5);font-weight:600}
-.matchday-home-footer{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.matchday-home-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px}
 .matchday-home-xp{display:none}
 .matchday-home-go{font-size:13px;font-weight:900;color:var(--green)}
 .matchday-done-badge{background:rgba(29,158,117,.2);border:1px solid rgba(29,158,117,.4);color:var(--green);font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px}
@@ -2621,33 +2607,6 @@ function buildUnifiedHeroCard(){
   else if(S.streak<30) greeting='<em>'+S.streak+'日</em>連続。本物だ。';
   else greeting='<em>伝説</em>になれ。'+S.streak+'日連続。';
 
-  // Ring progress
-  const milestones=[3,7,14,30,60,100];
-  const nextM=milestones.find(m=>m>S.streak)||S.streak+30;
-  const prevM=milestones.filter(m=>m<=S.streak).pop()||0;
-  const pct=prevM===nextM?1:Math.min(1,(S.streak-prevM)/(nextM-prevM));
-  const r=36,cx=44,cy=44;
-  const circ=2*Math.PI*r; // ~226
-  const offset=circ*(1-pct);
-  // dashes for spinning track decoration
-  const ringHtml=`<div class="huc-ring-col">
-    <svg width="88" height="88" viewBox="0 0 88 88">
-      <circle class="huc-ring-track" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#FFD700" stroke-width="5"/>
-      <circle class="huc-ring-spin" cx="${cx}" cy="${cy}" r="${r}" fill="none"
-        stroke="rgba(255,215,0,.08)" stroke-width="5"
-        stroke-dasharray="4 10" stroke-linecap="round"/>
-      <circle class="huc-ring-progress" cx="${cx}" cy="${cy}" r="${r}" fill="none"
-        stroke="#FFD700" stroke-width="5" stroke-linecap="round"
-        stroke-dasharray="${circ.toFixed(1)}"
-        style="--ring-full:${circ.toFixed(1)};--ring-to:${offset.toFixed(1)};stroke-dashoffset:${circ.toFixed(1)}"
-        transform="rotate(-90 ${cx} ${cy})"/>
-    </svg>
-    <div class="huc-ring-inner">
-      <span class="huc-ring-label"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="currentColor" stroke="none"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-2.5-1.5-5-2-6.5C15 8 16 10 16 13a4 4 0 01-8 0c0-2.5 1.5-5.5 4-7z"/></svg></span>
-      <span class="huc-ring-sub">NEXT</span>
-      <span class="huc-ring-goal">${nextM}日</span>
-    </div>
-  </div>`;
 
   // 今週（月〜今日）の達成数
   const now=new Date();
@@ -2674,7 +2633,6 @@ function buildUnifiedHeroCard(){
         </div>
         <div class="huc-greeting">${greeting}</div>
       </div>
-      ${ringHtml}
     </div>
     <div class="huc-bottom">
       <div class="huc-week">
@@ -2769,32 +2727,23 @@ function renderHome(){
   /* Matchday card */
   const ticketsEarned=S.matchTickets||0;
   const playsToday=S.matchdayCount||0;
-  const pipSources=[
-    {key:'auto',  label:'自動',        earned:true},
-    {key:'phrase',label:'フレーズ',    earned:phraseDone},
-    {key:'pitch', label:'PITCH',       earned:pitchQuizDone},
-    {key:'locker',label:'LOCKER',      earned:lockerQuizDone},
-    {key:'speak', label:'スピーキング',earned:speakDone},
+  const hasTickets=ticketsEarned>0;
+  // チケット獲得状況（どのミッションが未達か一目で分かる）
+  const earnSources=[
+    {label:'クイズ',   done:pitchQuizDone&&lockerQuizDone},
+    {label:'スピーキング', done:speakDone},
+    {label:'単語5枚',  done:(S.cardsSinceTicket||0)>=5},
   ];
-  const pipsHtml=pipSources.map((_,i)=>{
-    const cleared=i<playsToday;
-    const earned=_.earned;
-    const cls=cleared?'cleared':earned?'earned':'';
-    return `<span class="md-play-pip ${cls}" title="${_.label}"></span>`;
-  }).join('');
+  const earnHints=earnSources.map(e=>`<span class="md-earn-chip ${e.done?'done':''}">${e.done?'✓ ':'+1 '}${e.label}</span>`).join('');
   const matchdayCardHtml=`<div class="matchday-home-card tap-fx" onclick="openMatchday()">
     <div class="matchday-home-eyebrow">
       <span class="matchday-home-badge">MATCHDAY MODE</span>
-      <span class="matchday-home-count" style="color:${playsToday>=ticketsEarned&&playsToday>0?'var(--green)':'var(--grey)'}">${playsToday} / ${ticketsEarned} クリア</span>
     </div>
     <div class="matchday-home-title">現場英語で<br>判断しろ。</div>
     <div class="matchday-home-sub">シーンに入り、3択で返す。サッカー現場英語。</div>
     <div class="matchday-home-footer">
-      <div class="md-plays-row">
-        ${pipsHtml}
-        <span class="md-plays-label" style="margin-left:4px"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> ${ticketsEarned}枚</span>
-      </div>
-      <span class="matchday-home-go">${ticketsEarned>playsToday?'プレイ ›':'チケット不足'}</span>
+      <div class="md-earn-row">${earnHints}</div>
+      <span class="matchday-home-go">${hasTickets?`<svg viewBox="0 0 24 24" style="width:.9em;height:.9em;vertical-align:-.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> ${ticketsEarned}枚 プレイ ›`:'ミッションをクリアして獲得'}</span>
     </div>
   </div>`;
 
