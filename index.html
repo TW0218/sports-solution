@@ -4051,6 +4051,7 @@ function startDrill(cat){
   drillCat=cat||'mix';
   drillDeck=pick(poolFor(drillCat),5);
   drillIdx=0;drillMissCount=0;
+  _warmUpMic(); // ドリル開始時にマイク権限を事前取得
   go('drill');
   renderDrillPhrase();
 }
@@ -4127,29 +4128,20 @@ function _stopDrillRec(){
   clearInterval(drillTimerInterval);
   if(drillRecog){try{drillRecog.stop();}catch(e){}}
 }
-let _micPermissionGranted=false;
-async function _ensureMicPermission(){
-  if(_micPermissionGranted)return true;
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return true;
-  try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    stream.getTracks().forEach(t=>t.stop());
-    _micPermissionGranted=true;
-    return true;
-  }catch(e){
-    toast('マイクの許可が必要です（設定→Safari→マイク）');
-    return false;
-  }
+// マイク権限をドリル開始時に事前取得（getUserMediaはユーザージェスチャー外でも可）
+function _warmUpMic(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return;
+  navigator.mediaDevices.getUserMedia({audio:true})
+    .then(s=>s.getTracks().forEach(t=>t.stop()))
+    .catch(()=>{});
 }
-async function startDrillRec(){
+function startDrillRec(){
+  // ★ iOS対策: この関数はonclick直下で同期的に呼ばれる必要がある
+  // async/awaitを使うとiOSのユーザージェスチャー連鎖が切れてSpeechRecognitionが動かない
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   const micBtn=document.getElementById('drill-mic-btn');
   const hint=document.getElementById('drill-mic-hint');
   if(!SR){toast('音声認識非対応のブラウザです');showDrillResult('',0);return;}
-
-  // 初回のみマイク権限を確定。2問目以降はスキップしてすぐ開始
-  const ok=await _ensureMicPermission();
-  if(!ok)return;
 
   // 前のrecogを確実に破棄
   if(drillRecog){try{drillRecog.abort();}catch(e){}drillRecog=null;}
