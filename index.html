@@ -905,6 +905,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
     </div>
     <div class="card-actions">
       <button class="btn-again" onclick="gradeCard(false)">まだ 😬</button>
+      <button id="card-fav-btn" onclick="toggleFavCard()" style="background:none;border:2px solid rgba(255,255,255,.2);border-radius:12px;width:44px;height:44px;font-size:18px;cursor:pointer;flex-shrink:0">☆</button>
       <button class="btn-got" onclick="gradeCard(true)">知ってる ✅</button>
     </div>
     <div class="card-count" id="card-count"></div>
@@ -928,7 +929,10 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
         <div class="heard" id="sp-heard"></div>
         <div class="speak-score" id="sp-score"></div>
       </div>
-      <button class="check-btn" id="sp-next" style="display:none" onclick="nextSpeak()">次のフレーズ →</button>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button class="check-btn" id="sp-next" style="display:none" onclick="nextSpeak()">次のフレーズ →</button>
+        <button id="sp-fav-btn" style="display:none;background:none;border:2px solid rgba(255,255,255,.2);border-radius:12px;width:44px;height:44px;font-size:18px;cursor:pointer" onclick="toggleFavSpeak()">☆</button>
+      </div>
     </div>
   </div>
 </section>
@@ -971,7 +975,10 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   <div class="fb-en"><span id="fb-en"></span> <button class="fb-audio" onclick="playFb()">🔊</button></div>
   <div class="fb-ja" id="fb-ja"></div>
   <div class="fb-note" id="fb-note"></div>
-  <button class="next-btn" id="fb-next" onclick="nextQuestion()">次へ →</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="next-btn" id="fb-next" onclick="nextQuestion()" style="flex:1">次へ →</button>
+    <button id="fb-fav-btn" onclick="toggleFavCurrent('quiz')" style="background:none;border:2px solid rgba(255,255,255,.25);border-radius:12px;width:44px;height:44px;font-size:20px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">☆</button>
+  </div>
 </div>
 
 <!-- ============ QUIZ PICKER SHEET ============ -->
@@ -1002,6 +1009,15 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   <button id="nav-strength" onclick="go('career','tab');renderCareer()"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg></span>キャリア</button>
   <button id="nav-others" onclick="renderOthers();go('others','tab')"><span class="nic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></span>その他</button>
 </nav>
+<!-- ============ FAVOURITES ============ -->
+<section class="screen" id="scr-fav">
+  <div class="quiz-top"><button class="btn-x" onclick="go('others','pop')">&#x2715;</button>
+    <div style="font-weight:900;font-size:17px">⭐ お気に入り</div>
+    <div id="fav-count" style="font-size:12px;font-weight:800;color:var(--grey)"></div>
+  </div>
+  <div id="fav-list" style="padding-bottom:20px"></div>
+</section>
+
 <!-- ============ OTHERS MENU ============ -->
 <section class="screen" id="scr-others">
   <div class="quiz-top"><button class="btn-x" onclick="go('home')">&#x2715;</button>
@@ -1057,6 +1073,11 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       <span class="oc-ic">&#x1F3C6;</span>
       <h3>キャリア</h3>
       <p>成長記録とトロフィー</p>
+    </div>
+    <div class="other-card featured" onclick="renderFavs();go('fav')">
+      <span class="oc-ic">&#x2B50;</span>
+      <h3>お気に入り</h3>
+      <p>保存したフレーズを見返す</p>
     </div>
   </div>
   <button class="logout-row" onclick="doLogout()">ログアウト</button>
@@ -2077,7 +2098,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[]},data.progress);
   }
 }
 
@@ -2121,7 +2142,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[]};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2266,6 +2287,27 @@ function speakTTS(text,r,cat){
     }, speechSynthesis.speaking ? 80 : 10);
   }catch(e){}
 }
+/* iOS: 最初のタッチでオーディオコンテキストとAudio要素をアンロック */
+(function(){
+  let unlocked=false;
+  function unlock(){
+    if(unlocked)return;unlocked=true;
+    try{
+      const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      const buf=ctx.createBuffer(1,1,22050);
+      const src=ctx.createBufferSource();src.buffer=buf;
+      src.connect(ctx.destination);src.start(0);
+      setTimeout(()=>ctx.close(),500);
+    }catch(e){}
+    try{
+      const a=new Audio();a.src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+      a.volume=0;a.play().catch(()=>{});
+    }catch(e){}
+  }
+  document.addEventListener('touchstart',unlock,{once:true,passive:true});
+  document.addEventListener('touchend',unlock,{once:true,passive:true});
+  document.addEventListener('click',unlock,{once:true,passive:true});
+})();
 /* バックグラウンド復帰後にspeechSynthesisが詰まるiOSバグ対策 */
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible' && speechSynthesis.pending){
@@ -2298,7 +2340,7 @@ function go(id, dir){
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.getElementById("scr-"+id).classList.add("active");
     document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home"}[id];
+    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home",fav:"nav-others"}[id];
     if(nv)document.getElementById(nv).classList.add("sel");
     document.getElementById("feedback").classList.remove("show");
     window.scrollTo(0,0);
@@ -2795,6 +2837,8 @@ function answerResult(ok){
   document.getElementById("fb-ja").textContent=curItem.ja+"／"+curItem.exJa;
   document.getElementById("fb-note").textContent=curItem.note||"";
   document.getElementById("fb-next").textContent=qi===Q.length-1?"試合終了 →":"次へ →";
+  const favBtn=document.getElementById("fb-fav-btn");
+  if(favBtn)favBtn.textContent=isFaved(curItem.en)?"⭐":"☆";
   if(!ok)speak(curItem.ex,0.9);
 }
 function playFb(){speak(curItem.ex)}
@@ -2822,8 +2866,8 @@ function finishSession(){
     S.history.push(t);
     if(S.history.length>30)S.history=S.history.slice(-30);
     if(S.streak%7===0&&S.streak>prevStreak){S.tickets=(S.tickets||0)+1;toast("復活チケット獲得！🎫");}
-  earnMatchTicket();
   }
+  earnMatchTicket();
   if(S.streak>=7)awardOnce("week","📅 週間MVP！7日連続出場");
   if(S.streak>=30)awardOnce("month","🏅 月間MVP！30日連続");
   if(S.caps>=10)awardOnce("ten","🔟 通算10試合出場！");
@@ -2877,6 +2921,7 @@ function renderCard(){
   document.getElementById("fc-ja").textContent=c.ja;
   document.getElementById("fc-exja").textContent=c.exJa+(c.note?"〔"+c.note+"〕":"");
   document.getElementById("card-count").textContent=(ci+1)+" / "+cardDeck.length+"　習得度: "+"⭐".repeat(S.box[c.en]||0)+"☆".repeat(3-(S.box[c.en]||0));
+  const cfb=document.getElementById("card-fav-btn");if(cfb)cfb.textContent=isFaved(c.en)?"⭐":"☆";
   setTimeout(()=>speak(c.en,null,c.c),300);
 }
 function flipCard(){document.getElementById("fcard").classList.toggle("flip")}
@@ -2895,7 +2940,7 @@ function gradeCard(known){
 }
 
 /* ================= SPEAKING ================= */
-let spDeck=[],si=0,recog=null,recording=false;
+let spDeck=[],si=0,recog=null,recording=false,_recogGotResult=false;
 function startSpeak(cat){
   rate=unlockedLv()===1?0.7:1.0;
   spDeck=pick(poolFor(cat),5);si=0;
@@ -2909,20 +2954,29 @@ function renderSpeak(){
   document.getElementById("sp-heard").textContent="";
   document.getElementById("sp-score").textContent="";
   document.getElementById("sp-next").style.display="none";
+  document.getElementById("sp-fav-btn").style.display="none";
   setTimeout(()=>speak(c.ex,null,c.c),300);
+}
+function showSpeakNext(){
+  document.getElementById("sp-next").style.display="block";
+  const fb=document.getElementById("sp-fav-btn");
+  fb.style.display="flex";fb.style.alignItems="center";fb.style.justifyContent="center";
+  fb.textContent=isFaved(spDeck[si].ex)?"⭐":"☆";
 }
 function playSpeak(){speak(spDeck[si].ex,null,spDeck[si].c)}
 function toggleRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){
     document.getElementById("sp-heard").textContent="このブラウザは音声認識非対応。お手本のあとに声に出して自己チェック→";
-    document.getElementById("sp-next").style.display="block";return;
+    showSpeakNext();return;
   }
   if(recording){stopRec();return;}
-  recog=new SR();recog.lang="en-GB";recog.interimResults=false;
-  recording=true;document.getElementById("mic-btn").classList.add("rec");
+  recog=new SR();recog.lang="en-GB";recog.interimResults=false;recog.maxAlternatives=1;
+  recording=true;_recogGotResult=false;
+  document.getElementById("mic-btn").classList.add("rec");
   document.getElementById("sp-heard").textContent="🎙️ 聞き取り中… 話してみて";
   recog.onresult=e=>{
+    _recogGotResult=true;
     const heard=e.results[0][0].transcript;
     const target=spDeck[si].ex.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
     const got=heard.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
@@ -2933,11 +2987,23 @@ function toggleRec(){
     sc.textContent=score+"%";sc.style.color=score>=80?"var(--green)":score>=50?"var(--yellow)":"var(--red)";
     sfx(score>=80?"good":"bad");
     if(score>=80){S.speakCount++;if(S.speakCount>=20)awardOnce("poly","🗣️ 声出し職人！");save();}
-    document.getElementById("sp-next").style.display="block";
+    showSpeakNext();
     stopRec();
   };
-  recog.onerror=()=>{document.getElementById("sp-heard").textContent="うまく聞き取れず。もう一度🎙️をタップ";stopRec();};
-  recog.onend=()=>stopRec();
+  recog.onerror=e=>{
+    _recogGotResult=true;
+    const msg=e.error==="not-allowed"?"マイク許可が必要です。ブラウザ設定を確認":"うまく聞き取れず。もう一度🎙️をタップ";
+    document.getElementById("sp-heard").textContent=msg;
+    showSpeakNext();
+    stopRec();
+  };
+  recog.onend=()=>{
+    stopRec();
+    if(!_recogGotResult){
+      document.getElementById("sp-heard").textContent="聞き取れませんでした。声を出して試してみてください";
+      showSpeakNext();
+    }
+  };
   recog.start();
 }
 function stopRec(){recording=false;document.getElementById("mic-btn").classList.remove("rec");try{recog&&recog.stop()}catch(e){}}
@@ -3464,6 +3530,63 @@ function earnMatchTicket(){
   if((S.matchTickets||0)>=MD_TICKET_MAX)return;
   S.matchTickets=(S.matchTickets||0)+1;save();
   toast(`🎟️ MATCH TICKET +1（残り${S.matchTickets}枚）`);
+}
+
+/* ================= FAVOURITES ================= */
+function isFaved(en){return (S.favs||[]).some(f=>f.en===en);}
+function toggleFav(en,ja,source){
+  S.favs=S.favs||[];
+  const idx=S.favs.findIndex(f=>f.en===en);
+  if(idx>=0){S.favs.splice(idx,1);save();toast("お気に入りから削除");return false;}
+  else{S.favs.push({en,ja,source,savedAt:today()});save();toast("⭐ お気に入りに保存");return true;}
+}
+function toggleFavCurrent(source){
+  const en=curItem&&curItem.en;const ja=curItem&&curItem.ja;
+  if(!en)return;
+  const added=toggleFav(en,ja,source||'quiz');
+  const btn=document.getElementById("fb-fav-btn");
+  if(btn)btn.textContent=added?"⭐":"☆";
+}
+function toggleFavCard(){
+  const c=cardDeck[ci];if(!c)return;
+  const added=toggleFav(c.en,c.ja,'cards');
+  const btn=document.getElementById("card-fav-btn");
+  if(btn)btn.textContent=added?"⭐":"☆";
+}
+function toggleFavSpeak(){
+  const c=spDeck[si];if(!c)return;
+  const added=toggleFav(c.ex,c.exJa||'','speak');
+  const btn=document.getElementById("sp-fav-btn");
+  if(btn)btn.textContent=added?"⭐":"☆";
+}
+const SOURCE_LABEL={quiz:'クイズ',cards:'単語カード',speak:'シャドーイング',matchday:'MATCHDAY',phrase:'フレーズ',case:'ケーススタディ',coach:'英語でどう言う？'};
+function renderFavs(){
+  const favs=S.favs||[];
+  document.getElementById("fav-count").textContent=favs.length+"件";
+  const list=document.getElementById("fav-list");
+  if(!favs.length){
+    list.innerHTML=`<div style="text-align:center;padding:60px 20px;color:var(--grey)"><div style="font-size:40px;margin-bottom:12px">☆</div><div style="font-weight:800">お気に入りはまだありません</div><div style="font-size:12px;margin-top:6px">クイズ・単語カード・シャドーイングのフレーズを⭐で保存できます</div></div>`;
+    return;
+  }
+  const bySource={};
+  favs.forEach(f=>{const s=f.source||'other';bySource[s]=bySource[s]||[];bySource[s].push(f);});
+  list.innerHTML=Object.entries(bySource).map(([src,items])=>`
+    <div style="margin-bottom:4px">
+      <div style="font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--grey);padding:14px 4px 8px">${SOURCE_LABEL[src]||src.toUpperCase()}</div>
+      ${items.map((f,i)=>`<div style="background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:3px">${f.en}</div>
+          <div style="font-size:12px;color:var(--grey)">${f.ja||''}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+          <button onclick="speak('${f.en.replace(/'/g,"\\'")}')" style="background:none;border:none;font-size:20px;cursor:pointer">🔊</button>
+          <button onclick="removeFav('${f.en.replace(/'/g,"\\'")}')" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--grey)">✕</button>
+        </div>
+      </div>`).join('')}
+    </div>`).join('');
+}
+function removeFav(en){
+  S.favs=(S.favs||[]).filter(f=>f.en!==en);save();renderFavs();toast("削除しました");
 }
 function mdPlaySrc(src){const a=new Audio(src);a.play().catch(()=>{});}
 function mdPlayText(text,btnEl){
