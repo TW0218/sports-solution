@@ -3219,6 +3219,7 @@ function _releaseSpStream(){
   if(_spStream){_spStream.getTracks().forEach(t=>t.stop());_spStream=null;}
 }
 async function toggleRec(){
+  _resumeAudioCtx(); // iOSでAudioContextをジェスチャー内でunlock
   if(recording){_stopSpRec();return;}
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
     document.getElementById("sp-heard").textContent="このブラウザは録音非対応です";
@@ -4060,32 +4061,43 @@ function renderQuizDaily(){
 function startQuizDaily(cat){go('home','pop');startSession(cat,false);}
 
 /* ================= VAD（無音検出）================= */
+let _sharedAudioCtx=null;
+function _resumeAudioCtx(){
+  // ユーザージェスチャーの同期コード内から呼ぶこと（iOS unlock用）
+  try{
+    if(!_sharedAudioCtx||_sharedAudioCtx.state==='closed'){
+      _sharedAudioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    }
+    if(_sharedAudioCtx.state==='suspended')_sharedAudioCtx.resume();
+  }catch(e){}
+}
 function _startVAD(stream, stopFn){
   try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const ctx=_sharedAudioCtx||new(window.AudioContext||window.webkitAudioContext)();
     const src=ctx.createMediaStreamSource(stream);
     const an=ctx.createAnalyser();
     an.fftSize=512;
     src.connect(an);
     const buf=new Uint8Array(an.frequencyBinCount);
     let silenceMs=0,voiceDetected=false,prevTick=Date.now(),done=false;
-    const startTime=Date.now();
     const tick=()=>{
       if(done)return;
+      // AudioContextがsuspendedなら何もしない（setIntervalのタイマーに任せる）
+      if(ctx.state==='suspended'){requestAnimationFrame(tick);return;}
       an.getByteFrequencyData(buf);
       const avg=buf.reduce((s,v)=>s+v,0)/buf.length;
       const now=Date.now();
       const dt=now-prevTick; prevTick=now;
       if(avg>12){voiceDetected=true;silenceMs=0;}
       else if(voiceDetected){silenceMs+=dt;}
-      // 発話後700ms無音 or 最大4秒で停止
-      if((voiceDetected&&silenceMs>700)||(now-startTime>4000)){
-        done=true;ctx.close();stopFn();return;
+      // 発話後700ms無音で停止（タイムアウトはsetIntervalに任せる）
+      if(voiceDetected&&silenceMs>700){
+        done=true;stopFn();return;
       }
       requestAnimationFrame(tick);
     };
     setTimeout(()=>requestAnimationFrame(tick),300);
-    return ()=>{done=true;try{ctx.close();}catch(e){}};
+    return ()=>{done=true;};
   }catch(e){return ()=>{};}
 }
 /* ================= SPEAKING DRILL ================= */
@@ -4167,6 +4179,7 @@ function showDrillSpeak(){
 
 let _drillRecording=false;
 function toggleDrillRec(){
+  _resumeAudioCtx(); // iOSでAudioContextをジェスチャー内でunlock
   if(_drillRecording){_stopDrillRec();return;}
   startDrillRec();
 }
