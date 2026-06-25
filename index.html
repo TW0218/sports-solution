@@ -339,11 +339,11 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 @keyframes ringSpinSlow{to{transform:rotate(360deg)}}
 /* bottom row */
 .huc-bottom{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
-.huc-dots{display:flex;gap:5px;align-items:center}
-.huc-dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.15)}
-.huc-dot.done{background:#FF6B00}
-.huc-dot.today-done{background:#FFD700;box-shadow:0 0 6px #FFD700}
-.huc-dot.today-pending{width:24px;border-radius:999px;background:rgba(255,255,255,.1);font-size:7px;font-weight:900;color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;letter-spacing:.04em}
+.huc-week{flex:1;min-width:0}
+.huc-week-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.45);margin-bottom:5px}
+.huc-week-label span{color:#FFD700;font-size:14px;font-weight:900;margin-left:4px;letter-spacing:0}
+.huc-week-track{height:6px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden}
+.huc-week-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#FF6B00,#FFD700);transition:width .6s cubic-bezier(.4,0,.2,1)}
 .huc-right{display:flex;align-items:center;gap:8px}
 .huc-ticket{font-size:11px;font-weight:800;color:rgba(255,200,100,.7)}
 .huc-cd{font-size:10px;font-weight:800;color:rgba(255,255,255,.3)}
@@ -2421,15 +2421,16 @@ function buildUnifiedHeroCard(){
     </div>
   </div>`;
 
-  // Week dots
-  const dots=[];
-  for(let i=6;i>=1;i--){
+  // 今週（月〜今日）の達成数
+  const now=new Date();
+  const dow=now.getDay()===0?6:now.getDay()-1; // 0=月曜
+  let weekDone=0,weekTotal=dow+1;
+  for(let i=dow;i>=1;i--){
     const d=new Date(Date.now()-864e5*i).toISOString().slice(0,10);
-    dots.push(`<div class="huc-dot ${hist.includes(d)?'done':''}"></div>`);
+    if(hist.includes(d))weekDone++;
   }
-  dots.push(done
-    ?'<div class="huc-dot today-done"></div>'
-    :'<div class="huc-dot today-pending">今日</div>');
+  if(done)weekDone++;
+  const weekPct=Math.round(weekDone/weekTotal*100);
 
   const ticketHtml=S.tickets>0?`<span class="huc-ticket">🎫×${S.tickets}</span>`:'';
   const cdHtml=!done?`<span class="huc-cd" id="streak-cd"></span>`:'';
@@ -2448,7 +2449,10 @@ function buildUnifiedHeroCard(){
       ${ringHtml}
     </div>
     <div class="huc-bottom">
-      <div class="huc-dots">${dots.join('')}</div>
+      <div class="huc-week">
+        <div class="huc-week-label">今週<span>${weekDone}/${weekTotal}日</span></div>
+        <div class="huc-week-track"><div class="huc-week-fill" style="width:${weekPct}%"></div></div>
+      </div>
       <div class="huc-right">${ticketHtml}${cdHtml}</div>
     </div>
   </div>`;
