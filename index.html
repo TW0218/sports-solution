@@ -3029,6 +3029,10 @@ function buildUnifiedHeroCard(){
   else if(S.streak<30) greeting='<em>'+S.streak+'日</em>連続。本物だ。';
   else greeting='<em>伝説</em>になれ。'+S.streak+'日連続。';
 
+  // 今週（月〜今日）の達成数
+  const now=new Date();
+  const dow=now.getDay()===0?6:now.getDay()-1; // 0=月曜
+
   // 週ドット（月〜日）
   const DAY_LBL=['M','T','W','T','F','S','S'];
   const dotsHtml=DAY_LBL.map((lbl,i)=>{
@@ -3040,11 +3044,6 @@ function buildUnifiedHeroCard(){
     return `<span class="huc-wd ${cls}"></span>`;
   }).join('');
   const dotLabelsHtml=DAY_LBL.map(l=>`<span>${l}</span>`).join('');
-
-
-  // 今週（月〜今日）の達成数
-  const now=new Date();
-  const dow=now.getDay()===0?6:now.getDay()-1; // 0=月曜
   let weekDone=0,weekTotal=dow+1;
   for(let i=dow;i>=1;i--){
     const d=new Date(Date.now()-864e5*i).toISOString().slice(0,10);
