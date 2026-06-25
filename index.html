@@ -817,6 +817,22 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .md-speaker-play{background:none;border:none;color:var(--green);cursor:pointer;font-size:18px;float:right;margin-top:-2px}
 .md-choices-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--grey)}
 .md-choices{display:flex;flex-direction:column;gap:10px}
+.md-voice-area{display:flex;flex-direction:column;align-items:center;padding:28px 0 8px;gap:16px}
+.md-voice-cue{font-size:13px;font-weight:900;letter-spacing:.12em;color:rgba(255,255,255,.35);text-transform:uppercase}
+.md-mic-btn{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.25);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.md-mic-btn:active{background:rgba(255,255,255,.15)}
+.md-voice-hint{font-size:12px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.05em}
+.md-voice-result{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px;margin:16px 0 12px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.md-verdict-label{font-size:40px;font-weight:900;font-family:Barlow,sans-serif;line-height:1;letter-spacing:.05em}
+.md-verdict-ja{font-size:14px;font-weight:900;letter-spacing:.08em}
+.md-heard-wrap{width:100%;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;text-align:center}
+.md-heard-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-bottom:4px}
+.md-heard-text{font-size:15px;font-weight:700;color:rgba(255,255,255,.7);font-style:italic}
+.md-best-wrap{width:100%;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;text-align:center}
+.md-best-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-bottom:4px}
+.md-best-text{font-size:16px;font-weight:900;color:var(--green);font-family:Barlow,sans-serif}
+.md-next-btn{width:100%;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.04em}
+.md-next-btn:active{background:rgba(255,255,255,.14)}
 .md-choice{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:15px 16px;font-size:15px;font-weight:700;color:var(--ink);text-align:left;cursor:pointer;font-family:inherit;transition:border-color .15s,background .15s;width:100%}
 .md-choice:active{background:var(--card2)}
 .md-choice.selected-good{background:rgba(29,158,117,.12);border-color:var(--green)}
@@ -2448,7 +2464,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[]},data.progress);
   }
 }
 
@@ -2497,7 +2513,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[]};
 function save(){saveToSupabase();}
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 
@@ -4508,6 +4524,8 @@ const ROLEPLAY_SCENES=[
 
 /* ================= ROLEPLAY LOGIC ================= */
 let rpCat=null,rpScenes=[],rpIdx=0,rpTotalScore=0;
+let _mdRecording=false,_mdStarting=false,_mdProcessing=false;
+let _mdStream=null,_mdMediaRec=null,_mdChunks=[],_mdStartMs=0;
 let rpTimerInterval=null,rpStartMs=0,rpRecording=false,_rpStarting=false;
 let _rpStream=null,_rpMediaRec=null,_rpChunks=[],_rpProcessing=false;
 let rpChosenKey='',rpCurrentKeys=[];
@@ -4722,6 +4740,8 @@ function showRPResult(heard,timeMs){
   const speedLabel=timeMs>0&&timeMs<2500?'A':timeMs<4500?'B':'C';
   const total=Math.min(100,Math.round(pronScore*0.7+speedBonus));
   rpTotalScore+=total;
+  const _scKey=`${rpCat}||${rpScenes[rpIdx].title}`;
+  if(!(S.rpCompletedSceneKeys||[]).includes(_scKey)){S.rpCompletedSceneKeys=[...(S.rpCompletedSceneKeys||[]),_scKey];save();}
   const grade=total>=80?'EXCELLENT':total>=50?'GOOD':'KEEP GOING';
   const isLast=rpIdx>=rpScenes.length-1;
   const scoreColor=total>=80?'var(--green)':total>=50?'#FFC400':'var(--red)';
@@ -5271,46 +5291,158 @@ function openMatchday(){
     return;
   }
   S.matchTickets--;save();
-  mdQueue=shuffleMd().slice(0,1);
+  const _mdPool=shuffleMd();
+  if(_mdPool.length===0){
+    document.getElementById('md-scene-wrap').innerHTML=`
+      <div class="md-complete">
+        <div class="md-complete-title">全シーンクリア</div>
+        <div class="md-complete-sub">ROLEPLAYで新しいシーンをこなすと、MATCHDAYに追加されます。</div>
+        <button class="md-complete-btn" onclick="go('match','pop');renderMatch()">戻る</button>
+      </div>`;
+    go('matchday','push');
+    return;
+  }
+  mdQueue=_mdPool.slice(0,1);
   mdQueueIdx=0;
   go('matchday','push');
   renderMdScene();
 }
 
 function shuffleMd(){
-  const arr=[...MATCHDAY_SCENES];
+  const STARTERS=ROLEPLAY_SCENES.slice(0,3).map(s=>`${s.cat}||${s.title}`);
+  const completed=S.rpCompletedSceneKeys||[];
+  const used=S.mdUsedSceneKeys||[];
+  const pool=ROLEPLAY_SCENES.filter(s=>{
+    const k=`${s.cat}||${s.title}`;
+    return (STARTERS.includes(k)||completed.includes(k))&&!used.includes(k);
+  });
+  const arr=[...pool];
   for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
   return arr;
 }
 
 function renderMdScene(){
-  mdAnswered=false;
+  mdAnswered=false;_mdRecording=false;_mdProcessing=false;
   mdCurrentScene=mdQueue[mdQueueIdx];
   const scene=mdCurrentScene;
-  const lv=MD_LEVELS[scene.level];
-  mdCurrentChoices=[...scene.choices].map((c,i)=>({...c,origIdx:i})).sort(()=>Math.random()-.5);
   renderMdDots();
-  const lineIsEn=!scene.line.startsWith('（')&&!scene.line.startsWith('(');
-  const speakerCardHtml=`<div class="md-speaker-card">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
-      <div style="flex:1">
-        <div class="md-speaker-name">${scene.speaker}</div>
-        <div class="md-speaker-line">"${scene.line}"</div>
-      </div>
-      ${lineIsEn?mdSoundBtn(scene.line):''}
-    </div>
-  </div>`;
   document.getElementById('md-scene-wrap').innerHTML=`
-    <span class="md-level-badge ${lv.cls}">${lv.label}</span>
-    <div class="md-setting">${scene.setting}</div>
-    ${speakerCardHtml}
-    <div class="md-choices-label">どう返す？</div>
-    <div class="md-choices" id="md-choices">
-      ${mdCurrentChoices.map((c,i)=>`<button class="md-choice tap-fx" id="md-ch-${i}" onclick="mdSelect(${i})">${c.text}</button>`).join('')}
+    <div class="md-setting">${scene.situation}</div>
+    <div class="md-speaker-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+        <div style="flex:1">
+          <div class="md-speaker-name">${scene.npc}</div>
+          <div class="md-speaker-line">"${scene.line}"</div>
+        </div>
+        ${mdSoundBtn(scene.line)}
+      </div>
+    </div>
+    <div class="md-voice-area">
+      <div class="md-voice-cue">声で返せ</div>
+      <button class="md-mic-btn" id="md-mic-btn" onclick="mdStartRec()">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="11" y="3" width="10" height="16" rx="5" fill="currentColor"/>
+          <path d="M6 16a10 10 0 0020 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <line x1="16" y1="26" x2="16" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="md-voice-hint" id="md-voice-hint">タップして話す</div>
     </div>
     <div id="md-result"></div>
   `;
-  if(lineIsEn) setTimeout(()=>mdPlayText(scene.line),400);
+  setTimeout(()=>mdPlayText(scene.line),400);
+}
+
+async function mdStartRec(){
+  if(_mdRecording||_mdStarting||_mdProcessing)return;
+  _mdStarting=true;
+  const btn=document.getElementById('md-mic-btn');
+  const hint=document.getElementById('md-voice-hint');
+  if(btn)btn.style.opacity='.5';
+  try{
+    if(!_mdStream||_mdStream.getTracks().some(t=>t.readyState==='ended')){
+      _mdStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    }
+  }catch(e){toast('マイクを許可してください');_mdStarting=false;if(btn)btn.style.opacity='';return;}
+  _mdChunks=[];
+  const mime=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4',''].find(m=>!m||MediaRecorder.isTypeSupported(m))||'';
+  _mdMediaRec=new MediaRecorder(_mdStream,mime?{mimeType:mime}:{});
+  _mdMediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_mdChunks.push(e.data);};
+  _mdMediaRec.onstop=async()=>{
+    const blob=new Blob(_mdChunks,{type:_mdMediaRec.mimeType||'audio/webm'});
+    const heard=await _transcribeAudio(blob,_mdMediaRec.mimeType||'audio/webm').catch(()=>'');
+    mdShowResult(heard);
+  };
+  _mdMediaRec.start();
+  _mdStartMs=Date.now();
+  _mdRecording=true;_mdStarting=false;
+  if(btn){btn.onclick=mdStopRec;btn.style.opacity='';btn.style.background='rgba(226,73,59,.25)';btn.style.borderColor='rgba(226,73,59,.6)';}
+  if(hint)hint.textContent='話しています — タップで完了';
+}
+
+function mdStopRec(){
+  if(!_mdRecording||_mdProcessing)return;
+  _mdRecording=false;_mdProcessing=true;
+  if(_mdMediaRec&&_mdMediaRec.state!=='inactive')_mdMediaRec.stop();
+  const btn=document.getElementById('md-mic-btn');
+  const hint=document.getElementById('md-voice-hint');
+  if(btn){btn.disabled=true;btn.style.opacity='.4';}
+  if(hint)hint.textContent='判定中…';
+}
+
+function mdScoreVoice(heard,keys){
+  const norm=t=>t.toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/).filter(Boolean);
+  const got=norm(heard||'');
+  let best=0;
+  (keys||[]).forEach(k=>{
+    const target=norm(k);
+    const hit=target.filter(w=>got.includes(w)).length;
+    const pct=target.length>0?hit/target.length:0;
+    if(pct>best)best=pct;
+  });
+  return Math.round(best*100);
+}
+
+function mdShowResult(heard){
+  _mdProcessing=false;
+  const scene=mdCurrentScene;
+  const score=mdScoreVoice(heard,scene.keys);
+  const verdict=score>=70?'YES':score>=35?'ALMOST':'NO';
+  const verdictJa=score>=70?'通じた！':score>=35?'惜しい':'もう一度';
+  const verdictColor=score>=70?'#1D9E75':score>=35?'#FFC400':'#E2493B';
+  const bestKey=scene.keys[0];
+
+  // Mark scene as used in MATCHDAY
+  const scKey=`${scene.cat}||${scene.title}`;
+  if(!(S.mdUsedSceneKeys||[]).includes(scKey)){S.mdUsedSceneKeys=[...(S.mdUsedSceneKeys||[]),scKey];save();}
+
+  document.getElementById('md-result').innerHTML=`
+    <div class="md-voice-result">
+      <div class="md-verdict-label" style="color:${verdictColor}">${verdict}</div>
+      <div class="md-verdict-ja" style="color:${verdictColor}">${verdictJa}</div>
+      ${heard?`<div class="md-heard-wrap"><div class="md-heard-label">あなたの声</div><div class="md-heard-text">"${heard}"</div></div>`:''}
+      <div class="md-best-wrap">
+        <div class="md-best-label">ベストフレーズ</div>
+        <div class="md-best-text">"${bestKey}"</div>
+      </div>
+    </div>
+    <button class="md-next-btn" onclick="mdFinishScene()">結果を見る</button>
+  `;
+  mdAnswered=true;
+}
+
+function mdFinishScene(){
+  S.matchdayCount=(S.matchdayCount||0)+1;
+  S.matchdayTotal=(S.matchdayTotal||0)+1;
+  save();
+  document.getElementById('md-scene-wrap').innerHTML=`
+    <div class="md-complete">
+      <div class="md-complete-icon"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="22" stroke="#1D9E75" stroke-width="2"/><path d="M14 24l7 7 13-13" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="md-complete-title">MATCHDAY 完了</div>
+      <div class="md-complete-sub">声で返した。それが全てだ。</div>
+      <button class="md-complete-btn" onclick="go('match','pop');renderMatch()">ホームへ戻る</button>
+    </div>`;
+  checkMissionBonus&&checkMissionBonus();
 }
 
 function renderMdDots(){
