@@ -63,6 +63,26 @@ body{
 :root.vt-tab ::view-transition-old(root){animation:.18s ease both vt-fade-out}
 :root.vt-tab ::view-transition-new(root){animation:.18s ease both vt-fade-in}
 
+/* ---------- first-run ---------- */
+#scr-first-run{position:fixed;inset:0;z-index:250;background:#060f08;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;color:#fff;overflow:hidden}
+#scr-first-run.hidden{display:none}
+#scr-first-run::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:360px;height:360px;background:radial-gradient(ellipse,rgba(29,158,117,.12) 0%,transparent 70%);pointer-events:none}
+.fr-eyebrow{font-size:11px;font-weight:900;letter-spacing:.22em;color:rgba(255,215,0,.6);margin-bottom:32px}
+.fr-greeting{font-size:28px;font-weight:900;line-height:1.2;text-align:center;margin-bottom:8px}
+.fr-greeting em{font-style:normal;color:#FFD700}
+.fr-sub{font-size:14px;color:rgba(255,255,255,.45);font-weight:700;text-align:center;margin-bottom:36px}
+.fr-phrase-card{width:100%;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.25);border-radius:22px;padding:24px 22px;margin-bottom:28px;text-align:center;position:relative}
+.fr-phrase-en{font-size:26px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:8px;font-style:italic}
+.fr-phrase-ja{font-size:14px;color:rgba(255,255,255,.5);font-weight:700}
+.fr-play-btn{width:72px;height:72px;border-radius:50%;background:var(--green);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 24px rgba(29,158,117,.45);transition:transform .1s,box-shadow .1s;font-family:inherit}
+.fr-play-btn:active{transform:scale(.94);box-shadow:0 2px 12px rgba(29,158,117,.3)}
+.fr-play-btn.played{background:var(--green-dk)}
+@keyframes frPulse{0%,100%{box-shadow:0 4px 24px rgba(29,158,117,.45)}50%{box-shadow:0 0 0 16px rgba(29,158,117,.1),0 4px 24px rgba(29,158,117,.45)}}
+.fr-play-btn.pulse{animation:frPulse 1.4s ease-in-out infinite}
+.fr-play-hint{font-size:11px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.06em;margin-bottom:32px;text-align:center}
+.fr-next-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:18px;padding:18px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);letter-spacing:.04em;opacity:0;transition:opacity .4s;pointer-events:none}
+.fr-next-btn.visible{opacity:1;pointer-events:auto}
+.fr-skip{background:none;border:none;color:rgba(255,255,255,.22);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:18px}
 /* ---------- header ---------- */
 .brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .logo{font-weight:900;font-style:italic;font-size:22px;letter-spacing:-.5px}
@@ -874,6 +894,23 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
     <button class="pos-skip" onclick="skipPos()">スキップ</button>
   </div>
 </div>
+<!-- ============ FIRST RUN ============ -->
+<div id="scr-first-run" class="hidden">
+  <div class="fr-eyebrow">TOP BINS</div>
+  <div class="fr-greeting" id="fr-greeting">ようこそ。</div>
+  <div class="fr-sub">まず、この1フレーズを聞いてみろ。</div>
+  <div class="fr-phrase-card">
+    <div class="fr-phrase-en" id="fr-phrase-en"></div>
+    <div class="fr-phrase-ja" id="fr-phrase-ja"></div>
+  </div>
+  <button class="fr-play-btn pulse" id="fr-play-btn" onclick="frPlay()">
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+  </button>
+  <div class="fr-play-hint" id="fr-play-hint">タップして聞く</div>
+  <button class="fr-next-btn" id="fr-next-btn" onclick="frFinish()">よし、始めよう →</button>
+  <button class="fr-skip" onclick="frFinish()">スキップ</button>
+</div>
+
 <!-- ============ LOGIN ============ -->
 <div id="scr-login">
   <div id="scr-login-bg"></div>
@@ -2308,7 +2345,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:""},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false},data.progress);
   }
 }
 
@@ -2357,7 +2394,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2417,13 +2454,58 @@ function confirmPos(){
   if(nameVal)S.name=nameVal;
   S.position=_selectedPositions.join(',');save();
   document.getElementById('pos-picker').classList.add('hidden');
-  renderHome();
+  maybeShowFirstRun();
 }
 function skipPos(){
   const nameVal=document.getElementById('onboard-name-input')?.value.trim();
   if(nameVal)S.name=nameVal;
   save();
   document.getElementById('pos-picker').classList.add('hidden');
+  maybeShowFirstRun();
+}
+
+/* ================= FIRST RUN ================= */
+let _frPhrase=null;
+function maybeShowFirstRun(){
+  // 既存ユーザーは履歴やカード学習実績があればスキップ
+  if(S.firstRunDone||(S.history&&S.history.length>0)||S.caps>0){
+    S.firstRunDone=true;save();renderHome();return;
+  }
+  showFirstRun();
+}
+function showFirstRun(){
+  // ポジションに合わせたカテゴリの最初のlv:1フレーズ
+  const pos=(S.position||'').split(',')[0];
+  const catMap={fw:'pitch',mf:'pitch',df:'pitch',gk:'pitch'};
+  const cat=catMap[pos]||'pitch';
+  _frPhrase=DB.find(d=>d.c===cat&&d.lv===1)||DB[0];
+
+  const name=S.name||'YOU';
+  document.getElementById('fr-greeting').innerHTML=`<em>${name}</em>、ようこそ。`;
+  document.getElementById('fr-phrase-en').textContent=`"${_frPhrase.en}"`;
+  document.getElementById('fr-phrase-ja').textContent=_frPhrase.ja;
+  document.getElementById('scr-first-run').classList.remove('hidden');
+}
+function frPlay(){
+  if(!_frPhrase)return;
+  const btn=document.getElementById('fr-play-btn');
+  const hint=document.getElementById('fr-play-hint');
+  btn.classList.remove('pulse');
+  btn.classList.add('played');
+  hint.textContent='もう一度聞くにはタップ';
+  const src=textToAudioSrc(_frPhrase.en);
+  if(audioPlayer){audioPlayer.pause();audioPlayer=null;}
+  audioPlayer=new Audio(src);
+  audioPlayer.play().catch(()=>{});
+  // 再生開始から少し後に「始めよう」ボタンを表示
+  setTimeout(()=>{
+    const nb=document.getElementById('fr-next-btn');
+    if(nb)nb.classList.add('visible');
+  },1200);
+}
+function frFinish(){
+  S.firstRunDone=true;save();
+  document.getElementById('scr-first-run').classList.add('hidden');
   renderHome();
 }
 function maybeShowPosPicker(){
