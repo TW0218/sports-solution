@@ -3616,7 +3616,7 @@ function startCards(cat){
   rate=unlockedLv()===1?0.7:1.0;
   cardCat=cat;
   const pool=poolFor(cat);
-  cardDeck=shuffle(pool).sort((a,b)=>(S.box[a.en]||0)-(S.box[b.en]||0)).slice(0,12);
+  cardDeck=shuffle(pool).sort((a,b)=>(S.box[a.en]||0)-(S.box[b.en]||0)).slice(0,10);
   ci=0;
   document.getElementById("cards-cat").textContent=cat==="my"?"マイフレーズ":CATS[cat].name;
   go("cards");renderCard();
