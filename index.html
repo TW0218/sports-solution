@@ -4127,22 +4127,32 @@ function _stopDrillRec(){
   clearInterval(drillTimerInterval);
   if(drillRecog){try{drillRecog.stop();}catch(e){}}
 }
+let _micPermissionGranted=false;
+async function _ensureMicPermission(){
+  if(_micPermissionGranted)return true;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return true;
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    stream.getTracks().forEach(t=>t.stop());
+    _micPermissionGranted=true;
+    return true;
+  }catch(e){
+    toast('マイクの許可が必要です（設定→Safari→マイク）');
+    return false;
+  }
+}
 async function startDrillRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   const micBtn=document.getElementById('drill-mic-btn');
   const hint=document.getElementById('drill-mic-hint');
   if(!SR){toast('音声認識非対応のブラウザです');showDrillResult('',0);return;}
 
-  // iOS Safari: SpeechRecognition前にgetUserMediaでマイク権限を確定させる
-  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
-    try{
-      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-      stream.getTracks().forEach(t=>t.stop());
-    }catch(e){
-      toast('マイクへのアクセスを許可してください');
-      return;
-    }
-  }
+  // 初回のみマイク権限を確定。2問目以降はスキップしてすぐ開始
+  const ok=await _ensureMicPermission();
+  if(!ok)return;
+
+  // 前のrecogを確実に破棄
+  if(drillRecog){try{drillRecog.abort();}catch(e){}drillRecog=null;}
 
   _drillRecording=true;drillGotResult=false;
   if(micBtn){micBtn.classList.add('rec');micBtn.textContent='■';}
