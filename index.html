@@ -5308,14 +5308,23 @@ function openMatchday(){
   renderMdScene();
 }
 
+const MD_EASY_KEYS=['pitch||走り込め','locker||シャツ交換','manager||交代'];
 function shuffleMd(){
-  const STARTERS=ROLEPLAY_SCENES.slice(0,3).map(s=>`${s.cat}||${s.title}`);
   const completed=S.rpCompletedSceneKeys||[];
   const used=S.mdUsedSceneKeys||[];
+  const mdTotal=S.matchdayTotal||0;
+  // 最初の3回はeasyシーンのみ
+  const allowedKeys=mdTotal<3
+    ?MD_EASY_KEYS
+    :[...MD_EASY_KEYS,...completed];
   const pool=ROLEPLAY_SCENES.filter(s=>{
     const k=`${s.cat}||${s.title}`;
-    return (STARTERS.includes(k)||completed.includes(k))&&!used.includes(k);
+    return allowedKeys.includes(k)&&!used.includes(k);
   });
+  // easyが全て使用済みでもフォールバック
+  if(pool.length===0&&mdTotal<3){
+    return ROLEPLAY_SCENES.filter(s=>MD_EASY_KEYS.includes(`${s.cat}||${s.title}`));
+  }
   const arr=[...pool];
   for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
   return arr;
