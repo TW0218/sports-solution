@@ -1051,7 +1051,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 <!-- ============ SPEAKING ============ -->
 <section class="screen" id="scr-speak">
-  <div class="quiz-top"><button class="btn-x" onclick="stopRec();go('home')">✕</button>
+  <div class="quiz-top"><button class="btn-x" onclick="stopRec();_releaseSpStream();go('home')">✕</button>
     <div style="font-weight:900;font-size:17px">シャドーイング</div>
     <div class="minute" id="speak-count">1/5</div></div>
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
@@ -3210,6 +3210,14 @@ function showSpeakNext(){
   fb.textContent=isFaved(spDeck[si].ex)?"⭐":"☆";
 }
 function playSpeak(){speak(spDeck[si].ex,null,spDeck[si].c)}
+async function _ensureSpStream(){
+  if(_spStream&&_spStream.active)return _spStream;
+  _spStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+  return _spStream;
+}
+function _releaseSpStream(){
+  if(_spStream){_spStream.getTracks().forEach(t=>t.stop());_spStream=null;}
+}
 async function toggleRec(){
   if(recording){_stopSpRec();return;}
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
@@ -3217,18 +3225,17 @@ async function toggleRec(){
     showSpeakNext();return;
   }
   let stream;
-  try{stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});}
+  try{stream=await _ensureSpStream();}
   catch(e){
     document.getElementById("sp-heard").textContent="マイクの許可が必要です（設定→プライバシー→マイク）";
     showSpeakNext();return;
   }
-  _spStream=stream;_spChunks=[];
+  _spChunks=[];
   const mimeType=_drillMimeType();
   try{_spMediaRec=new MediaRecorder(stream,mimeType?{mimeType}:{});}
   catch(e){_spMediaRec=new MediaRecorder(stream);}
   _spMediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_spChunks.push(e.data);};
   _spMediaRec.onstop=async()=>{
-    stream.getTracks().forEach(t=>t.stop());
     const actualMime=_spMediaRec.mimeType||mimeType||'audio/webm';
     const blob=new Blob(_spChunks,{type:actualMime});
     document.getElementById("sp-heard").textContent="認識中...";
@@ -3263,7 +3270,7 @@ function _stopSpRec(){
 function stopRec(){_stopSpRec();}
 function nextSpeak(){
   si++;
-  if(si>=spDeck.length){S.lastSpeakDate=today();save();earnMatchTicket();toast("シャドーイング完了！🎙️");go("home");renderHome();return;}
+  if(si>=spDeck.length){_releaseSpStream();S.lastSpeakDate=today();save();earnMatchTicket();toast("シャドーイング完了！🎙️");go("home");renderHome();return;}
   renderSpeak();
 }
 
@@ -4194,6 +4201,14 @@ async function _transcribeAudio(blob,mimeType){
   const d=await res.json();
   return d.text||'';
 }
+async function _ensureDrillStream(){
+  if(_drillStream&&_drillStream.active)return _drillStream;
+  _drillStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+  return _drillStream;
+}
+function _releaseDrillStream(){
+  if(_drillStream){_drillStream.getTracks().forEach(t=>t.stop());_drillStream=null;}
+}
 async function startDrillRec(){
   const micBtn=document.getElementById('drill-mic-btn');
   const hint=document.getElementById('drill-mic-hint');
@@ -4201,16 +4216,15 @@ async function startDrillRec(){
     toast('このブラウザは録音非対応です');return;
   }
   let stream;
-  try{stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});}
+  try{stream=await _ensureDrillStream();}
   catch(e){toast('マイクの許可が必要です（設定→プライバシー→マイク）');return;}
 
-  _drillStream=stream;_drillChunks=[];
+  _drillChunks=[];
   const mimeType=_drillMimeType();
   try{_drillMediaRec=new MediaRecorder(stream,mimeType?{mimeType}:{});}
   catch(e){_drillMediaRec=new MediaRecorder(stream);}
   _drillMediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_drillChunks.push(e.data);};
   _drillMediaRec.onstop=async()=>{
-    stream.getTracks().forEach(t=>t.stop());
     const elapsed=Date.now()-drillStartMs;
     const actualMime=_drillMediaRec.mimeType||mimeType||'audio/webm';
     const blob=new Blob(_drillChunks,{type:actualMime});
@@ -4304,9 +4318,11 @@ function nextDrill(){
 function quitDrill(){
   if(drillRecog){try{drillRecog.stop();}catch(e){}}
   clearInterval(drillTimerInterval);
+  _releaseDrillStream();
   go('home');renderHome();
 }
 function finishDrill(){
+  _releaseDrillStream();
   S.lastSpeakDate=today();earnMatchTicket();save();
   document.getElementById('drill-body').innerHTML=`
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">
