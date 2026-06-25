@@ -4127,11 +4127,23 @@ function _stopDrillRec(){
   clearInterval(drillTimerInterval);
   if(drillRecog){try{drillRecog.stop();}catch(e){}}
 }
-function startDrillRec(){
+async function startDrillRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   const micBtn=document.getElementById('drill-mic-btn');
   const hint=document.getElementById('drill-mic-hint');
-  if(!SR){showDrillResult('',0);return;}
+  if(!SR){toast('音声認識非対応のブラウザです');showDrillResult('',0);return;}
+
+  // iOS Safari: SpeechRecognition前にgetUserMediaでマイク権限を確定させる
+  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      stream.getTracks().forEach(t=>t.stop());
+    }catch(e){
+      toast('マイクへのアクセスを許可してください');
+      return;
+    }
+  }
+
   _drillRecording=true;drillGotResult=false;
   if(micBtn){micBtn.classList.add('rec');micBtn.textContent='■';}
   if(hint)hint.textContent='タップして止める';
@@ -4140,18 +4152,26 @@ function startDrillRec(){
   drillTimerInterval=setInterval(()=>{
     const el=document.getElementById('drill-timer');
     if(el)el.textContent=((Date.now()-drillStartMs)/1000).toFixed(1)+'s';
-    // 5秒で自動停止
     if(Date.now()-drillStartMs>=5000&&_drillRecording){_stopDrillRec();}
   },100);
-  drillRecog=new SR();drillRecog.lang='en-GB';drillRecog.interimResults=false;drillRecog.maxAlternatives=1;
+  drillRecog=new SR();
+  drillRecog.lang='en-US';
+  drillRecog.interimResults=false;
+  drillRecog.maxAlternatives=1;
   drillRecog.onresult=e=>{
     if(drillGotResult)return;drillGotResult=true;
     _drillRecording=false;clearInterval(drillTimerInterval);
     showDrillResult(e.results[0][0].transcript,Date.now()-drillStartMs);
   };
-  drillRecog.onerror=()=>{if(!drillGotResult){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);showDrillResult('',0);}};
-  drillRecog.onend=()=>{if(!drillGotResult){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);showDrillResult('',0);}};
-  drillRecog.start();
+  drillRecog.onerror=e=>{
+    if(!drillGotResult){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);
+    if(e.error==='not-allowed')toast('マイクの許可が必要です（設定→Safari→マイク）');
+    showDrillResult('',0);}
+  };
+  drillRecog.onend=()=>{
+    if(!drillGotResult){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);showDrillResult('',0);}
+  };
+  try{drillRecog.start();}catch(e){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);showDrillResult('',0);}
 }
 
 function showDrillResult(heard,timeMs){
