@@ -2557,7 +2557,7 @@ function textToAudioSrc(text){
   return "audio/"+text.replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
 }
 function exToAudioSrc(text){
-  return "audio/"+text.toLowerCase().replace(/[!?',.\/\-]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
+  return "audio/"+text.replace(/[!?',.\/\-]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
 }
 let _exPhrases;
 function getExPhrases(){
