@@ -63,6 +63,16 @@ body{
 :root.vt-tab ::view-transition-old(root){animation:.18s ease both vt-fade-out}
 :root.vt-tab ::view-transition-new(root){animation:.18s ease both vt-fade-in}
 
+/* ---------- score celebration ---------- */
+#score-celebration{position:fixed;inset:0;z-index:500;background:rgba(6,15,8,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer}
+#score-celebration.hidden{display:none}
+#cel-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cel-score{font-size:100px;font-weight:900;line-height:1;color:#FFD700;position:relative;z-index:1;text-shadow:0 0 40px rgba(255,215,0,.6),0 0 80px rgba(255,215,0,.3);letter-spacing:-.02em}
+@keyframes celScoreIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.cel-score{animation:celScoreIn .35s cubic-bezier(.34,1.56,.64,1) forwards}
+.cel-label{font-size:22px;font-weight:900;letter-spacing:.16em;color:#fff;position:relative;z-index:1;margin-top:6px;opacity:.9}
+.cel-msg{font-size:14px;color:rgba(255,255,255,.5);font-weight:700;margin-top:14px;position:relative;z-index:1;text-align:center;padding:0 32px;line-height:1.5}
+.cel-hint{font-size:11px;font-weight:800;letter-spacing:.1em;color:rgba(255,255,255,.2);position:relative;z-index:1;margin-top:28px}
 /* ---------- first-run ---------- */
 #scr-first-run{position:fixed;inset:0;z-index:250;background:#060f08;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;color:#fff;overflow:hidden}
 #scr-first-run.hidden{display:none}
@@ -894,6 +904,15 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
     <button class="pos-skip" onclick="skipPos()">スキップ</button>
   </div>
 </div>
+<!-- ============ SCORE CELEBRATION ============ -->
+<div id="score-celebration" class="hidden">
+  <canvas id="cel-canvas"></canvas>
+  <div class="cel-score" id="cel-score">0</div>
+  <div class="cel-label">TOP BINS!</div>
+  <div class="cel-msg" id="cel-msg"></div>
+  <div class="cel-hint">TAP TO CONTINUE</div>
+</div>
+
 <!-- ============ FIRST RUN ============ -->
 <div id="scr-first-run" class="hidden">
   <div class="fr-eyebrow">TOP BINS</div>
@@ -2621,6 +2640,114 @@ function sfx(type){
     else if(type==="bad"){o.type="sawtooth";o.frequency.setValueAtTime(180,t);o.frequency.exponentialRampToValueAtTime(90,t+.25);g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}
     else if(type==="whistle"){o.frequency.setValueAtTime(2400,t);g.gain.setValueAtTime(.08,t);g.gain.setValueAtTime(0,t+.12);g.gain.setValueAtTime(.08,t+.2);g.gain.exponentialRampToValueAtTime(.001,t+.55);o.start(t);o.stop(t+.6);}
   }catch(e){}
+}
+
+/* ================= CELEBRATION ================= */
+function sfxGoal(){
+  try{
+    const ctx=_sharedAudioCtx||new(window.AudioContext||window.webkitAudioContext)();
+    if(ctx.state==='suspended')ctx.resume();
+    // 4音ファンファーレ C5→E5→G5→C6（triangle波＋vibrato）
+    [[523,0],[659,.13],[784,.26],[1047,.39]].forEach(([freq,delay])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      const lfo=ctx.createOscillator(),lfoG=ctx.createGain();
+      lfo.frequency.value=6;lfoG.gain.value=10;
+      lfo.connect(lfoG);lfoG.connect(o.frequency);
+      lfo.start();lfo.stop(ctx.currentTime+delay+.55);
+      o.connect(g);g.connect(ctx.destination);
+      o.type='triangle';o.frequency.value=freq;
+      const t=ctx.currentTime+delay;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(.14,t+.03);
+      g.gain.setValueAtTime(.14,t+.18);
+      g.gain.exponentialRampToValueAtTime(.001,t+.55);
+      o.start(t);o.stop(t+.55);
+    });
+    // 白ノイズ短バースト（歓声質感）
+    const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*.28),ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.045;
+    const ns=ctx.createBufferSource(),ng=ctx.createGain();
+    ns.buffer=buf;
+    ng.gain.setValueAtTime(.07,ctx.currentTime+.08);
+    ng.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.38);
+    ns.connect(ng);ng.connect(ctx.destination);
+    ns.start(ctx.currentTime+.08);
+  }catch(e){}
+}
+
+let _celRAF=null,_celTimer=null;
+function showCelebration(score,msg){
+  const el=document.getElementById('score-celebration');
+  const canvas=document.getElementById('cel-canvas');
+  const scoreEl=document.getElementById('cel-score');
+  const msgEl=document.getElementById('cel-msg');
+  if(!el)return;
+
+  scoreEl.textContent='0';
+  msgEl.textContent=msg;
+  el.classList.remove('hidden');
+
+  // サウンド
+  sfxGoal();
+
+  // スコアカウントアップ
+  const dur=650,startT=performance.now();
+  (function countUp(now){
+    const p=Math.min((now-startT)/dur,1);
+    scoreEl.textContent=Math.round(score*(1-Math.pow(1-p,3)));
+    if(p<1)requestAnimationFrame(countUp);
+  })(startT);
+
+  // Canvas コンフェッティ
+  canvas.width=canvas.offsetWidth||window.innerWidth;
+  canvas.height=canvas.offsetHeight||window.innerHeight;
+  const cx=canvas.getContext('2d');
+  const COLORS=['#FFD700','#1D9E75','#fff','#FF6B00','#9b59b6','#E2493B'];
+  const pts=Array.from({length:50},()=>({
+    x:canvas.width/2+(Math.random()-.5)*80,
+    y:canvas.height*.52,
+    vx:(Math.random()-.5)*10,
+    vy:-(Math.random()*14+5),
+    w:Math.random()*8+3,
+    h:Math.random()*4+2,
+    color:COLORS[Math.floor(Math.random()*COLORS.length)],
+    alpha:1,
+    rot:Math.random()*Math.PI*2,
+    rotV:(Math.random()-.5)*.25
+  }));
+  if(_celRAF)cancelAnimationFrame(_celRAF);
+  function draw(){
+    cx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    pts.forEach(p=>{
+      if(p.alpha<=0)return;
+      alive=true;
+      p.x+=p.vx;p.y+=p.vy;
+      p.vy+=.38;p.alpha-=.016;p.rot+=p.rotV;
+      cx.save();
+      cx.globalAlpha=Math.max(0,p.alpha);
+      cx.translate(p.x,p.y);cx.rotate(p.rot);
+      cx.fillStyle=p.color;
+      cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      cx.restore();
+    });
+    if(alive)_celRAF=requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  // 2.2秒で自動消灯
+  if(_celTimer)clearTimeout(_celTimer);
+  _celTimer=setTimeout(dismissCelebration,2200);
+  el.onclick=dismissCelebration;
+}
+function dismissCelebration(){
+  const el=document.getElementById('score-celebration');
+  if(!el)return;
+  if(_celRAF){cancelAnimationFrame(_celRAF);_celRAF=null;}
+  if(_celTimer){clearTimeout(_celTimer);_celTimer=null;}
+  el.classList.add('hidden');
+  el.onclick=null;
 }
 
 /* ================= NAV ================= */
@@ -4361,6 +4488,9 @@ function showDrillResult(heard,timeMs){
   const pool=total>=80?msgs.high:total>=50?msgs.mid:msgs.low;
   const msg=pool[Math.floor(Math.random()*pool.length)];
   const isLast=drillIdx>=drillDeck.length-1;
+
+  // 高得点演出
+  if(total>=80)showCelebration(total,msg);
 
   document.getElementById('drill-body').innerHTML=`
     <div class="drill-phrase-card" style="margin-top:16px">
