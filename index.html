@@ -220,6 +220,8 @@ body{
 .card-next-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:16px;padding:15px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);margin-top:14px;display:none}
 .card-next-btn:active{transform:translateY(2px);box-shadow:none}
 .card-next-btn.show{display:block}
+.card-play-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--card2);color:var(--ink);border:1px solid var(--border2);border-radius:14px;padding:12px;font-size:14px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:12px;transition:background .1s}
+.card-play-btn:active{background:var(--border2)}
 .card-count{text-align:center;font-size:12px;font-weight:800;color:var(--grey);margin-top:10px}
 
 /* ---------- speaking ---------- */
@@ -1116,6 +1118,10 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       </button>
     </div>
     <div class="card-choices" id="card-choices"></div>
+    <button class="card-play-btn" id="card-play-btn" onclick="playCurrentCard()" style="display:none">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>
+      発音を聴く
+    </button>
     <button class="card-next-btn" id="card-next-btn" onclick="cardNext()">次へ →</button>
     <div class="card-count" id="card-count"></div>
   </div>
@@ -3631,12 +3637,12 @@ function renderCard(){
   choicesEl.innerHTML=_cardChoices.map((ch,i)=>
     `<button class="card-choice" onclick="selectCardAnswer(${i})">${ch.en}</button>`
   ).join('');
-  // 次へボタン非表示
+  // 次へ・再生ボタン非表示
   const nb=document.getElementById("card-next-btn");
   if(nb){nb.classList.remove("show");}
+  const pb=document.getElementById("card-play-btn");
+  if(pb){pb.style.display="none";}
   document.getElementById("card-count").textContent=(ci+1)+" / "+cardDeck.length;
-  // 音声自動再生
-  setTimeout(()=>speak(c.en,null,c.c),250);
 }
 function _updateCardFavStar(){
   const c=cardDeck[ci];if(!c)return;
@@ -3667,7 +3673,9 @@ function selectCardAnswer(idx){
     if(S.cardsSinceTicket>=10){S.cardsSinceTicket=0;S.lastCardDate=today();earnMatchTicket();}
   }
   save();
-  // 次へボタン表示
+  // 再生・次へボタン表示
+  const pb=document.getElementById("card-play-btn");
+  if(pb){pb.style.display="flex";}
   const nb=document.getElementById("card-next-btn");
   if(nb){nb.textContent=ci>=cardDeck.length-1?'完了！':'次へ →';nb.classList.add("show");}
 }
