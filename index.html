@@ -2321,7 +2321,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:""},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:""},data.progress);
   }
 }
 
@@ -2370,7 +2370,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:""};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -3037,7 +3037,7 @@ function startSession(cat,daily,ear){
     if(unlockedLv()===1&&wc(item)>5)types=types.filter(t=>t!=="builder"); /* 基礎は5語以下のみ並べ替え */
     return {item,type:types[Math.floor(Math.random()*types.length)]};
   });
-  qi=0;goalsNow=0;missNow=0;sessionBadges=[];S.combo=0;
+  qi=0;goalsNow=0;missNow=0;sessionBadges=[];
   sfx("whistle");
   go("quiz");renderQuestion();
 }
@@ -3119,10 +3119,9 @@ function checkBuild(){
 }
 function answerResult(ok){
   if(curItem){if(curItem.c==="pitch"){S.pitchTotal++;if(ok)S.pitchRight++;}else if(curItem.c==="locker"){S.lockerTotal++;if(ok)S.lockerRight++;}}
-  if(ok){goalsNow++;S.goals++;S.combo++;sfx("good");
+  if(ok){goalsNow++;S.goals++;sfx("good");
     awardOnce("first","⚽ 初ゴール！");
-    if(S.combo>=3)awardOnce("hat","🎩 ハットトリック！");
-  }else{missNow++;S.combo=0;sfx("bad");}
+  }else{missNow++;sfx("bad");}
   const f=document.getElementById("feedback");
   f.className="feedback show "+(ok?"good":"bad");
   document.getElementById("fb-title").textContent=ok?pick(["GOAL!!","What a finish!","Top bins!","Get in!"],1)[0]:pick(["Off target…","Saved by the keeper","ポスト直撃！"],1)[0];
