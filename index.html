@@ -250,7 +250,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 /* ---------- coach's call (ピッチ翻訳) ---------- */
 .coach-feature{background:var(--card2);color:#fff;border-radius:24px;padding:20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);cursor:pointer;margin-bottom:18px;position:relative;overflow:hidden;border:2px solid var(--yellow)}
-.coach-feature::after{content:"📢";position:absolute;right:-10px;bottom:-18px;font-size:80px;opacity:.12;transform:rotate(-12deg)}
+.coach-feature::after{content:"";position:absolute;right:-10px;bottom:-18px;font-size:80px;opacity:.12;transform:rotate(-12deg);display:none}
 .coach-feature:active{transform:scale(.985)}
 .cf-left{flex:1}
 .cf-tag{display:inline-block;background:var(--yellow);color:var(--ink);font-size:10px;font-weight:900;letter-spacing:.14em;border-radius:999px;padding:4px 10px;margin-bottom:8px}
@@ -902,7 +902,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       <input class="login-input" id="login-pass" type="password" placeholder="パスワード" autocomplete="current-password"
         onkeydown="if(event.key==='Enter')doLogin()">
       <div class="login-err" id="login-err"></div>
-      <button class="login-btn" id="login-btn" onclick="doLogin()">ログイン ⚽</button>
+      <button class="login-btn" id="login-btn" onclick="doLogin()">ログイン <svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></button>
     </div>
   </div>
 </div>
@@ -933,7 +933,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 <!-- ============ COACH'S CALL (ピッチ翻訳) ============ -->
 <section class="screen" id="scr-coach">
   <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
-    <div style="font-weight:900;font-size:17px">📢 ピッチ翻訳 <span style="color:var(--grey);font-size:12px">COACH'S CALL</span></div></div>
+    <div style="font-weight:900;font-size:17px"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l16-7v14L3 13V11z"/><path d="M11.6 16.8a3 3 0 11-5.8-1.6"/></svg> ピッチ翻訳 <span style="color:var(--grey);font-size:12px">COACH'S CALL</span></div></div>
   <div class="coach-inputwrap">
     <input class="coach-input" id="coach-input" type="text" inputmode="text" enterkeyhint="search"
       placeholder="例：中を切れ／寄せろ／裏を狙え" onkeydown="if(event.key==='Enter')searchCoach()">
@@ -941,16 +941,16 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   </div>
   <div class="cat-row" id="coach-examples"></div>
   <div id="coach-result"></div>
-  <div class="note-banner" style="margin-top:14px">⚡ よく使うコールは内蔵辞書から即答。辞書にない状況は <b>AIコーチ（Claude）</b>に問い合わせる。AI問い合わせはこのプレビュー環境内で動作（Vercel公開時はagent-crmと同じAPIプロキシ構成が必要）。</div>
+  <div class="note-banner" style="margin-top:14px">よく使うコールは内蔵辞書から即答。辞書にない状況は <b>AIコーチ（Claude）</b>に問い合わせる。AI問い合わせはこのプレビュー環境内で動作（Vercel公開時はagent-crmと同じAPIプロキシ構成が必要）。</div>
 </section>
 
 <!-- ============ CASE STUDIES ============ -->
 <section class="screen" id="scr-cases">
   <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
-    <div style="font-weight:900;font-size:17px">🎬 ケーススタディ</div></div>
+    <div style="font-weight:900;font-size:17px"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16"/><path d="M17 4v16"/><path d="M2 9h5"/><path d="M2 14h5"/><path d="M17 9h5"/><path d="M17 14h5"/></svg> ケーススタディ</div></div>
   <div class="cat-row" id="cases-cats"></div>
   <div id="cases-list"></div>
-  <button class="ai-ask-btn" onclick="askAICase()">🤖 自分のシチュエーションをAIに作らせる</button>
+  <button class="ai-ask-btn" onclick="askAICase()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="4" r="1" fill="currentColor" stroke="none"/><rect x="7" y="12" width="3" height="3" rx=".5"/><rect x="14" y="12" width="3" height="3" rx=".5"/><line x1="9" y1="18" x2="15" y2="18"/></svg> 自分のシチュエーションをAIに作らせる</button>
 </section>
 
 <section class="screen" id="scr-case">
@@ -1030,7 +1030,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
         <div class="cat-mini" id="fc-cat"></div>
         <div class="big" id="fc-en"></div>
         <div class="ex" id="fc-ex"></div>
-        <button class="fb-audio" style="margin-top:10px;font-size:26px" onclick="event.stopPropagation();playCurrentCard()">🔊</button>
+        <button class="fb-audio" style="margin-top:10px;font-size:26px" onclick="event.stopPropagation();playCurrentCard()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg></button>
         <div class="tap-hint">タップで意味をみる</div>
       </div>
       <div class="fface back">
@@ -1041,9 +1041,9 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       </div>
     </div>
     <div class="card-actions">
-      <button class="btn-again" onclick="gradeCard(false)">まだ 😬</button>
+      <button class="btn-again" onclick="gradeCard(false)">まだ</button>
       <button id="card-fav-btn" onclick="toggleFavCard()" style="background:none;border:2px solid rgba(255,255,255,.2);border-radius:12px;width:44px;height:44px;font-size:18px;cursor:pointer;flex-shrink:0">☆</button>
-      <button class="btn-got" onclick="gradeCard(true)">知ってる ✅</button>
+      <button class="btn-got" onclick="gradeCard(true)">知ってる <svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
     </div>
     <div class="card-count" id="card-count"></div>
   </div>
@@ -1058,10 +1058,10 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
     <div class="speak-phrase">
       <div class="big" id="sp-en"></div>
       <div class="ja" id="sp-ja"></div>
-      <button class="play-big" style="margin-top:16px;padding:14px" onclick="playSpeak()">🔊 お手本を聞く</button>
+      <button class="play-big" style="margin-top:16px;padding:14px" onclick="playSpeak()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg> お手本を聞く</button>
     </div>
     <div class="center">
-      <button class="mic-btn" id="mic-btn" onclick="toggleRec()">🎙️</button>
+      <button class="mic-btn" id="mic-btn" onclick="toggleRec()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg></button>
       <div class="speak-result">
         <div class="heard" id="sp-heard"></div>
         <div class="speak-score" id="sp-score"></div>
@@ -1077,7 +1077,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 <!-- ============ CAREER ============ -->
 <section class="screen" id="scr-career">
   <div class="brand"><div class="logo">MY <span>CAREER</span></div>
-    <div class="streak-pill"><span class="fire">🔥</span><span id="streak-num2">0</span></div></div>
+    <div class="streak-pill"><span class="fire"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="currentColor" stroke="none"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-2.5-1.5-5-2-6.5C15 8 16 10 16 13a4 4 0 01-8 0c0-2.5 1.5-5.5 4-7z"/></svg></span><span id="streak-num2">0</span></div></div>
   <div id="career-tier-area"></div>
   <!-- career-head removed; stats now in career-tier-area -->
   <div class="section-title">THE PYRAMID — 昇格への道</div>
@@ -1095,13 +1095,13 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   </div>
   <div class="player-dots" id="player-dots"></div>
   <div class="player-body" id="player-body">
-    <button class="player-listen-btn" id="player-listen-btn" onclick="playerListen()">🔊</button>
+    <button class="player-listen-btn" id="player-listen-btn" onclick="playerListen()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg></button>
     <div class="player-phrase" id="player-phrase"></div>
     <div class="player-meaning" id="player-meaning"></div>
     <div class="player-example" id="player-example"></div>
   </div>
   <div class="player-actions" id="player-actions">
-    <button class="player-speak-btn" id="player-speak-btn" onclick="playerSpeak()" disabled>🎤 &nbsp;真似して言う</button>
+    <button class="player-speak-btn" id="player-speak-btn" onclick="playerSpeak()" disabled><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg> &nbsp;真似して言う</button>
     <button class="player-next-btn" onclick="playerNext()">スキップ → 次へ</button>
   </div>
 </section>
@@ -1109,7 +1109,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 <!-- feedback / nav / toast -->
 <div class="feedback" id="feedback">
   <h4 id="fb-title"></h4>
-  <div class="fb-en"><span id="fb-en"></span> <button class="fb-audio" onclick="playFb()">🔊</button></div>
+  <div class="fb-en"><span id="fb-en"></span> <button class="fb-audio" onclick="playFb()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg></button></div>
   <div class="fb-ja" id="fb-ja"></div>
   <div class="fb-note" id="fb-note"></div>
   <div style="display:flex;gap:8px;align-items:center">
@@ -1130,12 +1130,12 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
     <div class="feature-carousel" id="qd-carousel" style="padding-right:28px;margin-bottom:10px">
       <div class="feature-carousel-slide" style="display:flex;flex-direction:column">
         <div class="qd-card pitch" id="qd-pitch-card" onclick="startQuizDaily('pitch')">
-          <div class="qd-card-icon">⚽</div>
+          <div class="qd-card-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></div>
           <div class="qd-card-badge">PITCH</div>
           <div class="qd-card-title">Pitch<br>Quiz</div>
           <div class="qd-card-sub">ピッチ上の指示・コール・戦術英語<br>10問チャレンジ</div>
           <div class="qd-card-footer">
-            <span class="qd-ticket-tag">🎟️ +1 TICKET</span>
+            <span class="qd-ticket-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1 TICKET</span>
             <span class="qd-card-go">プレイ ›</span>
           </div>
           <div id="qd-pitch-done" class="qd-done-stamp" style="display:none">✓ 完了</div>
@@ -1143,12 +1143,12 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       </div>
       <div class="feature-carousel-slide" style="display:flex;flex-direction:column">
         <div class="qd-card locker" id="qd-locker-card" onclick="startQuizDaily('locker')">
-          <div class="qd-card-icon">🪑</div>
+          <div class="qd-card-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
           <div class="qd-card-badge">LOCKER</div>
           <div class="qd-card-title">Locker<br>Quiz</div>
           <div class="qd-card-sub">ロッカールーム・チームメイトとの<br>英語・10問チャレンジ</div>
           <div class="qd-card-footer">
-            <span class="qd-ticket-tag">🎟️ +1 TICKET</span>
+            <span class="qd-ticket-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1 TICKET</span>
             <span class="qd-card-go" style="color:#FFC400">プレイ ›</span>
           </div>
           <div id="qd-locker-done" class="qd-done-stamp" style="display:none">✓ 完了</div>
@@ -1247,7 +1247,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       <p>成長記録とトロフィー</p>
     </div>
     <div class="other-card hero tap-fx" onclick="startDrill('mix')" style="background:linear-gradient(135deg,#1a0a00 0%,#2e1500 100%);border-color:rgba(255,140,0,.3)">
-      <span class="oc-ic">🎙️</span>
+      <span class="oc-ic"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg></span>
       <div>
         <div class="hero-sub">SPEAKING DRILL</div>
         <h3>スピーキング練習</h3>
@@ -1276,15 +1276,61 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 
 <script>
+/* ================= SVG ICON HELPER ================= */
+function svgI(name){
+  const s='width:1em;height:1em;vertical-align:-.13em;display:inline-block';
+  const icons={
+    spk:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>`,
+    mic:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>`,
+    fire:`<svg viewBox="0 0 24 24" style="${s}" fill="currentColor" stroke="none"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-2.5-1.5-5-2-6.5C15 8 16 10 16 13a4 4 0 01-8 0c0-2.5 1.5-5.5 4-7z"/></svg>`,
+    ball:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg>`,
+    ticket:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg>`,
+    lock:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`,
+    robot:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="4" r="1" fill="currentColor" stroke="none"/><rect x="7" y="12" width="3" height="3" rx=".5"/><rect x="14" y="12" width="3" height="3" rx=".5"/><line x1="9" y1="18" x2="15" y2="18"/></svg>`,
+    mega:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l16-7v14L3 13V11z"/><path d="M11.6 16.8a3 3 0 11-5.8-1.6"/></svg>`,
+    book:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`,
+    film:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16"/><path d="M17 4v16"/><path d="M2 9h5"/><path d="M2 14h5"/><path d="M17 9h5"/><path d="M17 14h5"/></svg>`,
+    head:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14a9 9 0 0118 0"/><path d="M3 14v2a2 2 0 002 2h1a2 2 0 002-2v-2"/><path d="M16 14v2a2 2 0 002 2h1a2 2 0 002-2v-2"/></svg>`,
+    ear:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0v4"/><path d="M18 12a6 6 0 01-9.33 5"/><circle cx="12" cy="17" r="1"/></svg>`,
+    puzzle:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 9.5c.28-.28.5-.66.5-1.1a1.4 1.4 0 00-1.4-1.4c-.44 0-.82.22-1.1.5L17 9H15V7l1.5-1.5c.28-.28.5-.66.5-1.1a1.4 1.4 0 00-2.8 0c0 .44.22.82.5 1.1L16 7H9l1.5-1.5c.28-.28.5-.66.5-1.1a1.4 1.4 0 00-2.8 0c0 .44.22.82.5 1.1L10 7v2H8L6.5 7.5c-.28-.28-.66-.5-1.1-.5a1.4 1.4 0 000 2.8c.44 0 .82-.22 1.1-.5L8 8v8l-1.5 1.5c-.28.28-.5.66-.5 1.1a1.4 1.4 0 002.8 0c0-.44-.22-.82-.5-1.1L7 16h2v2l-1.5 1.5c-.28.28-.5.66-.5 1.1a1.4 1.4 0 002.8 0c0-.44-.22-.82-.5-1.1L11 18v-2h6l1.5 1.5c.28.28.66.5 1.1.5a1.4 1.4 0 000-2.8c-.44 0-.82.22-1.1.5L18 17v-2h2l1.5 1.5c.28.28.66.5 1.1.5a1.4 1.4 0 000-2.8c-.44 0-.82.22-1.1.5L21 16h-2V9h2l-.5-.5z"/></svg>`,
+    shuffle:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>`,
+    light:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M12 2a7 7 0 017 7c0 2.38-1.19 4.47-3 5.74V17H8v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 017-7z"/></svg>`,
+    sock:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v10l-4 4v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4L2 12V2z"/><line x1="6" y1="7" x2="18" y2="7"/></svg>`,
+    news:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h4"/><rect x="4" y="9" width="3" height="8" rx=".5"/></svg>`,
+    check:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+    warn:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    goal:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="1"/><path d="M2 10h20"/><path d="M2 14h20"/><path d="M8 6v12"/><path d="M16 6v12"/></svg>`,
+    trophy:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H2V5h4"/><path d="M18 9h4V5h-4"/><path d="M6 5h12v7a6 6 0 01-12 0V5z"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="9" y1="21" x2="15" y2="21"/></svg>`,
+    hat:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17h20"/><path d="M8 17V9a4 4 0 018 0v8"/><path d="M5 17h14a2 2 0 012 2v1H3v-1a2 2 0 012-2z"/></svg>`,
+    cal:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+    blue:`<svg viewBox="0 0 24 24" style="${s}" fill="#3B82F6" stroke="none"><circle cx="12" cy="12" r="10"/></svg>`,
+    say:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`,
+    door:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="18" height="20" rx="1"/><line x1="9" y1="12" x2="10" y2="12"/></svg>`,
+    food:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="3" x2="8" y2="21"/><path d="M5 3h3a3 3 0 013 3v3a3 3 0 01-3 3H5V3z"/><line x1="16" y1="3" x2="16" y2="21"/></svg>`,
+    hand:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`,
+    shirt:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 001 .81H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.15a1 1 0 001-.81l.58-3.57a2 2 0 00-1.35-2.16z"/></svg>`,
+    smirk:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M8 14s1-2 4-2 4 2 4 2"/></svg>`,
+    pray:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`,
+    yellcard:`<svg viewBox="0 0 24 24" style="${s}"><rect x="4" y="2" width="16" height="20" rx="2" fill="#FFC400"/></svg>`,
+    fist:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2"/><path d="M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2"/><path d="M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8"/><path d="M18 11a2 2 0 114 0v3a8 8 0 01-8 8h-2c-2.8 0-4.5-.86-5.99-2L4 17"/></svg>`,
+    bandage:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" style="display:none"/><rect x="2" y="8" width="20" height="8" rx="4"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="12" y1="9" x2="12" y2="15"/></svg>`,
+    clipboard:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>`,
+    slow:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    pen:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>`,
+    plane:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>`
+  };
+  return icons[name]||'';
+}
+
 /* ================= DATA =================
    ※すべてオリジナルの例文・訳。市販辞典からの転載なし */
 const CATS = {
-  pitch:  {name:"ピッチ英語",   ic:"⚽", desc:"試合中のコーチング・コール"},
-  locker: {name:"ロッカールーム英語", ic:"🧦", desc:"チームメイトとの会話・スラング"},
-  comm:   {name:"実況解説英語", ic:"🎙️", desc:"中継で飛び交う定番表現"},
-  paper:  {name:"新聞・ゴシップ誌英語", ic:"📰", desc:"タブロイド紙の移籍報道語彙"},
-  fan:    {name:"サポーター英語", ic:"📣", desc:"スタンドのチャント・煽り文化"},
-  mix:    {name:"ミックス", ic:"🔀", desc:"全カテゴリーから出題"}
+  pitch:  {name:"ピッチ英語",   ic:"ball", desc:"試合中のコーチング・コール"},
+  locker: {name:"ロッカールーム英語", ic:"sock", desc:"チームメイトとの会話・スラング"},
+  comm:   {name:"実況解説英語", ic:"mic", desc:"中継で飛び交う定番表現"},
+  paper:  {name:"新聞・ゴシップ誌英語", ic:"news", desc:"タブロイド紙の移籍報道語彙"},
+  fan:    {name:"サポーター英語", ic:"mega", desc:"スタンドのチャント・煽り文化"},
+  mix:    {name:"ミックス", ic:"shuffle", desc:"全カテゴリーから出題"}
 };
 
 const DB = [
@@ -2256,7 +2302,7 @@ async function doLogin(){
   if(!email||!pass){err.textContent="メールアドレスとパスワードを入力してください";return;}
   btn.disabled=true;btn.textContent="ログイン中…";err.textContent="";
   const{data,error}=await supa.auth.signInWithPassword({email,password:pass});
-  btn.disabled=false;btn.textContent="ログイン ⚽";
+  btn.disabled=false;btn.innerHTML='ログイン <svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg>";'
   if(error){err.textContent="メールアドレスまたはパスワードが違います";return;}
   stampLogin();
   currentUser=data.user;
@@ -2317,15 +2363,15 @@ const TIERS=[
  {name:"JAPAN CALL-UP", ja:"サムライブルーの語学力",min:14400,img:"images/tier-japan.png",title:"日本代表招集の電話が鳴った",sub:"サムライブルーで世界へ"}
 ];
 const TROPHIES=[
- {id:"first",ic:"⚽",n:"初ゴール",d:"初めて正解する"},
- {id:"hat",ic:"🎩",n:"ハットトリック",d:"3問連続正解"},
+ {id:"first",ic:"ball",n:"初ゴール",d:"初めて正解する"},
+ {id:"hat",ic:"hat",n:"ハットトリック",d:"3問連続正解"},
  {id:"motm",ic:"⭐",n:"MOTM",d:"1試合全問正解"},
- {id:"week",ic:"📅",n:"週間MVP",d:"7日連続出場"},
- {id:"month",ic:"🏅",n:"月間MVP",d:"30日連続出場"},
- {id:"fifty",ic:"📖",n:"50語マスター",d:"カード50語を習得"},
- {id:"cap",ic:"🔵",n:"サムライブルー",d:"通算14400分到達"},
- {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
- {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
+ {id:"week",ic:"cal",n:"週間MVP",d:"7日連続出場"},
+ {id:"month",ic:"trophy",n:"月間MVP",d:"30日連続出場"},
+ {id:"fifty",ic:"book",n:"50語マスター",d:"カード50語を習得"},
+ {id:"cap",ic:"blue",n:"サムライブルー",d:"通算14400分到達"},
+ {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
+ {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
 let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:""};
 function save(){saveToSupabase();}
@@ -2600,7 +2646,7 @@ function buildUnifiedHeroCard(){
         transform="rotate(-90 ${cx} ${cy})"/>
     </svg>
     <div class="huc-ring-inner">
-      <span class="huc-ring-label">🔥</span>
+      <span class="huc-ring-label"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="currentColor" stroke="none"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-2.5-1.5-5-2-6.5C15 8 16 10 16 13a4 4 0 01-8 0c0-2.5 1.5-5.5 4-7z"/></svg></span>
       <span class="huc-ring-sub">NEXT</span>
       <span class="huc-ring-goal">${nextM}日</span>
     </div>
@@ -2617,7 +2663,7 @@ function buildUnifiedHeroCard(){
   if(done)weekDone++;
   const weekPct=Math.round(weekDone/weekTotal*100);
 
-  const ticketHtml=S.tickets>0?`<span class="huc-ticket">🎫×${S.tickets}</span>`:'';
+  const ticketHtml=S.tickets>0?`<span class="huc-ticket"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg>×${S.tickets}</span>`:'';
   const cdHtml=!done?`<span class="huc-cd" id="streak-cd"></span>`:'';
 
   return `<div class="home-unified-card">
@@ -2625,7 +2671,7 @@ function buildUnifiedHeroCard(){
     <div class="huc-body">
       <div class="huc-left">
         <div class="huc-main">
-          <span class="huc-fire">🔥</span>
+          <span class="huc-fire"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="currentColor" stroke="none"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-2.5-1.5-5-2-6.5C15 8 16 10 16 13a4 4 0 01-8 0c0-2.5 1.5-5.5 4-7z"/></svg></span>
           <span class="huc-num" id="streak-big-num">0</span>
           <span class="huc-unit">DAY<br>STREAK</span>
         </div>
@@ -2752,7 +2798,7 @@ function renderHome(){
     <div class="matchday-home-footer">
       <div class="md-plays-row">
         ${pipsHtml}
-        <span class="md-plays-label" style="margin-left:4px">🎟️ ${ticketsEarned}枚</span>
+        <span class="md-plays-label" style="margin-left:4px"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> ${ticketsEarned}枚</span>
       </div>
       <span class="matchday-home-go">${ticketsEarned>playsToday?'プレイ ›':'チケット不足'}</span>
     </div>
@@ -2778,7 +2824,7 @@ function renderHome(){
     :`<div class="ai-roleplay-card locked" onclick="toast('あと${MD_UNLOCK-mdTotal}シーンでROLEPLAYが解放される')">
         <div class="ai-rp-eyebrow">
           <span class="ai-rp-badge-locked">ROLEPLAY</span>
-          <span class="ai-rp-lock">🔒</span>
+          <span class="ai-rp-lock"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
         </div>
         <div class="ai-rp-title-locked">本番ピッチに<br>立て。</div>
         <div class="ai-rp-sub">MATCHDAYを14シーンクリアで解放</div>
@@ -2843,14 +2889,14 @@ function renderWeek(){
     const div=document.createElement("div");div.className="week-card";
     const btnHtml=unlocked
       ? '<button class="week-btn" onclick="startSession(\''+w.cat+'\',false)">Week '+w.n+'を練習する &#x2192;</button>'
-      : '<button class="week-btn locked-btn">🔒 まだ解放されていない</button>';
+      : '<button class="week-btn locked-btn"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> まだ解放されていない</button>';
     div.innerHTML='<div class="week-head">'
       +'<div class="week-num-el'+(unlocked?'':' locked')+'">'+w.n+'</div>'
       +'<div class="week-texts">'
       +'<div class="week-title-el'+(unlocked?'':' locked')+'">'+w.title+'</div>'
       +'<div class="week-desc-el">'+w.desc+'</div>'
       +'</div>'
-      +'<span class="week-badge '+(unlocked?(w.n===1?'active':'active'):'locked')+'">'+(unlocked?'決定':'🔒')+'</span>'
+      +'<span class="week-badge '+(unlocked?(w.n===1?'active':'active'):'locked')+'">'+(unlocked?'決定':'<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>')+'</span>'
       +'</div>'
       +(!unlocked?'<div class="week-unlock-bar"><div class="week-unlock-label">解放条件: '+w.unlock+'</div></div>':'')
       +'<div style="padding:0 16px 14px">'+btnHtml+'</div>';
@@ -2949,7 +2995,7 @@ function renderPlayer(){
   // reset speak button
   playerReady=false;
   const sb=document.getElementById('player-speak-btn');
-  sb.disabled=true;sb.textContent='🎤  真似して言う';
+  sb.disabled=true;sb.innerHTML='<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>  真似して言う';
   // auto-play after short delay
   const lb=document.getElementById('player-listen-btn');
   lb.classList.add('playing');
@@ -2979,7 +3025,7 @@ function playerNext(){
 function playerComplete(){
   const td=today();
   if(S.doneToday!==td){S.streak++;S.doneToday=td;save();}
-  document.getElementById('player-body').innerHTML=`<div class="player-complete"><div class="player-complete-icon">🎉</div><div class="player-complete-title">セッション完了！</div><div class="player-complete-sub">今日の3フレーズをクリア</div><button class="player-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button></div>`;
+  document.getElementById('player-body').innerHTML=`<div class="player-complete"><div class="player-complete-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H2V5h4"/><path d="M18 9h4V5h-4"/><path d="M6 5h12v7a6 6 0 01-12 0V5z"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="9" y1="21" x2="15" y2="21"/></svg></div><div class="player-complete-title">セッション完了！</div><div class="player-complete-sub">今日の3フレーズをクリア</div><button class="player-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button></div>`;
   document.getElementById('player-actions').style.display='none';
   document.getElementById('player-dots').innerHTML=playerPhrases.map(()=>'<div class="player-dot done"></div>').join('');
 }
@@ -3009,27 +3055,27 @@ function renderQuestion(){
   const body=document.getElementById("q-body");
   const others=pick(poolFor("mix").filter(d=>d.en!==q.item.en),3);
   if(q.type==="listen"){
-    body.innerHTML=`<div class="q-tag">🎧 LISTEN — 意味を選べ</div>
-      <button class="play-big" onclick="speak(curItem.en)">🔊 もう一度聞く</button>
+    body.innerHTML=`<div class="q-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14a9 9 0 0118 0"/><path d="M3 14v2a2 2 0 002 2h1a2 2 0 002-2v-2"/><path d="M16 14v2a2 2 0 002 2h1a2 2 0 002-2v-2"/></svg> LISTEN — 意味を選べ</div>
+      <button class="play-big" onclick="speak(curItem.en)"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg> もう一度聞く</button>
       <div class="speed-row">${speedBtns()}</div><div class="opts" id="opts"></div>`;
     mcOptions([q.item,...others],"ja",q.item.ja);
     setTimeout(()=>speak(q.item.en),350);
   }else if(q.type==="ja2en"){
-    body.innerHTML=`<div class="q-tag">⚽ TRANSLATE — 英語で何と言う？</div>
+    body.innerHTML=`<div class="q-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg> TRANSLATE — 英語で何と言う？</div>
       <div class="q-text">「${q.item.ja}」</div><div class="q-sub">現場で叫ぶならどれ？</div>
       <div class="opts" id="opts"></div>`;
     mcOptions([q.item,...others],"en",q.item.en);
   }else if(q.type==="ear"){
-    body.innerHTML=`<div class="q-tag">👂 EAR TEST — 文字なし。音だけで意味を当てろ</div>
-      <button class="play-big" onclick="speak(curItem.ex)">🔊 再生する</button>
+    body.innerHTML=`<div class="q-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0v4"/><path d="M18 12a6 6 0 01-9.33 5"/><circle cx="12" cy="17" r="1"/></svg> EAR TEST — 文字なし。音だけで意味を当てろ</div>
+      <button class="play-big" onclick="speak(curItem.ex)"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg> 再生する</button>
       <div class="speed-row">${speedBtns()}</div><div class="opts" id="opts"></div>`;
     mcOptions([q.item,...others],"exJa",q.item.exJa);
     setTimeout(()=>speak(q.item.ex),350);
   }else{ // builder
     const words=q.item.ex.replace(/[.!?]+$/,"").split(" ");
-    body.innerHTML=`<div class="q-tag">🧩 BUILD — 並べ替えて文をつくれ</div>
+    body.innerHTML=`<div class="q-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 11h2a2 2 0 010 4h-2v3a1 1 0 01-1 1h-3v2a2 2 0 01-4 0v-2H8a1 1 0 01-1-1v-3H5a2 2 0 010-4h2V8a1 1 0 011-1h3V5a2 2 0 014 0v2h3a1 1 0 011 1v3z"/></svg> BUILD — 並べ替えて文をつくれ</div>
       <div class="q-text" style="font-size:16px">「${q.item.exJa}」</div>
-      <button class="play-big" style="padding:13px" onclick="speak(curItem.ex)">🔊 ヒント（音声）</button>
+      <button class="play-big" style="padding:13px" onclick="speak(curItem.ex)"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg> ヒント（音声）</button>
       <div class="build-zone" id="bzone"></div>
       <div class="word-pool" id="wpool"></div>
       <button class="check-btn" id="bcheck" disabled onclick="checkBuild()">シュート！</button>`;
@@ -3048,7 +3094,10 @@ function renderQuestion(){
   }
 }
 function speedBtns(){
-  return [0.7,1.0,1.25].map(r=>`<button class="speed-btn ${r===rate?'sel':''}" onclick="rate=${r};document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel')">${r===0.7?'🐢 ゆっくり':r===1.0?'⚽ 普通':'🔥 速い'}</button>`).join("");
+  const _sp0='<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ゆっくり';
+  const _sp1='<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg> 普通';
+  const _sp2='<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="currentColor" stroke="none"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-2.5-1.5-5-2-6.5C15 8 16 10 16 13a4 4 0 01-8 0c0-2.5 1.5-5.5 4-7z"/></svg> 速い';
+  return [0.7,1.0,1.25].map(r=>`<button class="speed-btn ${r===rate?'sel':''}" onclick="rate=${r};document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel')">${r===0.7?_sp0:r===1.0?_sp1:_sp2}</button>`).join("");
 }
 function mcOptions(items,field,answer){
   const wrap=document.getElementById("opts");
@@ -3082,7 +3131,7 @@ function answerResult(ok){
   }else{missNow++;S.combo=0;sfx("bad");}
   const f=document.getElementById("feedback");
   f.className="feedback show "+(ok?"good":"bad");
-  document.getElementById("fb-title").textContent=ok?pick(["GOAL!! 🥅","What a finish!","Top bins! 🎯","Get in!"],1)[0]:pick(["Off target…","Saved by the keeper","ポスト直撃！"],1)[0];
+  document.getElementById("fb-title").textContent=ok?pick(["GOAL!!","What a finish!","Top bins!","Get in!"],1)[0]:pick(["Off target…","Saved by the keeper","ポスト直撃！"],1)[0];
   document.getElementById("fb-en").textContent=curItem.en+" — "+curItem.ex;
   document.getElementById("fb-ja").textContent=curItem.ja+"／"+curItem.exJa;
   document.getElementById("fb-note").textContent=curItem.note||"";
@@ -3142,7 +3191,7 @@ function finishSession(){
   }else{document.getElementById("missed-wrap").style.display="none";}
   const rb=document.getElementById("res-badges");rb.innerHTML="";
   if(unlockedLv()>prevLv){
-    rb.innerHTML+=`<div class="badge-pop" style="background:var(--green)"><span style="font-size:24px">📚</span><span>昇格ボーナス！新しい語彙レベル「${LV_NAMES[unlockedLv()]}」が解放された</span></div>`;
+    rb.innerHTML+=`<div class="badge-pop" style="background:var(--green)"><span style="font-size:24px"><svg viewBox="0 0 24 24" style="width:1.5em;height:1.5em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span><span>昇格ボーナス！新しい語彙レベル「${LV_NAMES[unlockedLv()]}」が解放された</span></div>`;
   }
   sessionBadges.forEach(id=>{
     const tr=TROPHIES.find(x=>x.id===id);
@@ -3257,7 +3306,7 @@ async function toggleRec(){
       sfx(score>=80?"good":"bad");
       if(score>=80){S.speakCount++;if(S.speakCount>=20)awardOnce("poly","🗣️ 声出し職人！");save();}
     }catch(e){
-      document.getElementById("sp-heard").textContent="うまく聞き取れず。もう一度🎙️をタップ";
+      document.getElementById("sp-heard").textContent="うまく聞き取れず。もう一度タップ";
     }
     showSpeakNext();
   };
@@ -3265,7 +3314,7 @@ async function toggleRec(){
   _spVADCancel=_startVAD(stream,()=>_stopSpRec());
   recording=true;
   document.getElementById("mic-btn").classList.add("rec");
-  document.getElementById("sp-heard").textContent="🎙️ 聞き取り中… 話してみて";
+  document.getElementById("sp-heard").textContent="聞き取り中… 話してみて";
 }
 function _stopSpRec(){
   if(!recording)return;
@@ -3337,7 +3386,7 @@ function renderCareer(){
   });
   const tg=document.getElementById("trophies");tg.innerHTML="";
   TROPHIES.forEach(tr=>{
-    tg.innerHTML+=`<div class="trophy ${S.trophies.includes(tr.id)?'won':''}"><div class="tic">${tr.ic}</div><div class="tn">${tr.n}<br>${tr.d}</div></div>`;
+    tg.innerHTML+=`<div class="trophy ${S.trophies.includes(tr.id)?'won':''}"><div class="tic">${svgI(tr.ic)}</div><div class="tn">${tr.n}<br>${tr.d}</div></div>`;
   });
 }
 
@@ -3403,13 +3452,13 @@ function searchCoach(){
   // 2) 学習DBのja/exJaからも検索
   let dbHit=!hit&&DB.find(d=>normJa(d.ja).includes(q)||q.includes(normJa(d.ja).slice(0,4)));
   if(hit){
-    res.innerHTML=callCard(hit.en,hit.ja,hit.note,"📖 内蔵コール辞書",false)
+    res.innerHTML=callCard(hit.en,hit.ja,hit.note,'<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> 内蔵コール辞書',false)
       +hit.alt.map(a=>callCard(a,"別の言い方","","ALTERNATIVE",true)).join("")
-      +`<button class="ai-ask-btn" onclick="askAI('${raw.replace(/'/g,"")}')">🤖 AIコーチに別案・ニュアンスを聞く</button>`;
+      +`<button class="ai-ask-btn" onclick="askAI('${raw.replace(/'/g,"")}')"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="4" r="1" fill="currentColor" stroke="none"/><rect x="7" y="12" width="3" height="3" rx=".5"/><rect x="14" y="12" width="3" height="3" rx=".5"/><line x1="9" y1="18" x2="15" y2="18"/></svg> AIコーチに別案・ニュアンスを聞く</button>`;
     speak(hit.en,null,"pitch");
   }else if(dbHit){
-    res.innerHTML=callCard(dbHit.en,dbHit.ja,(dbHit.note||"")+"　例: "+dbHit.ex,"📖 単語帳から",false)
-      +`<button class="ai-ask-btn" onclick="askAI('${raw.replace(/'/g,"")}')">🤖 AIコーチに別案を聞く</button>`;
+    res.innerHTML=callCard(dbHit.en,dbHit.ja,(dbHit.note||'')+'　例: '+dbHit.ex,'<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> 単語帳から',false)
+      +`<button class="ai-ask-btn" onclick="askAI('${raw.replace(/'/g,"")}')"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="4" r="1" fill="currentColor" stroke="none"/><rect x="7" y="12" width="3" height="3" rx=".5"/><rect x="14" y="12" width="3" height="3" rx=".5"/><line x1="9" y1="18" x2="15" y2="18"/></svg> AIコーチに別案を聞く</button>`;
     speak(dbHit.en,null,"pitch");
   }else{
     askAI(raw);
@@ -3419,7 +3468,7 @@ function callCard(en,ja,note,src,isAlt){
   const safeEn=en.replace(/'/g,"\\'");
   return `<div class="call-card${isAlt?' alt':''}">
     <div class="src">${src}</div>
-    <div class="call-en">${en} <button class="fb-audio" onclick="speak('${safeEn}')">🔊</button></div>
+    <div class="call-en">${en} <button class="fb-audio" onclick="speak('${safeEn}')"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg></button></div>
     <div class="call-ja">${ja||""}</div>
     ${note?`<div class="call-note">${note}</div>`:""}
   </div>`;
@@ -3441,7 +3490,7 @@ async function aiCall(body){
 }
 async function askAI(situation){
   const res=document.getElementById("coach-result");
-  res.innerHTML=`<div class="loading-pitch"><span class="ball">⚽</span><br>AIコーチが考え中… "${situation}"</div>`;
+  res.innerHTML=`<div class="loading-pitch"><span class="ball"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></span><br>AIコーチが考え中… "${situation}"</div>`;
   try{
     const data=await aiCall({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:
 `あなたはロンドン出身のサッカーコーチ。日本人選手から試合中の状況を日本語で伝えられたら、イングランドの現場（試合・練習）で実際に叫ばれる英語コールを返す。
@@ -3452,7 +3501,7 @@ async function askAI(situation){
     const text=(data.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("");
     const parsed=JSON.parse(text.replace(/```json|```/g,"").trim());
     if(!parsed.calls||!parsed.calls.length)throw new Error("empty");
-    res.innerHTML=parsed.calls.map((c,i)=>callCard(c.en,c.ja,c.note,i===0?"🤖 AIコーチ (Claude)":"ALTERNATIVE",i>0)).join("");
+    res.innerHTML=parsed.calls.map((c,i)=>callCard(c.en,c.ja,c.note,i===0?'<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="4" r="1" fill="currentColor" stroke="none"/><rect x="7" y="12" width="3" height="3" rx=".5"/><rect x="14" y="12" width="3" height="3" rx=".5"/><line x1="9" y1="18" x2="15" y2="18"/></svg> AIコーチ (Claude)':'ALTERNATIVE',i>0)).join("");
     speak(parsed.calls[0].en,null,"pitch");
   }catch(e){
     res.innerHTML=`<div class="call-card" style="border-left-color:var(--red)">
@@ -3464,7 +3513,7 @@ async function askAI(situation){
 /* ================= CASE STUDIES (ケーススタディ) =================
    ★1=まず通じる ★2=自然な定番 ★3=ネイティブ級。全てオリジナル編纂 */
 const SCENARIOS=[
-{id:"s1",c:"locker",ic:"🚪",t:"初合流。ロッカールームで初対面の挨拶",scene:"移籍初日。ロッカールームに入ると選手たちがこっちを見ている。第一声で空気が決まる。",
+{id:"s1",c:"locker",ic:"door",t:"初合流。ロッカールームで初対面の挨拶",scene:"移籍初日。ロッカールームに入ると選手たちがこっちを見ている。第一声で空気が決まる。",
  ops:[
  {lv:1,en:"Alright? I'm Shohei.",ja:"よう。ショウヘイだ。",note:"Alright? は「元気？」と聞いていない万能挨拶。返しも Alright が正解"},
  {lv:1,en:"Good to be here, lads.",ja:"ここに来られて嬉しいよ。",note:"lads（みんな）を付けるだけで現場っぽくなる"},
@@ -3472,7 +3521,7 @@ const SCENARIOS=[
  {lv:2,en:"So... what's the gaffer like, then?",ja:"で…監督ってどんな人？",note:"質問で会話を始めると輪に入りやすい"},
  {lv:3,en:"Alright boys? Shohei. Go easy on me in the rondo, yeah?",ja:"よう。ショウヘイだ。ロンドでは手加減してくれよ？",note:"自虐の軽口で笑いを取る。初日に一番強いカード"}],
  ng:{en:"Hello everyone. My name is Shohei. Please take care of me.",why:"「よろしくお願いします」の直訳は存在しない。丁寧すぎる自己紹介は逆に距離を作る"}},
-{id:"s2",c:"locker",ic:"🍝",t:"練習後、チームメイトに食事に誘われた",scene:"「このあと飯行くけど来る？」と誘われた。受けるか、角を立てずに断るか。",
+{id:"s2",c:"locker",ic:"food",t:"練習後、チームメイトに食事に誘われた",scene:"「このあと飯行くけど来る？」と誘われた。受けるか、角を立てずに断るか。",
  ops:[
  {lv:1,en:"Yeah, sounds good.",ja:"いいね、行くよ。",note:"これだけで十分"},
  {lv:2,en:"Yeah, I'm in. Where we going?",ja:"乗った。どこ行くの？",note:"I'm in（乗った）は誘いへの定番の返し"},
@@ -3480,34 +3529,34 @@ const SCENARIOS=[
  {lv:3,en:"Go on then. As long as you're paying.",ja:"しゃーねえな、行くか。お前のおごりならな。",note:"Go on then＝「まあ付き合うか」。冗談を添えるのが流儀"},
  {lv:3,en:"Can't tonight — got a call home. Save me a seat next time.",ja:"今夜は無理だ、家に電話する約束でね。次は席取っといてくれ。",note:"理由＋次への意思で関係を切らない断り方"}],
  ng:{en:"I'm sorry. I cannot come because I have a personal reason.",why:"謝罪から入る断りは重すぎる。軽く断り、次につなげるのが文化"}},
-{id:"s3",c:"locker",ic:"🤝",t:"ミスして落ち込んでいる味方に声をかける",scene:"決定機を外した味方がロッカーでうなだれている。チームメイトとしての一言。",
+{id:"s3",c:"locker",ic:"hand",t:"ミスして落ち込んでいる味方に声をかける",scene:"決定機を外した味方がロッカーでうなだれている。チームメイトとしての一言。",
  ops:[
  {lv:1,en:"Forget it. Next one.",ja:"忘れろ。次だ。",note:"短いほど効く場面"},
  {lv:2,en:"Chin up, mate. We go again.",ja:"顔上げろよ。また次がある。",note:"we go again はリヴァプール文化からの定番"},
  {lv:2,en:"You'll bury the next one, no doubt.",ja:"次は絶対決める。間違いない。",note:"bury＝沈める（確実に決める）"},
  {lv:3,en:"Happens to the best of us. Even Kane's missed sitters.",ja:"誰にでもある。ケインだって決定機を外す。",note:"具体名を出した励ましはネイティブの常套手段"}],
  ng:{en:"Why did you miss that easy chance?",why:"原因の追及は監督の仕事。仲間の仕事は前を向かせること"}},
-{id:"s4",c:"locker",ic:"👔",t:"監督に呼ばれ「調子はどうだ」と聞かれた",scene:"オフィスに呼ばれた。ここでの受け答えが起用に直結する。",
+{id:"s4",c:"locker",ic:"shirt",t:"監督に呼ばれ「調子はどうだ」と聞かれた",scene:"オフィスに呼ばれた。ここでの受け答えが起用に直結する。",
  ops:[
  {lv:1,en:"Feeling good. Getting sharper.",ja:"いい感じです。キレも上がってます。",note:"sharp（キレがある）はコンディション報告の必須語"},
  {lv:2,en:"Feeling sharp. Still adapting to the tempo, but I'm getting there.",ja:"キレてます。テンポにはまだ適応中ですが、掴めてきました。",note:"正直さ＋前進を1文に入れる"},
  {lv:3,en:"Honestly, gaffer? Best I've felt in years. Just give me the minutes.",ja:"正直言って、ここ数年で最高です。出場時間さえもらえれば。",note:"give me the minutes＝出番をくれ。自己主張は文化として必須"}],
  ng:{en:"I will do my best if you give me a chance, sir.",why:"sir は軍隊。監督は gaffer か boss。謙遜しすぎは「自信がない」と読まれる"}},
-{id:"s5",c:"locker",ic:"😏",t:"banterでイジられた時の返し",scene:"練習でミスしたら「お前の足は飾りか？」と笑われた。ここで返せるかが試されている。",
+{id:"s5",c:"locker",ic:"smirk",t:"banterでイジられた時の返し",scene:"練習でミスしたら「お前の足は飾りか？」と笑われた。ここで返せるかが試されている。",
  ops:[
  {lv:1,en:"Yeah, yeah. Very funny.",ja:"はいはい、面白い面白い。",note:"流す返し。まずはこれで十分"},
  {lv:2,en:"Keep talking. I'll megs you next drill.",ja:"言ってろ。次のメニューで股抜きしてやる。",note:"宣言型の返し。実行できれば伝説になる"},
  {lv:3,en:"Big words from a man who couldn't hit a barn door.",ja:"納屋のドアにも当てられない男がよく言うよ。",note:"couldn't hit a barn door＝シュートが下手の定番表現"},
  {lv:3,en:"Leave it out, mate.",ja:"いい加減にしとけよ。",note:"[Cockney] 本気で嫌な時の一言。banterと一線を引く時はこれ"}],
  ng:{en:"Why do you say that? It hurts my feelings.",why:"banterは返すのが文化。真顔の抗議は輪の外に出る。本気で不快なら Leave it out で線を引く"}},
-{id:"s6",c:"pitch",ic:"❓",t:"戦術指示が聞き取れなかった。聞き返す",scene:"ミーティングで監督の指示が速すぎて分からなかった。分かったフリが一番危険。",
+{id:"s6",c:"pitch",ic:"warn",t:"戦術指示が聞き取れなかった。聞き返す",scene:"ミーティングで監督の指示が速すぎて分からなかった。分かったフリが一番危険。",
  ops:[
  {lv:1,en:"Sorry, say that again?",ja:"すみません、もう一度？",note:"短く即座に。タイミングが命"},
  {lv:2,en:"Run that by me again, gaffer?",ja:"監督、もう一回お願いできますか？",note:"run that by me again は自然な聞き返しの定番"},
  {lv:2,en:"So I'm pressing the six, not the centre-half — right?",ja:"つまり俺がプレスに行くのはボランチで、CBじゃない、で合ってます？",note:"自分の理解を言い直して確認する。最も信頼される聞き方"},
  {lv:3,en:"Didn't catch a word of that, boss. One more time for the foreign lad?",ja:"全然聞き取れませんでした。外国人枠にもう一回お願いします？",note:"自虐で笑いに変える。チームに愛されるタイプの返し"}],
  ng:{en:"Yes, I understand.",why:"分かっていないのに understand と言うのが最悪手。ピッチ上のミスで信頼ごと失う"}},
-{id:"s7",c:"pitch",ic:"🙏",t:"自分のミスを謝る／味方の好プレーを称える",scene:"パスミスでカウンターを食らった直後。あるいは味方が決めた直後。即座の一言。",
+{id:"s7",c:"pitch",ic:"pray",t:"自分のミスを謝る／味方の好プレーを称える",scene:"パスミスでカウンターを食らった直後。あるいは味方が決めた直後。即座の一言。",
  ops:[
  {lv:1,en:"My fault! My fault!",ja:"俺のミスだ！",note:"即座に大声で。隠すのが一番嫌われる"},
  {lv:2,en:"My bad, lads. Won't happen again.",ja:"悪い。もうやらない。",note:""},
@@ -3515,43 +3564,43 @@ const SCENARIOS=[
  {lv:2,en:"Great shift today, lads.",ja:"今日はみんなよく走った。",note:"shift＝運動量。労いの定番"},
  {lv:3,en:"You were different gravy today, mate.",ja:"今日のお前は別格だったよ。",note:"different gravy＝「別次元」。ロンドン色の強い最上級の褒め言葉"}],
  ng:{en:"I apologize for my mistake.",why:"apologize は事務的すぎる。ピッチでは My fault! の即時性がすべて"}},
-{id:"s8",c:"pitch",ic:"🟨",t:"審判に抗議する（カードをもらわずに）",scene:"毎回ユニフォームを引っ張られているのに笛が鳴らない。伝え方を間違えると黄紙。",
+{id:"s8",c:"pitch",ic:"yellcard",t:"審判に抗議する（カードをもらわずに）",scene:"毎回ユニフォームを引っ張られているのに笛が鳴らない。伝え方を間違えると黄紙。",
  ops:[
  {lv:1,en:"Ref! Come on!",ja:"レフェリー！おいおい！",note:"これ以上強い言葉はリスクしかない"},
  {lv:2,en:"Ref, he's pulling me every single time!",ja:"レフ、毎回引っ張られてるんですよ！",note:"事実を伝える形なら聞いてもらえる"},
  {lv:3,en:"How's that not a foul, ref? You're better than that.",ja:"今のがファウルじゃないって？あなたほどの審判が。",note:"皮肉込みの上級表現。言い方次第で笑いも取れるが自己責任"}],
  ng:{en:"(罵倒語を使った抗議)",why:"abusive language は一発警告対象。FA規律規定でも累積処分の対象になる"}},
-{id:"s9",c:"locker",ic:"🩹",t:"フィジオに違和感を正確に伝える",scene:"スプリントでハムに違和感。「大丈夫です」で隠すのはキャリアを縮める。",
+{id:"s9",c:"locker",ic:"bandage",t:"フィジオに違和感を正確に伝える",scene:"スプリントでハムに違和感。「大丈夫です」で隠すのはキャリアを縮める。",
  ops:[
  {lv:1,en:"My hamstring's tight.",ja:"ハムが張ってます。",note:"tight（張り）は痛みの手前を表す重要語"},
  {lv:2,en:"I felt my hamstring grab on that last sprint.",ja:"最後のスプリントでハムがピキッときました。",note:"grab＝瞬間的に掴まれる感覚。発生状況とセットで伝える"},
  {lv:3,en:"It's not a pull — more of a niggle. But I don't want to risk it.",ja:"肉離れじゃなく違和感レベル。でもリスクは冒したくない。",note:"niggle（軽い違和感）と pull（肉離れ）の使い分けはプロ必須"}],
  ng:{en:"I'm fine. No problem.",why:"違和感を隠して悪化させるのが最悪のシナリオ。正確な申告は自己管理能力として評価される"}},
-{id:"s10",c:"locker",ic:"📋",t:"トライアル初日、コーチへの自己紹介",scene:"練習参加の初日。コーチに名前とポジションを聞かれた。売り込みのチャンスは一瞬。",
+{id:"s10",c:"locker",ic:"clipboard",t:"トライアル初日、コーチへの自己紹介",scene:"練習参加の初日。コーチに名前とポジションを聞かれた。売り込みのチャンスは一瞬。",
  ops:[
  {lv:1,en:"Shohei. Midfielder. Thanks for having me.",ja:"ショウヘイです。MFです。機会をありがとうございます。",note:"最低限はこの3点"},
  {lv:2,en:"Shohei — box-to-box midfielder. Played my football in Japan. Where do you want me?",ja:"ショウヘイ、ボックストゥボックスのMFです。日本でプレーしてました。どこに入りますか？",note:"Where do you want me? で即戦力感を出す"},
  {lv:3,en:"Shohei. I'll do my talking on the pitch — but I'm an eight, and I'll run all day for you.",ja:"ショウヘイです。実力はピッチで見せますが、8番タイプで、90分走り続けます。",note:"do my talking on the pitch は決まり文句。数字でポジションを言えると通"}],
  ng:{en:"I am not confident but I will try hard.",why:"謙遜は美徳ではなくセールスポイントの欠如と見なされる。トライアルでは特に致命的"}},
-{id:"s11",c:"pitch",ic:"🤜",t:"試合後、対戦相手と握手・交流",scene:"激しくやり合った相手と試合後にすれ違う。敵への敬意もフットボールの言語。",
+{id:"s11",c:"pitch",ic:"fist",t:"試合後、対戦相手と握手・交流",scene:"激しくやり合った相手と試合後にすれ違う。敵への敬意もフットボールの言語。",
  ops:[
  {lv:1,en:"Good game, mate.",ja:"いい試合だったよ。",note:""},
  {lv:2,en:"Well played. Tough game, that.",ja:"ナイスプレー。タフな試合だったな。",note:"文末の that は英国口語の癖。真似すると一気にそれっぽい"},
  {lv:3,en:"You gave me a proper battle out there. All the best for the season, yeah?",ja:"ガチのバトルだったよ。今シーズンの健闘を祈る。",note:"proper battle＝本物の闘い。敵を讃える最上級"}],
  ng:{en:"You are a very good player. I respect you.",why:"間違いではないが直球すぎて教科書的。mate と短さが敬意の表現"}},
-{id:"s12",c:"fan",ic:"✍️",t:"ファンにサイン・写真を求められた",scene:"スタジアムの外で子どもがユニフォームを差し出してきた。ファン対応も仕事のうち。",
+{id:"s12",c:"fan",ic:"pen",t:"ファンにサイン・写真を求められた",scene:"スタジアムの外で子どもがユニフォームを差し出してきた。ファン対応も仕事のうち。",
  ops:[
  {lv:1,en:"Course. Who's it for?",ja:"もちろん。誰宛てにする？",note:"Of course の of は落ちる"},
  {lv:2,en:"Cheers for coming today. What's your name, mate?",ja:"今日は来てくれてありがとう。名前は？",note:"子どもにも mate を使ってOK"},
  {lv:3,en:"Appreciate you, mate. See you next week, yeah?",ja:"応援ありがとな。また来週な？",note:"appreciate you はファンへの感謝の現代的表現"}],
  ng:{en:"(無言でサインだけして去る)",why:"地元コミュニティとの関係はクラブが選手を評価する項目の一つ。一言が資産になる"}},
-{id:"s13",c:"comm",ic:"🎤",t:"試合後のフラッシュインタビュー",scene:"勝利後、ピッチサイドでマイクを向けられた。30秒で印象が決まる。",
+{id:"s13",c:"comm",ic:"mic",t:"試合後のフラッシュインタビュー",scene:"勝利後、ピッチサイドでマイクを向けられた。30秒で印象が決まる。",
  ops:[
  {lv:1,en:"Great win. Happy for the lads.",ja:"大きな勝利です。チームのために嬉しい。",note:"困ったら lads を主語にすれば外さない"},
  {lv:2,en:"Credit to the boys — we stuck to the plan and got what we deserved.",ja:"チームのおかげです。プランを貫いて、当然の結果を手にしました。",note:"credit to 〜／stick to the plan はインタビュー頻出セット"},
  {lv:3,en:"It's a massive three points. The gaffer asked for a reaction, and I think we showed real character.",ja:"非常に大きな勝ち点3です。監督に反発力を求められて、本物の人間力を見せられたと思います。",note:"massive／reaction／character はプレミア選手インタビューの三種の神器"}],
  ng:{en:"I think my performance was very good today.",why:"自分のパフォーマンス自慢から入るのはNG。チーム→自分の順序が鉄則"}},
-{id:"s14",c:"locker",ic:"🔥",t:"ハーフタイム、ビハインドのロッカールームで声を出す",scene:"0-1で折り返した。沈黙のロッカールーム。ここで声を出せる外国人は信頼される。",
+{id:"s14",c:"locker",ic:"fire",t:"ハーフタイム、ビハインドのロッカールームで声を出す",scene:"0-1で折り返した。沈黙のロッカールーム。ここで声を出せる外国人は信頼される。",
  ops:[
  {lv:1,en:"Heads up, lads. Plenty of time.",ja:"顔を上げろ。時間はたっぷりある。",note:""},
  {lv:2,en:"We're still in this. Win the second balls and we're fine.",ja:"まだ終わってない。セカンドボールを制せば問題ない。",note:"具体的な修正点を入れると言葉に重みが出る"},
@@ -3565,14 +3614,14 @@ function openCases(filterCat){
   ["all","locker","pitch","fan","comm"].forEach(k=>{
     const b=document.createElement("button");
     b.className="chip"+((filterCat||"all")===k?" sel":"");
-    b.textContent=k==="all"?"ぜんぶ":CATS[k].ic+" "+CATS[k].name;
+    b.innerHTML=k==="all"?"ぜんぶ":svgI(CATS[k].ic)+" "+CATS[k].name;
     b.onclick=()=>openCases(k);
     cc.appendChild(b);
   });
   const list=document.getElementById("cases-list");list.innerHTML="";
   SCENARIOS.filter(s=>!filterCat||filterCat==="all"||s.c===filterCat).forEach(s=>{
     const d=document.createElement("div");d.className="scene-card";
-    d.innerHTML=`<div class="sic">${s.ic}</div><div><h3>${s.t}</h3><p>${CATS[s.c].name}・${s.ops.length}フレーズ</p></div>`;
+    d.innerHTML=`<div class="sic">${svgI(s.ic)}</div><div><h3>${s.t}</h3><p>${CATS[s.c].name}・${s.ops.length}フレーズ</p></div>`;
     d.onclick=()=>openCase(s);
     list.appendChild(d);
   });
@@ -3587,7 +3636,7 @@ function renderCase(){
   const body=document.getElementById("case-body");
   const ops=s.ops.filter(o=>!lvFilter||o.lv===lvFilter);
   body.innerHTML=`
-  <div class="scene-head"><div class="sh-cat">${CATS[s.c].ic} ${CATS[s.c].name} — SITUATION</div>
+  <div class="scene-head"><div class="sh-cat">${svgI(CATS[s.c].ic)} ${CATS[s.c].name} — SITUATION</div>
     <h2>${s.t}</h2><p>${s.scene}</p></div>
   <div class="lv-filter">
     ${[0,1,2,3].map(l=>`<button class="chip ${lvFilter===l?'sel':''}" onclick="lvFilter=${l};renderCase()">${l===0?"全部":"★".repeat(l)}</button>`).join("")}
@@ -3599,17 +3648,17 @@ function renderCase(){
         <span class="lv-badge lv${o.lv}">${"★".repeat(o.lv)}</span>
         <div class="pr-en">${o.en}</div>
         <div class="pr-btns">
-          <button onclick="speakScn(${i})">🔊</button>
+          <button onclick="speakScn(${i})"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg></button>
           <button class="${faved?'faved':''}" onclick="toggleMyPhrase(${i});renderCase()">${faved?"⭐":"☆"}</button>
         </div>
       </div>
       <div class="pr-ja">${o.ja}</div>
-      ${o.note?`<div class="pr-note">💡 ${o.note}</div>`:""}
+      ${o.note?`<div class="pr-note"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M12 2a7 7 0 017 7c0 2.38-1.19 4.47-3 5.74V17H8v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 017-7z"/></svg> ${o.note}</div>`:""}
     </div>`;
   }).join("")}
-  <div class="ng-card"><div class="ng-tag">🟥 これは言うな — 教科書英語</div>
+  <div class="ng-card"><div class="ng-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block"><rect x="4" y="2" width="16" height="20" rx="2" fill="#E2493B"/></svg> これは言うな — 教科書英語</div>
     <div class="ng-en">${s.ng.en}</div><div class="ng-why">${s.ng.why}</div></div>
-  <button class="check-btn" onclick="practiceCase()">🎙️ この場面をシャドーイング</button>
+  <button class="check-btn" onclick="practiceCase()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg> この場面をシャドーイング</button>
   <div style="text-align:center;font-size:11px;color:var(--grey);font-weight:700;margin-top:10px">⭐で保存したフレーズは単語カードの「マイフレーズ」デッキに入る</div>`;
 }
 function speakScn(i){
@@ -3633,7 +3682,7 @@ async function askAICase(){
   const situation=prompt("シチュエーションを日本語で（例：寮の食堂で隣に座っていいか聞きたい）");
   if(!situation)return;
   const list=document.getElementById("cases-list");
-  list.innerHTML=`<div class="loading-pitch"><span class="ball">⚽</span><br>AIがケーススタディを作成中…</div>`+list.innerHTML;
+  list.innerHTML=`<div class="loading-pitch"><span class="ball"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></span><br>AIがケーススタディを作成中…</div>`+list.innerHTML;
   try{
     const data=await aiCall({model:"claude-sonnet-4-6",max_tokens:1500,messages:[{role:"user",content:
 `あなたはイングランドのサッカー現場に詳しいロンドン出身のコーチ。日本人選手向けに、次の状況のケーススタディを作る。
@@ -3643,7 +3692,7 @@ async function askAICase(){
 {"t":"タイトル","scene":"状況説明(日本語)","ops":[{"lv":1,"en":"","ja":"","note":""}],"ng":{"en":"","why":""}}`}]});
     const text=(data.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("");
     const p=JSON.parse(text.replace(/```json|```/g,"").trim());
-    const scn={id:"ai"+Date.now(),c:"locker",ic:"🤖",t:p.t,scene:p.scene,ops:p.ops,ng:p.ng};
+    const scn={id:"ai"+Date.now(),c:"locker",ic:"robot",t:p.t,scene:p.scene,ops:p.ops,ng:p.ng};
     SCENARIOS.unshift(scn);
     openCase(scn);
     toast("🤖 AIケーススタディ完成");
@@ -3796,13 +3845,13 @@ let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false,mdCurrentChoices=[],m
 const MD_TICKET_MAX=5;
 /* ================= ROLEPLAY DATA ================= */
 const RP_CATEGORIES=[
-  {id:'pitch',   label:'試合中の状況',   npc:'On the pitch / Captain',     icon:'⚽', color:'#1D9E75'},
-  {id:'manager', label:'監督との会話',   npc:'Manager / Gaffer',           icon:'📋', color:'#FF6B00'},
-  {id:'medical', label:'メディカル',     npc:'Doctor / Physio',            icon:'🏥', color:'#4A90D9'},
-  {id:'locker',  label:'ロッカールーム', npc:'Teammates',                  icon:'🪑', color:'#9B59B6'},
-  {id:'media',   label:'メディア対応',   npc:'Reporter / Journalist',      icon:'🎤', color:'#E2493B'},
-  {id:'agent',   label:'エージェント',   npc:'Agent',                      icon:'💼', color:'#FFC400'},
-  {id:'daily',   label:'日常',           npc:'Airport / Hotel / Club staff',icon:'✈️', color:'#7A9488'},
+  {id:'pitch',   label:'試合中の状況',   npc:'On the pitch / Captain',     icon:'ball', color:'#1D9E75'},
+  {id:'manager', label:'監督との会話',   npc:'Manager / Gaffer',           icon:'clipboard', color:'#FF6B00'},
+  {id:'medical', label:'メディカル',     npc:'Doctor / Physio',            icon:'bandage', color:'#4A90D9'},
+  {id:'locker',  label:'ロッカールーム', npc:'Teammates',                  icon:'lock', color:'#9B59B6'},
+  {id:'media',   label:'メディア対応',   npc:'Reporter / Journalist',      icon:'mic', color:'#E2493B'},
+  {id:'agent',   label:'エージェント',   npc:'Agent',                      icon:'clipboard', color:'#FFC400'},
+  {id:'daily',   label:'日常',           npc:'Airport / Hotel / Club staff',icon:'plane', color:'#7A9488'},
 ];
 const ROLEPLAY_SCENES=[
   // PITCH
@@ -3867,7 +3916,7 @@ function renderRoleplayMenu(){
       ${RP_CATEGORIES.map((c,i)=>{
         const done=ROLEPLAY_SCENES.filter(s=>s.cat===c.id).length;
         return `<div class="rp-cat-card tap-fx" onclick="startRoleplay('${c.id}')" style="border-color:${c.color}22">
-          <div class="rp-cat-icon">${c.icon}</div>
+          <div class="rp-cat-icon">${svgI(c.icon)}</div>
           <div class="rp-cat-name">${c.label}</div>
           <div class="rp-cat-npc">${c.npc}</div>
           <div class="rp-cat-count">${done} SCENES</div>
@@ -3909,7 +3958,7 @@ function renderRPScene(){
     </div>
     <div class="rp-mic-section">
       <div class="rp-timer" id="rp-timer">00.0</div>
-      <button class="rp-mic-big" id="rp-mic-btn" onclick="toggleRPRec()">🎙️</button>
+      <button class="rp-mic-big" id="rp-mic-btn" onclick="toggleRPRec()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg></button>
       <div class="rp-hint">タップして返答 → もう一度タップで停止</div>
     </div>`;
   rpPlayLine();
@@ -3952,7 +4001,7 @@ function startRPRec(){
   rpRecog.onend=()=>{
     clearInterval(rpTimerInterval);rpRecording=false;
     const btn2=document.getElementById('rp-mic-btn');
-    if(btn2){btn2.textContent='🎙️';btn2.classList.remove('rec');}
+    if(btn2){btn2.innerHTML='<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>';btn2.classList.remove('rec');}
     if(!rpGotResult)showRPResult('',Date.now()-rpStartMs);
   };
   rpRecog.onerror=()=>{clearInterval(rpTimerInterval);rpRecording=false;};
@@ -3970,7 +4019,7 @@ function stopRPRec(){
   rpRecording=false;
   clearInterval(rpTimerInterval);
   const btn=document.getElementById('rp-mic-btn');
-  if(btn){btn.textContent='🎙️';btn.classList.remove('rec');}
+  if(btn){btn.innerHTML='<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>';btn.classList.remove('rec');}
 }
 
 function showRPResult(heard,timeMs){
@@ -4022,7 +4071,7 @@ function finishRoleplay(){
     </div>`;
   document.getElementById('rp-scene-body').innerHTML=`
     <div class="rp-finish-wrap">
-      <div style="font-size:36px">${cat?cat.icon:'🎙️'}</div>
+      <div style="font-size:36px">${cat?svgI(cat.icon):svgI('mic')}</div>
       <div class="rp-finish-label">${cat?cat.label:''} COMPLETE</div>
       <div class="rp-finish-score">${avg}</div>
       <div style="font-size:12px;font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.3)">AVERAGE SCORE</div>
@@ -4176,7 +4225,7 @@ function showDrillSpeak(){
     <div class="drill-cta">
       <div class="drill-mic-wrap">
         <div class="drill-timer" id="drill-timer">0.0s</div>
-        <button class="drill-mic-big" id="drill-mic-btn" onclick="toggleDrillRec()">🎙️</button>
+        <button class="drill-mic-big" id="drill-mic-btn" onclick="toggleDrillRec()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg></button>
         <div class="drill-hint" id="drill-mic-hint">タップして話す</div>
       </div>
     </div>
@@ -4361,7 +4410,7 @@ function finishDrill(){
   S.lastSpeakDate=today();earnMatchTicket();save();
   document.getElementById('drill-body').innerHTML=`
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">
-      <div style="font-size:52px;margin-bottom:16px">💪</div>
+      <div style="font-size:52px;margin-bottom:16px"><svg viewBox="0 0 24 24" style="width:1.5em;height:1.5em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2"/><path d="M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2"/><path d="M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8"/><path d="M18 11a2 2 0 114 0v3a8 8 0 01-8 8h-2c-2.8 0-4.5-.86-5.99-2L4 17"/></svg></div>
       <div style="font-size:26px;font-weight:900;color:#FFD700;margin-bottom:6px">セッション完了</div>
       <div style="font-size:13px;color:var(--grey);margin-bottom:20px">10フレーズ練習</div>
       <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,.4);margin-bottom:6px">今日のミス</div>
@@ -4418,7 +4467,7 @@ function renderFavs(){
           <div style="font-size:12px;color:var(--grey)">${f.ja||''}</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-          <button onclick="speak('${f.en.replace(/'/g,"\\'")}')" style="background:none;border:none;font-size:20px;cursor:pointer">🔊</button>
+          <button onclick="speak('${f.en.replace(/'/g,"\\'")}')" style="background:none;border:none;font-size:20px;cursor:pointer"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg></button>
           <button onclick="removeFav('${f.en.replace(/'/g,"\\'")}')" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--grey)">✕</button>
         </div>
       </div>`).join('')}
@@ -4470,7 +4519,7 @@ function mdCelebrate(){
     const dl=(Math.random()*.2).toFixed(2);
     pts+=`<div class="md-celeb-particle" style="background:${c};--tx:${tx.toFixed(0)}px;--ty:${ty.toFixed(0)}px;animation-delay:${dl}s"></div>`;
   }
-  ol.innerHTML=`<div class="md-celeb-text">GET IN! ⚽</div>${pts}`;
+  ol.innerHTML=`<div class="md-celeb-text">GET IN! <svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></div>${pts}`;
   document.body.appendChild(ol);
   mdPlayVictorySound();
   setTimeout(()=>ol.remove(),2200);
@@ -4481,13 +4530,13 @@ function openMatchday(){
   if((S.matchTickets||0)<=0){
     document.getElementById('md-scene-wrap').innerHTML=`
       <div class="md-complete">
-        <div class="md-complete-icon">🎟️</div>
+        <div class="md-complete-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg></div>
         <div class="md-complete-title">チケットがありません</div>
         <div class="md-complete-sub" style="text-align:left;max-width:280px">
           <div style="margin-bottom:12px;color:rgba(238,244,241,.6)">以下をクリアして獲得：</div>
-          <div class="md-ticket-earn-row"><span>📝 Daily Quiz 完了</span><span class="md-ticket-earn-reward">🎟️ +1</span></div>
-          <div class="md-ticket-earn-row"><span>🎙️ シャドーイング完了</span><span class="md-ticket-earn-reward">🎟️ +1</span></div>
-          <div class="md-ticket-earn-row"><span>🃏 単語カード 5枚正解</span><span class="md-ticket-earn-reward">🎟️ +1</span></div>
+          <div class="md-ticket-earn-row"><span>Daily Quiz 完了</span><span class="md-ticket-earn-reward"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1</span></div>
+          <div class="md-ticket-earn-row"><span><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg> シャドーイング完了</span><span class="md-ticket-earn-reward"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1</span></div>
+          <div class="md-ticket-earn-row"><span>単語カード 5枚正解</span><span class="md-ticket-earn-reward"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1</span></div>
           <div style="font-size:10px;color:var(--grey);margin-top:10px">最大${MD_TICKET_MAX}枚まで保持できます</div>
         </div>
         <button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
@@ -4605,7 +4654,7 @@ function mdNext(){
     const rank=mdRankFor(S.totalXP||0);
     document.getElementById('md-scene-wrap').innerHTML=`
       <div class="md-complete">
-        <div class="md-complete-icon">⚽</div>
+        <div class="md-complete-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></div>
         <div class="md-complete-title">セッション完了！</div>
         <div class="md-complete-xp">+${mdSessionXP} XP 獲得</div>
         <div class="md-complete-sub">現在のランク：${rank.rank}<br>通算 ${S.totalXP} XP</div>
