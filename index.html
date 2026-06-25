@@ -2396,7 +2396,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[]},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:""},data.progress);
   }
 }
 
@@ -2445,7 +2445,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[]};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:""};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -3136,6 +3136,8 @@ function renderHome(){
   const lockerQuizDone=S.lastLockerQuizDate===td;
   const quizAllDone=pitchQuizDone&&lockerQuizDone;
   const speakDone=S.lastSpeakDate===td;
+  const cardDone=S.lastCardDate===td;
+  const cardProgress=Math.min(S.cardsSinceTicket||0,10);
   const pitchEnd=pitchQuizDone
     ?`<div class="mission-done-check">✓</div>`
     :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
@@ -3145,6 +3147,9 @@ function renderHome(){
   const speakEnd=speakDone
     ?`<div class="mission-done-check">✓</div>`
     :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
+  const cardEnd=cardDone
+    ?`<div class="mission-done-check">✓</div>`
+    :`<span class="mission-time-hint">${cardProgress}/10</span><div class="mission-arrow">›</div>`;
   const missionsHtml=`<div class="missions-section">
     <div class="missions-header">TODAY'S MISSIONS</div>
     <div class="missions-grid">
@@ -3169,8 +3174,15 @@ function renderHome(){
         </div>
         <div class="mission-end">${lockerEnd}</div>
       </button>
+      <button class="mission-card phrase-card mission-card-3d${cardDone?' done-card':''}" onclick="${cardDone?'':'go(\'cards\')'}">
+        <div class="mission-big-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8B84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <div class="mission-body">
+          <div class="mission-name-row"><span class="mission-name">単語カード</span></div>
+        </div>
+        <div class="mission-end">${cardEnd}</div>
+      </button>
     </div>
-    ${quizAllDone&&speakDone?`<div class="share-today-wrap"><button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button></div>`:''}
+    ${quizAllDone&&speakDone&&cardDone?`<div class="share-today-wrap"><button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button></div>`:''}
   </div>`;
 
   const posShirtColors={fw:'#E53935',mf:'#43A047',df:'#1E88E5',gk:'#8E24AA'};
@@ -3652,7 +3664,7 @@ function selectCardAnswer(idx){
   if(mastered>=50)awardOnce("fifty","📖 50語マスター達成！");
   if(isCorrect){
     S.cardsSinceTicket=(S.cardsSinceTicket||0)+1;
-    if(S.cardsSinceTicket>=15){S.cardsSinceTicket=0;earnMatchTicket();}
+    if(S.cardsSinceTicket>=10){S.cardsSinceTicket=0;S.lastCardDate=today();earnMatchTicket();}
   }
   save();
   // 次へボタン表示
@@ -4975,7 +4987,7 @@ function openMatchday(){
           <div class="md-ticket-earn-row"><span>今日の実戦フレーズ</span><span class="md-ticket-earn-reward">+1</span></div>
           <div class="md-ticket-earn-row"><span>PITCHフレーズ</span><span class="md-ticket-earn-reward">+1</span></div>
           <div class="md-ticket-earn-row"><span>LOCKER ROOMフレーズ</span><span class="md-ticket-earn-reward">+1</span></div>
-          <div class="md-ticket-earn-row"><span>単語カード15枚正解</span><span class="md-ticket-earn-reward">+1</span></div>
+          <div class="md-ticket-earn-row"><span>単語カード10枚正解</span><span class="md-ticket-earn-reward">+1</span></div>
           <div style="font-size:10px;color:var(--grey);margin-top:10px">※ 日付が変わると自動で1枚付与されます</div>
         </div>
         <button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
