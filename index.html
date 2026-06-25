@@ -1313,7 +1313,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
           <div class="qd-card-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></div>
           <div class="qd-card-badge">PITCH</div>
           <div class="qd-card-title">Pitch<br>Quiz</div>
-          <div class="qd-card-sub">ピッチ上の指示・コール・戦術英語<br>10問チャレンジ</div>
+          <div class="qd-card-sub">ピッチ上の指示・コール・戦術英語<br>5問チャレンジ</div>
           <div class="qd-card-footer">
             <span class="qd-ticket-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1 TICKET</span>
             <span class="qd-card-go">プレイ ›</span>
@@ -1326,7 +1326,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
           <div class="qd-card-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
           <div class="qd-card-badge">LOCKER</div>
           <div class="qd-card-title">Locker<br>Quiz</div>
-          <div class="qd-card-sub">ロッカールーム・チームメイトとの<br>英語・10問チャレンジ</div>
+          <div class="qd-card-sub">ロッカールーム・チームメイトとの<br>英語・5問チャレンジ</div>
           <div class="qd-card-footer">
             <span class="qd-ticket-tag"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1 TICKET</span>
             <span class="qd-card-go" style="color:#FFC400">プレイ ›</span>
@@ -3214,13 +3214,13 @@ function renderHome(){
   const cardProgress=Math.min(S.cardsSinceTicket||0,10);
   const pitchEnd=pitchQuizDone
     ?`<div class="mission-done-check">✓</div>`
-    :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
+    :`<span class="mission-time-hint">1分</span><div class="mission-arrow">›</div>`;
   const lockerEnd=lockerQuizDone
     ?`<div class="mission-done-check">✓</div>`
-    :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
+    :`<span class="mission-time-hint">1分</span><div class="mission-arrow">›</div>`;
   const speakEnd=speakDone
     ?`<div class="mission-done-check">✓</div>`
-    :`<span class="mission-time-hint">3分</span><div class="mission-arrow">›</div>`;
+    :`<span class="mission-time-hint">1分</span><div class="mission-arrow">›</div>`;
   const cardEnd=cardDone
     ?`<div class="mission-done-check">✓</div>`
     :`<span class="mission-time-hint">${cardProgress}/10</span><div class="mission-arrow">›</div>`;
@@ -3614,7 +3614,8 @@ function startSession(cat,daily,ear){
   rate=unlockedLv()===1?0.7:1.0; /* 基礎レベルはゆっくり再生がデフォルト */
   const pool=poolFor(cat);
   const wc=it=>it.ex.replace(/[.!?]+$/,"").split(" ").length;
-  Q=pick(pool,10).map(item=>{
+  const nQ=(cat==='pitch'||cat==='locker')?5:10;
+  Q=pick(pool,nQ).map(item=>{
     let types=ear?["ear","listen"]:["listen","ja2en","builder","ear"];
     if(wc(item)<2)types=types.filter(t=>t!=="builder"); /* 1語は並べ替え不可 */
     if(unlockedLv()===1&&wc(item)>5)types=types.filter(t=>t!=="builder"); /* 基礎は5語以下のみ並べ替え */
