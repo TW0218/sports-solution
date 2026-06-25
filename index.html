@@ -3186,7 +3186,7 @@ function gradeCard(known){
 
 /* ================= SPEAKING ================= */
 let spDeck=[],si=0,recording=false;
-let _spMediaRec=null,_spChunks=[],_spStream=null;
+let _spMediaRec=null,_spChunks=[],_spStream=null,_spVADCancel=null;
 function startSpeak(cat){
   rate=unlockedLv()===1?0.7:1.0;
   spDeck=pick(poolFor(cat),5);si=0;
@@ -3257,7 +3257,7 @@ async function toggleRec(){
     showSpeakNext();
   };
   _spMediaRec.start(100);
-  _startVAD(stream,()=>_stopSpRec());
+  _spVADCancel=_startVAD(stream,()=>_stopSpRec());
   recording=true;
   document.getElementById("mic-btn").classList.add("rec");
   document.getElementById("sp-heard").textContent="🎙️ 聞き取り中… 話してみて";
@@ -3265,6 +3265,7 @@ async function toggleRec(){
 function _stopSpRec(){
   if(!recording)return;
   recording=false;
+  if(_spVADCancel){_spVADCancel();_spVADCancel=null;}
   document.getElementById("mic-btn").classList.remove("rec");
   if(_spMediaRec&&_spMediaRec.state!=='inactive')_spMediaRec.stop();
 }
@@ -4097,7 +4098,7 @@ function _startVAD(stream, stopFn){
       requestAnimationFrame(tick);
     };
     setTimeout(()=>requestAnimationFrame(tick),300);
-    return ()=>{done=true;};
+    return ()=>{done=true;try{src.disconnect();}catch(e){}};
   }catch(e){return ()=>{};}
 }
 /* ================= SPEAKING DRILL ================= */
@@ -4177,7 +4178,7 @@ function showDrillSpeak(){
     <div class="drill-tagline">チームに行く前に、AI相手に100回ミスしておく</div>`;
 }
 
-let _drillRecording=false;
+let _drillRecording=false,_drillVADCancel=null;
 function toggleDrillRec(){
   _resumeAudioCtx(); // iOSでAudioContextをジェスチャー内でunlock
   if(_drillRecording){_stopDrillRec();return;}
@@ -4186,6 +4187,7 @@ function toggleDrillRec(){
 function _stopDrillRec(){
   if(!_drillRecording)return;
   _drillRecording=false;
+  if(_drillVADCancel){_drillVADCancel();_drillVADCancel=null;}
   clearInterval(drillTimerInterval);
   const micBtn=document.getElementById('drill-mic-btn');
   if(micBtn){micBtn.textContent='🎙️';micBtn.classList.remove('rec');}
@@ -4252,7 +4254,7 @@ async function startDrillRec(){
     }
   };
   _drillMediaRec.start(100);
-  _startVAD(stream,()=>_stopDrillRec());
+  _drillVADCancel=_startVAD(stream,()=>_stopDrillRec());
   _drillRecording=true;
   drillStartMs=Date.now();
   if(micBtn){micBtn.classList.add('rec');micBtn.textContent='■';}
