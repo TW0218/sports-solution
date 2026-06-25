@@ -928,20 +928,20 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 /* ===== MATCH SCREEN PITCH DESIGN ===== */
 #scr-match{background:linear-gradient(180deg,#020e04 0%,#041208 40%,#061a0c 100%);padding:0}
 .match-pitch-wrap{flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:100%}
-.match-pitch-bg{position:absolute;inset:0;pointer-events:none;opacity:.13}
-.match-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:48px 24px 32px;flex:1;justify-content:center}
-.match-eyebrow{font-size:11px;font-weight:900;letter-spacing:.22em;color:rgba(255,255,255,.28);margin-bottom:8px;text-align:center}
-.match-heading{font-size:52px;font-weight:900;color:#fff;letter-spacing:-.03em;line-height:1;margin-bottom:4px;font-family:Barlow,sans-serif;text-align:center}
-.match-heading span{color:var(--green)}
-.match-date-str{font-size:13px;font-weight:800;color:rgba(255,255,255,.3);margin-bottom:32px;text-align:center;letter-spacing:.04em}
-.match-scene-card{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 20px;margin-bottom:28px;backdrop-filter:blur(4px)}
-.match-scene-setting{font-size:11px;font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:10px;text-transform:uppercase}
-.match-scene-line{font-size:18px;font-weight:800;color:rgba(255,255,255,.9);line-height:1.6;font-style:italic}
-.match-ticket-row{display:flex;align-items:center;gap:10px;margin-bottom:24px}
-.match-ticket-num{font-size:38px;font-weight:900;color:#FFC400;font-family:Barlow,sans-serif;line-height:1}
-.match-ticket-meta{display:flex;flex-direction:column;gap:1px}
-.match-ticket-label{font-size:12px;font-weight:900;color:rgba(255,196,0,.5);letter-spacing:.08em}
-.match-ticket-sub{font-size:11px;color:rgba(255,255,255,.25);font-weight:700}
+.match-pitch-bg{position:absolute;inset:0;pointer-events:none;opacity:.22}
+.match-content{position:relative;z-index:1;display:flex;flex-direction:column;padding:0;flex:1}
+.match-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px 24px;text-align:center}
+.match-eyebrow{font-size:10px;font-weight:900;letter-spacing:.22em;color:rgba(255,255,255,.28);margin-bottom:16px}
+.match-situation-hero{font-size:32px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:8px;font-family:Barlow,sans-serif;letter-spacing:-.01em}
+.match-date-str{font-size:12px;font-weight:800;color:rgba(255,255,255,.22);letter-spacing:.04em;margin-bottom:28px}
+.match-scene-card{width:100%;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:20px;backdrop-filter:blur(8px)}
+.match-scene-setting{font-size:10px;font-weight:900;letter-spacing:.12em;color:rgba(255,255,255,.35);margin-bottom:10px;text-transform:uppercase}
+.match-scene-line{font-size:17px;font-weight:800;color:rgba(255,255,255,.95);line-height:1.65;font-style:italic}
+.match-bottom{padding:16px 20px 32px;display:flex;flex-direction:column;gap:10px}
+.match-ticket-badge{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,196,0,.08);border:1px solid rgba(255,196,0,.2);border-radius:12px}
+.match-ticket-badge-num{font-size:22px;font-weight:900;color:#FFC400;font-family:Barlow,sans-serif;line-height:1}
+.match-ticket-badge-label{font-size:11px;font-weight:900;color:rgba(255,196,0,.55);letter-spacing:.08em}
+.match-ticket-badge-sub{font-size:10px;color:rgba(255,255,255,.2);font-weight:700;margin-top:1px}
 .match-cta-btn{width:100%;background:linear-gradient(135deg,#1D9E75 0%,#0d7a5a 100%);color:#fff;border:none;border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.05em;box-shadow:0 6px 32px rgba(29,158,117,.45),0 0 0 1px rgba(29,158,117,.3);transition:transform .1s}
 .match-cta-btn:active{transform:scale(.97)}
 .match-demo-btn{width:100%;background:#FFC400;color:#1a1000;border:none;border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.05em;box-shadow:0 6px 24px rgba(255,196,0,.3)}
@@ -3322,21 +3322,21 @@ function renderMatch(){
     <div class="match-pitch-wrap">
       <div class="match-pitch-bg">${pitchSvg}</div>
       <div class="match-content">
-        <div class="match-eyebrow">TODAY'S MATCH</div>
-        <div class="match-heading">MATCH<span>DAY</span></div>
-        <div class="match-date-str">${dateStr}</div>
-        <div class="match-scene-card">
-          <div class="match-scene-setting">${scene.setting}</div>
-          <div class="match-scene-line">"${scene.line}"</div>
-        </div>
-        <div class="match-ticket-row">
-          <div class="match-ticket-num">${ticketsEarned}</div>
-          <div class="match-ticket-meta">
-            <div class="match-ticket-label">TICKETS</div>
-            <div class="match-ticket-sub">最大${MD_TICKET_MAX}枚まで保持</div>
+        <div class="match-top">
+          <div class="match-eyebrow">TODAY'S MATCH · ${dateStr}</div>
+          <div class="match-situation-hero">${scene.setting}</div>
+          <div class="match-scene-card">
+            <div class="match-scene-setting">相手の発言</div>
+            <div class="match-scene-line">"${scene.line}"</div>
           </div>
         </div>
-        ${ctaHtml}
+        <div class="match-bottom">
+          ${hasTickets?`<div class="match-ticket-badge">
+            <div class="match-ticket-badge-num">${ticketsEarned}</div>
+            <div><div class="match-ticket-badge-label">MATCH TICKETS</div><div class="match-ticket-badge-sub">最大${MD_TICKET_MAX}枚まで保持</div></div>
+          </div>`:''}
+          ${ctaHtml}
+        </div>
       </div>
     </div>`;
   if(!hasTickets)_startMdCountdown();
