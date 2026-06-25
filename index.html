@@ -4537,6 +4537,7 @@ async function startRPRec(){
     const elapsed=Date.now()-rpStartMs;
     const actualMime=_rpMediaRec.mimeType||mimeType||'audio/webm';
     const blob=new Blob(_rpChunks,{type:actualMime});
+    toast('⏹ 停止 chunks='+_rpChunks.length+' size='+blob.size+'B');
     const btn=document.getElementById('rp-mic-btn');
     const hint=document.getElementById('rp-hint');
     if(btn){btn.textContent='⏳';btn.classList.remove('rec');btn.disabled=true;}
@@ -4550,6 +4551,7 @@ async function startRPRec(){
   };
   _rpMediaRec.start(100);
   rpRecording=true;rpStartMs=Date.now();_rpProcessing=false;_rpStarting=false;
+  toast('🎤 録音開始');
   const btn=document.getElementById('rp-mic-btn');
   if(btn){btn.textContent='■';btn.classList.add('rec');btn.disabled=false;}
   if(hint0)hint0.textContent='タップして止める';
