@@ -654,6 +654,25 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .matchday-xp-label{font-size:10px;color:var(--grey);font-weight:700}
 .matchday-home-go{font-size:13px;font-weight:900;color:var(--green)}
 .matchday-done-badge{background:rgba(29,158,117,.2);border:1px solid rgba(29,158,117,.4);color:var(--green);font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px}
+/* AI ROLEPLAY card */
+.ai-roleplay-card{position:relative;overflow:hidden;border-radius:18px;padding:18px 18px 16px;cursor:pointer;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}
+.ai-roleplay-card.locked{background:linear-gradient(135deg,#0e1219 0%,#141b22 100%);border:1px solid rgba(255,255,255,.1)}
+.ai-roleplay-card.locked::before{content:'AI ROLEPLAY';position:absolute;right:-8px;top:-8px;font-size:56px;font-weight:900;color:rgba(255,255,255,.03);letter-spacing:-.02em;line-height:1;pointer-events:none}
+.ai-roleplay-card.unlocked{background:linear-gradient(135deg,#2e0a0a 0%,#1f0808 50%,#2a0d0d 100%);border:1px solid rgba(220,50,50,.35)}
+.ai-roleplay-card.unlocked::before{content:'AI ROLEPLAY';position:absolute;right:-8px;top:-8px;font-size:56px;font-weight:900;color:rgba(220,50,50,.06);letter-spacing:-.02em;line-height:1;pointer-events:none}
+.ai-rp-eyebrow{display:flex;align-items:center;gap:8px}
+.ai-rp-badge-locked{background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:10px;font-weight:900;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
+.ai-rp-badge-unlocked{background:#DC3232;color:#fff;font-size:10px;font-weight:900;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
+.ai-rp-lock{font-size:16px;color:rgba(255,255,255,.3)}
+.ai-rp-title-locked{font-size:20px;font-weight:900;color:rgba(255,255,255,.3);letter-spacing:-.01em;line-height:1.2}
+.ai-rp-title-unlocked{font-size:20px;font-weight:900;color:#fff;letter-spacing:-.01em;line-height:1.2}
+.ai-rp-sub{font-size:12px;color:rgba(255,255,255,.35);font-weight:600}
+.ai-rp-progress-wrap{margin-top:2px}
+.ai-rp-progress-label{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:rgba(255,255,255,.35);margin-bottom:5px}
+.ai-rp-progress-track{height:5px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+.ai-rp-progress-fill{height:100%;background:linear-gradient(90deg,rgba(255,255,255,.2),rgba(255,255,255,.4));border-radius:999px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.ai-rp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.ai-rp-go{font-size:14px;font-weight:900;color:#DC3232}
 .matchday-ticket-display{display:flex;align-items:center;gap:3px}
 .md-ticket-pip{font-size:14px;transition:opacity .2s}
 .md-ticket-pip.empty{opacity:.2;filter:grayscale(1)}
@@ -1043,6 +1062,21 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   <button id="nav-strength" onclick="go('career','tab');renderCareer()"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg></span>キャリア</button>
   <button id="nav-others" onclick="renderOthers();go('others','tab')"><span class="nic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></span>その他</button>
 </nav>
+<!-- ============ AI ROLEPLAY ============ -->
+<section class="screen" id="scr-roleplay">
+  <div class="quiz-top"><button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
+    <div style="font-weight:900;font-size:17px">AI ROLEPLAY</div></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center">
+    <div style="font-size:48px;margin-bottom:20px">🎙️</div>
+    <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:8px">Coming Soon</div>
+    <div style="font-size:14px;color:var(--grey);line-height:1.7;margin-bottom:32px">シーン別AIロールプレイを準備中。<br>声で、反射で、現場英語を磨け。</div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:18px;padding:20px;width:100%;text-align:left">
+      <div style="font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:12px">実装予定のシーン</div>
+      ${['監督との会話','ロッカールーム','メディカルスタッフ','空港・ホテル','エージェント会話','メディア対応'].map(s=>`<div style="font-size:13px;font-weight:800;color:var(--ink);padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px"><span style="color:var(--green)">›</span>${s}</div>`).join('')}
+    </div>
+  </div>
+</section>
+
 <!-- ============ SPEAKING DRILL ============ -->
 <section class="screen" id="scr-drill">
   <div id="drill-top"></div>
@@ -2141,7 +2175,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[]},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[],matchdayTotal:0},data.progress);
   }
 }
 
@@ -2185,7 +2219,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[]};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[],matchdayTotal:0};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2383,7 +2417,7 @@ function go(id, dir){
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.getElementById("scr-"+id).classList.add("active");
     document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home",fav:"nav-others",drill:"nav-others"}[id];
+    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home",fav:"nav-others",drill:"nav-others",roleplay:"nav-home"}[id];
     if(nv)document.getElementById(nv).classList.add("sel");
     document.getElementById("feedback").classList.remove("show");
     window.scrollTo(0,0);
@@ -2604,8 +2638,39 @@ function renderHome(){
     </div>
   </div>`;
 
+  const MD_UNLOCK=14;
+  const mdTotal=S.matchdayTotal||0;
+  const rpUnlocked=mdTotal>=MD_UNLOCK;
+  const rpPct=Math.min(100,Math.round(mdTotal/MD_UNLOCK*100));
+  const aiRoleplayCardHtml=rpUnlocked
+    ?`<div class="ai-roleplay-card unlocked tap-fx" onclick="openRoleplay()">
+        <div class="ai-rp-eyebrow">
+          <span class="ai-rp-badge-unlocked">AI ROLEPLAY</span>
+          <span style="font-size:11px;font-weight:800;color:rgba(255,80,80,.8)">UNLOCKED</span>
+        </div>
+        <div class="ai-rp-title-unlocked">本番ピッチに<br>立て。</div>
+        <div class="ai-rp-sub">シーン別AIと実戦対話。声で返せ。</div>
+        <div class="ai-rp-footer">
+          <span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.3)">6カテゴリ・18シーン</span>
+          <span class="ai-rp-go">入る ›</span>
+        </div>
+      </div>`
+    :`<div class="ai-roleplay-card locked" onclick="toast('あと${MD_UNLOCK-mdTotal}シーンでAI ROLEPLAYが解放される')">
+        <div class="ai-rp-eyebrow">
+          <span class="ai-rp-badge-locked">AI ROLEPLAY</span>
+          <span class="ai-rp-lock">🔒</span>
+        </div>
+        <div class="ai-rp-title-locked">本番ピッチに<br>立て。</div>
+        <div class="ai-rp-sub">MATCHDAYを14シーンクリアで解放</div>
+        <div class="ai-rp-progress-wrap">
+          <div class="ai-rp-progress-label"><span>${mdTotal} / ${MD_UNLOCK} シーン</span><span>あと${MD_UNLOCK-mdTotal}日</span></div>
+          <div class="ai-rp-progress-track"><div class="ai-rp-progress-fill" style="width:${rpPct}%"></div></div>
+        </div>
+      </div>`;
+
   document.getElementById("home-session-area").innerHTML=
     matchdayCardHtml
+    +aiRoleplayCardHtml
     +missionsHtml;
 
   const done=S.doneToday===today();
@@ -3573,6 +3638,7 @@ function mdXpFor(score){if(score>=80)return 100;if(score>=40)return 40;return 10
 let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null;
 
 const MD_TICKET_MAX=3;
+function openRoleplay(){go('roleplay');}
 function earnMatchTicket(){
   if((S.matchTickets||0)>=MD_TICKET_MAX)return;
   S.matchTickets=(S.matchTickets||0)+1;save();
@@ -3998,7 +4064,9 @@ function mdSelect(idx){
 }
 
 function mdNext(){
-  S.matchdayCount++;save();
+  S.matchdayCount++;
+  S.matchdayTotal=(S.matchdayTotal||0)+1;
+  save();
   mdQueueIdx++;
   if(mdQueueIdx>=1){
     const rank=mdRankFor(S.totalXP||0);
