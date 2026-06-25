@@ -1089,11 +1089,6 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       <h3>単語カード</h3>
       <p>スワイプで覚える復習デッキ</p>
     </div>
-    <div class="other-card" onclick="openCatPicker('speak')">
-      <span class="oc-ic">&#x1F399;&#xFE0F;</span>
-      <h3>シャドーイング</h3>
-      <p>声に出してリズムを掴む</p>
-    </div>
     <div class="other-card" onclick="openCatPicker('ear')">
       <span class="oc-ic">&#x1F3A7;</span>
       <h3>イヤーテスト</h3>
@@ -2146,7 +2141,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[],lastDrillDate:""},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[]},data.progress);
   }
 }
 
@@ -2190,7 +2185,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[],lastDrillDate:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[]};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2569,12 +2564,12 @@ function renderHome(){
         </div>
         <div class="mission-end">${quizEnd}</div>
       </button>
-      <button class="mission-card speak-card${speakDone?' done-card':''}" onclick="${speakDone?'':'openCatPicker(\'speak\')'}">
+      <button class="mission-card speak-card${speakDone?' done-card':''}" onclick="${speakDone?'':'startDrill(\'mix\')'}">
         <div class="mission-big-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg></div>
         <div class="mission-body">
-          <div class="mission-label">SHADOWING</div>
-          <div class="mission-name-row"><span class="mission-name">シャドーイング</span></div>
-          <div style="font-size:11px;color:${speakDone?'#bbb':'rgba(255,255,255,.45)'};font-weight:700;margin-top:2px">聞いて真似る・3分</div>
+          <div class="mission-label">SPEAKING DRILL</div>
+          <div class="mission-name-row"><span class="mission-name">スピーキング練習</span></div>
+          <div style="font-size:11px;color:${speakDone?'#bbb':'rgba(255,255,255,.45)'};font-weight:700;margin-top:2px">聞く→真似る→判定・1分</div>
         </div>
         <div class="mission-end">${speakEnd}</div>
       </button>
@@ -3590,7 +3585,7 @@ let drillRecog=null,drillTimerInterval=null,drillStartMs=0,drillGotResult=false;
 
 function startDrill(cat){
   drillCat=cat||'mix';
-  drillDeck=pick(poolFor(drillCat),10);
+  drillDeck=pick(poolFor(drillCat),5);
   drillIdx=0;drillMissCount=0;
   go('drill');
   renderDrillPhrase();
@@ -3764,7 +3759,7 @@ function quitDrill(){
   go('home');renderHome();
 }
 function finishDrill(){
-  S.lastDrillDate=today();save();
+  S.lastSpeakDate=today();earnMatchTicket();save();
   document.getElementById('drill-body').innerHTML=`
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">
       <div style="font-size:52px;margin-bottom:16px">💪</div>
