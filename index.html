@@ -4403,7 +4403,8 @@ const ROLEPLAY_SCENES=[
 
 /* ================= ROLEPLAY LOGIC ================= */
 let rpCat=null,rpScenes=[],rpIdx=0,rpTotalScore=0;
-let rpRecog=null,rpTimerInterval=null,rpStartMs=0,rpGotResult=false,rpRecording=false;
+let rpTimerInterval=null,rpStartMs=0,rpRecording=false;
+let _rpStream=null,_rpMediaRec=null,_rpChunks=[],_rpProcessing=false;
 
 function openRoleplay(){
   renderRoleplayMenu();
@@ -4473,7 +4474,7 @@ function renderRPScene(){
     <div class="rp-mic-section">
       <div class="rp-timer" id="rp-timer">00.0</div>
       <button class="rp-mic-big" id="rp-mic-btn" onclick="toggleRPRec()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg></button>
-      <div class="rp-hint">タップして返答 → もう一度タップで停止</div>
+      <div class="rp-hint" id="rp-hint">タップして返答 → もう一度タップで停止</div>
     </div>`;
   rpPlayLine();
 }
@@ -4486,54 +4487,68 @@ function rpPlayLine(){
 }
 
 function toggleRPRec(){
+  _resumeAudioCtx();
+  if(_rpProcessing)return;
   if(rpRecording){stopRPRec();return;}
   startRPRec();
 }
 
-function startRPRec(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){toast('音声認識非対応');return;}
-  rpRecog=new SR();
-  rpRecog.lang='en-US';rpRecog.interimResults=false;rpRecog.maxAlternatives=1;
-  rpGotResult=false;rpRecording=true;
-  rpStartMs=Date.now();
+function _rpMicSvg(){return '<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>';}
+function _rpMimeType(){
+  if(typeof MediaRecorder==='undefined')return '';
+  if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))return 'audio/webm;codecs=opus';
+  if(MediaRecorder.isTypeSupported('audio/webm'))return 'audio/webm';
+  if(MediaRecorder.isTypeSupported('audio/mp4'))return 'audio/mp4';
+  return '';
+}
+async function _ensureRPStream(){
+  if(_rpStream&&_rpStream.active)return _rpStream;
+  _rpStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+  return _rpStream;
+}
+async function startRPRec(){
+  if(_rpProcessing)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast('このブラウザは録音非対応です');return;}
+  let stream;
+  try{stream=await _ensureRPStream();}
+  catch(e){toast('マイクの許可が必要です（設定→プライバシー→マイク）');return;}
+  _rpChunks=[];
+  const mimeType=_rpMimeType();
+  try{_rpMediaRec=new MediaRecorder(stream,mimeType?{mimeType}:{});}
+  catch(e){_rpMediaRec=new MediaRecorder(stream);}
+  _rpMediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_rpChunks.push(e.data);};
+  _rpMediaRec.onstop=async()=>{
+    const elapsed=Date.now()-rpStartMs;
+    const actualMime=_rpMediaRec.mimeType||mimeType||'audio/webm';
+    const blob=new Blob(_rpChunks,{type:actualMime});
+    const btn=document.getElementById('rp-mic-btn');
+    const hint=document.getElementById('rp-hint');
+    if(btn){btn.textContent='⏳';btn.classList.remove('rec');btn.disabled=true;}
+    if(hint)hint.textContent='認識中...';
+    let heard='';
+    try{heard=await _transcribeAudio(blob,actualMime);}catch(e){toast('認識エラー: '+e.message.slice(0,40));}
+    _rpProcessing=false;
+    if(btn){btn.innerHTML=_rpMicSvg();btn.disabled=false;}
+    if(hint)hint.textContent='タップして返答 → もう一度タップで停止';
+    showRPResult(heard,elapsed);
+  };
+  _rpMediaRec.start(100);
+  rpRecording=true;rpStartMs=Date.now();_rpProcessing=false;
   const btn=document.getElementById('rp-mic-btn');
   if(btn){btn.textContent='■';btn.classList.add('rec');}
-  const timer=document.getElementById('rp-timer');
+  clearInterval(rpTimerInterval);
   rpTimerInterval=setInterval(()=>{
-    if(!timer)return;
-    const el=(Date.now()-rpStartMs)/1000;
-    timer.textContent=el.toFixed(1).padStart(4,'0');
-  },100);
-  rpRecog.onresult=e=>{
-    rpGotResult=true;
-    const heard=e.results[0][0].transcript;
-    const ms=Date.now()-rpStartMs;
-    clearInterval(rpTimerInterval);rpRecording=false;
-    showRPResult(heard,ms);
-  };
-  rpRecog.onend=()=>{
-    clearInterval(rpTimerInterval);rpRecording=false;
-    const btn2=document.getElementById('rp-mic-btn');
-    if(btn2){btn2.innerHTML='<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>';btn2.classList.remove('rec');}
-    if(!rpGotResult)showRPResult('',Date.now()-rpStartMs);
-  };
-  rpRecog.onerror=()=>{clearInterval(rpTimerInterval);rpRecording=false;};
-  rpTimerInterval=setInterval(()=>{
-    const el=(Date.now()-rpStartMs)/1000;
     const t=document.getElementById('rp-timer');
-    if(t)t.textContent=el.toFixed(1).padStart(4,'0');
-    if(el>=8){stopRPRec();}
+    if(t)t.textContent=((Date.now()-rpStartMs)/1000).toFixed(1).padStart(4,'0');
+    if((Date.now()-rpStartMs)>=8000&&rpRecording)stopRPRec();
   },100);
-  rpRecog.start();
 }
 
 function stopRPRec(){
-  if(rpRecog)try{rpRecog.stop();}catch(e){}
-  rpRecording=false;
+  if(!rpRecording)return;
+  rpRecording=false;_rpProcessing=true;
   clearInterval(rpTimerInterval);
-  const btn=document.getElementById('rp-mic-btn');
-  if(btn){btn.innerHTML='<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>';btn.classList.remove('rec');}
+  if(_rpMediaRec&&_rpMediaRec.state!=='inactive')_rpMediaRec.stop();
 }
 
 function showRPResult(heard,timeMs){
