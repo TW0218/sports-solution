@@ -956,9 +956,9 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .match-cta-btn:active{transform:scale(.96);box-shadow:0 0 0 2px rgba(255,255,255,.2),0 4px 20px rgba(255,255,255,.2)}
 .match-demo-btn{width:100%;background:#FFC400;color:#0e0a00;border:none;border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.05em;box-shadow:0 6px 28px rgba(255,196,0,.35)}
 .match-disabled-btn{width:100%;background:rgba(255,255,255,.04);color:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:default;letter-spacing:.05em}
-.match-countdown{font-size:12px;font-weight:900;color:rgba(226,73,59,.7);text-align:center;margin-bottom:10px;letter-spacing:.04em}
-.match-earn-hint{font-size:12px;font-weight:800;color:rgba(220,240,210,.22);text-align:center;margin-bottom:8px}
-.match-demo-label{font-size:12px;font-weight:800;color:rgba(255,196,0,.6);text-align:center;margin-bottom:10px}
+.match-ticket-inline{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:rgba(255,196,0,.2);border:1px solid rgba(255,196,0,.5);border-radius:50%;font-size:11px;font-weight:900;color:#FFC400;font-family:Barlow,sans-serif;margin-left:8px;vertical-align:middle}
+.match-meta-countdown{font-size:12px;font-weight:900;color:rgba(226,73,59,.7);text-align:center;margin-top:12px;letter-spacing:.04em}
+.match-meta-hint{font-size:12px;font-weight:800;color:rgba(220,240,210,.28);text-align:center;margin-top:6px}
 /* ホーム画面のROLEPLAYカード（ヒーロー直下） */
 @keyframes rp-glow-pulse{0%,100%{box-shadow:0 0 16px rgba(255,196,0,.25),0 2px 16px rgba(0,0,0,.6)}50%{box-shadow:0 0 36px rgba(255,196,0,.5),0 0 60px rgba(255,196,0,.15),0 2px 16px rgba(0,0,0,.6)}}
 @keyframes rp-shine{0%{transform:translateX(-120%) skewX(-20deg)}100%{transform:translateX(220%) skewX(-20deg)}}
@@ -3332,14 +3332,19 @@ function renderMatch(){
     <rect x="-6" y="105" width="8" height="50" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/>
     <rect x="398" y="105" width="8" height="50" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/>
   </svg>`;
-  const ctaHtml=hasTickets
-    ?`<button class="match-cta-btn" onclick="openMatchday()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9" fill="#060c06" fill-opacity=".1" stroke="#060c06" stroke-width="1.5"/><path d="M8 6.5 L13 10 L8 13.5" stroke="#060c06" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>試合に出る</button>`
+  const arrowSvg=`<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9" fill="#060c06" fill-opacity=".1" stroke="#060c06" stroke-width="1.5"/><path d="M8 6.5 L13 10 L8 13.5" stroke="#060c06" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const ticketBadgeInline=hasTickets?`<span class="match-ticket-inline">${ticketsEarned}</span>`:'';
+  const btnHtml=hasTickets
+    ?`<button class="match-cta-btn" onclick="openMatchday()">${arrowSvg}試合に出る${ticketBadgeInline}</button>`
     :!S.matchdayDemoDone
-    ?`<div class="match-demo-label">1問だけ無料で体験できる</div>
-      <button class="match-demo-btn" onclick="openMatchdayDemo()">▶ DEMO を試す</button>`
-    :`<div class="match-countdown">あと <span id="md-card-countdown">--:--:--</span> でリセット</div>
-      <div class="match-earn-hint">ミッションをクリアしてチケットを獲得</div>
-      <button class="match-disabled-btn" disabled>▶ 試合に出る</button>`;
+    ?`<button class="match-demo-btn" onclick="openMatchdayDemo()">${arrowSvg}DEMO を試す</button>`
+    :`<button class="match-disabled-btn" disabled>${arrowSvg}試合に出る</button>`;
+  const metaHtml=!hasTickets
+    ?(!S.matchdayDemoDone
+      ?`<div class="match-meta-hint">1問だけ無料で体験できる</div>`
+      :`<div class="match-meta-countdown">あと <span id="md-card-countdown">--:--:--</span> でリセット</div>
+        <div class="match-meta-hint">ミッションをクリアしてチケットを獲得</div>`)
+    :'';
   document.getElementById('match-area').innerHTML=`
     <div class="match-pitch-wrap">
       <div class="match-pitch-bg">${pitchSvg}</div>
@@ -3353,11 +3358,8 @@ function renderMatch(){
           <div class="match-cliffhanger">— <span>どう返す？</span> —</div>
         </div>
         <div class="match-bottom">
-          ${hasTickets?`<div class="match-ticket-badge">
-            <div class="match-ticket-badge-num">${ticketsEarned}</div>
-            <div><div class="match-ticket-badge-label">MATCH TICKETS</div><div class="match-ticket-badge-sub">最大${MD_TICKET_MAX}枚まで保持</div></div>
-          </div>`:''}
-          ${ctaHtml}
+          ${btnHtml}
+          ${metaHtml}
         </div>
       </div>
     </div>`;
