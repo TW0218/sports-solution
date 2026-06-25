@@ -4321,17 +4321,14 @@ function showDrillResult(heard,timeMs){
 }
 
 function retryDrill(){
-  if(drillRecog){try{drillRecog.stop();}catch(e){}}
   renderDrillPhrase();
 }
 function nextDrill(){
-  if(drillRecog){try{drillRecog.stop();}catch(e){}}
   drillIdx++;
   if(drillIdx>=drillDeck.length){finishDrill();return;}
   renderDrillPhrase();
 }
 function quitDrill(){
-  if(drillRecog){try{drillRecog.stop();}catch(e){}}
   clearInterval(drillTimerInterval);
   _releaseDrillStream();
   go('home');renderHome();
