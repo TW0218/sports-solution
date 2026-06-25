@@ -3159,9 +3159,10 @@ function renderHome(){
   const hasTickets=ticketsEarned>0;
   // チケット獲得状況（どのミッションが未達か一目で分かる）
   const earnSources=[
-    {label:'クイズ',   done:pitchQuizDone&&lockerQuizDone},
-    {label:'実戦フレーズ', done:speakDone},
-    {label:'単語5枚',  done:(S.cardsSinceTicket||0)>=5},
+    {label:'実戦フレーズ',       done:speakDone},
+    {label:'PITCHフレーズ',      done:pitchQuizDone},
+    {label:'LOCKER ROOMフレーズ',done:lockerQuizDone},
+    {label:'単語カード15枚',     done:(S.cardsSinceTicket||0)>=15},
   ];
   const earnHints=earnSources.map(e=>`<span class="md-earn-chip ${e.done?'done':''}">${e.done?'✓ ':'+1 '}${e.label}</span>`).join('');
   const matchdayCardHtml=`<div class="matchday-home-card tap-fx" onclick="openMatchday()">
@@ -3585,7 +3586,7 @@ function gradeCard(known){
   S.box[c.en]=known?Math.min(3,(S.box[c.en]||0)+1):0;
   const mastered=Object.values(S.box).filter(v=>v>=2).length;
   if(mastered>=50)awardOnce("fifty","📖 50語マスター達成！");
-  if(known){S.cardsSinceTicket=(S.cardsSinceTicket||0)+1;if(S.cardsSinceTicket>=5){S.cardsSinceTicket=0;earnMatchTicket();}}
+  if(known){S.cardsSinceTicket=(S.cardsSinceTicket||0)+1;if(S.cardsSinceTicket>=15){S.cardsSinceTicket=0;earnMatchTicket();}}
   save();
   sfx(known?"good":"bad");
   ci++;
@@ -4896,10 +4897,11 @@ function openMatchday(){
         <div class="md-complete-title">チケットがありません</div>
         <div class="md-complete-sub" style="text-align:left;max-width:280px">
           <div style="margin-bottom:12px;color:rgba(238,244,241,.6)">以下をクリアして獲得：</div>
-          <div class="md-ticket-earn-row"><span>Daily Quiz 完了</span><span class="md-ticket-earn-reward"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1</span></div>
-          <div class="md-ticket-earn-row"><span><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg> シャドーイング完了</span><span class="md-ticket-earn-reward"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1</span></div>
-          <div class="md-ticket-earn-row"><span>単語カード 5枚正解</span><span class="md-ticket-earn-reward"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg> +1</span></div>
-          <div style="font-size:10px;color:var(--grey);margin-top:10px">最大${MD_TICKET_MAX}枚まで保持できます</div>
+          <div class="md-ticket-earn-row"><span>今日の実戦フレーズ</span><span class="md-ticket-earn-reward">+1</span></div>
+          <div class="md-ticket-earn-row"><span>PITCHフレーズ</span><span class="md-ticket-earn-reward">+1</span></div>
+          <div class="md-ticket-earn-row"><span>LOCKER ROOMフレーズ</span><span class="md-ticket-earn-reward">+1</span></div>
+          <div class="md-ticket-earn-row"><span>単語カード15枚正解</span><span class="md-ticket-earn-reward">+1</span></div>
+          <div style="font-size:10px;color:var(--grey);margin-top:10px">※ 日付が変わると自動で1枚付与されます</div>
         </div>
         <button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
       </div>`;
