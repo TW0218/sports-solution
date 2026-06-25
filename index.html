@@ -655,6 +655,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 /* ===== FEATURE CAROUSEL ===== */
 .feature-carousel-wrap{margin-bottom:4px}
+.home-feature-stack{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .feature-carousel{display:flex;align-items:stretch;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none;-ms-overflow-style:none;padding-right:28px}
 .feature-carousel::-webkit-scrollbar{display:none}
 .feature-carousel-slide{scroll-snap-align:start;flex-shrink:0;width:calc(100% - 28px);display:flex;flex-direction:column}
@@ -2778,27 +2779,10 @@ function renderHome(){
       </div>`;
 
   document.getElementById("home-session-area").innerHTML=`
-    <div class="feature-carousel-wrap">
-      <div class="feature-carousel" id="feature-carousel">
-        <div class="feature-carousel-slide">${matchdayCardHtml}</div>
-        <div class="feature-carousel-slide">${aiRoleplayCardHtml}</div>
-      </div>
-      <div class="feature-carousel-dots">
-        <div class="feature-dot active" id="fdot-0"></div>
-        <div class="feature-dot" id="fdot-1"></div>
-      </div>
+    <div class="home-feature-stack">
+      ${matchdayCardHtml}
+      ${aiRoleplayCardHtml}
     </div>`+missionsHtml;
-
-  const fc=document.getElementById('feature-carousel');
-  if(fc){
-    fc.addEventListener('scroll',()=>{
-      const idx=Math.round(fc.scrollLeft/fc.offsetWidth);
-      [0,1].forEach(i=>{
-        const d=document.getElementById('fdot-'+i);
-        if(d)d.classList.toggle('active',i===idx);
-      });
-    },{passive:true});
-  }
 
   const done=S.doneToday===today();
   if(!done){
