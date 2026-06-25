@@ -4086,10 +4086,8 @@ function _startVAD(stream, stopFn){
     src.connect(an);
     const buf=new Uint8Array(an.frequencyBinCount);
     let silenceMs=0,voiceDetected=false,prevTick=Date.now(),done=false;
-    _dbg(`VAD開始: ctx.state=${ctx.state}`);
     const tick=()=>{
       if(done)return;
-      if(ctx.state==='suspended'){requestAnimationFrame(tick);return;}
       an.getByteFrequencyData(buf);
       const avg=buf.reduce((s,v)=>s+v,0)/buf.length;
       const now=Date.now();
@@ -4102,7 +4100,10 @@ function _startVAD(stream, stopFn){
       }
       requestAnimationFrame(tick);
     };
-    setTimeout(()=>requestAnimationFrame(tick),300);
+    // resume()はPromise — resolveしてからVAD開始（PWA対応）
+    const startTick=()=>{_dbg(`VAD開始: ctx.state=${ctx.state}`);setTimeout(()=>requestAnimationFrame(tick),300);};
+    if(ctx.state==='running'){startTick();}
+    else{ctx.resume().then(startTick).catch(()=>startTick());}
     return ()=>{done=true;try{src.disconnect();}catch(e){}};
   }catch(e){return ()=>{};}
 }
