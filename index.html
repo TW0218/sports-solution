@@ -1005,7 +1005,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 <!-- ============ MATCHDAY MODE ============ -->
 <section class="screen" id="scr-matchday">
   <div class="md-top">
-    <button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
+    <button class="btn-x" onclick="go('match','pop');renderMatch()">✕</button>
     <div class="md-top-label">MATCHDAY MODE</div>
     <div class="md-progress-dots" id="md-dots"></div>
   </div>
@@ -1014,7 +1014,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 <!-- ============ COACH'S CALL (ピッチ翻訳) ============ -->
 <section class="screen" id="scr-coach">
-  <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
+  <div class="quiz-top"><button class="btn-x" onclick="go('grow')">✕</button>
     <div style="font-weight:900;font-size:17px"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l16-7v14L3 13V11z"/><path d="M11.6 16.8a3 3 0 11-5.8-1.6"/></svg> ピッチ翻訳 <span style="color:var(--grey);font-size:12px">COACH'S CALL</span></div></div>
   <div class="coach-inputwrap">
     <input class="coach-input" id="coach-input" type="text" inputmode="text" enterkeyhint="search"
@@ -1028,7 +1028,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 <!-- ============ CASE STUDIES ============ -->
 <section class="screen" id="scr-cases">
-  <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
+  <div class="quiz-top"><button class="btn-x" onclick="go('grow')">✕</button>
     <div style="font-weight:900;font-size:17px"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16"/><path d="M17 4v16"/><path d="M2 9h5"/><path d="M2 14h5"/><path d="M17 9h5"/><path d="M17 14h5"/></svg> ケーススタディ</div></div>
   <div class="cat-row" id="cases-cats"></div>
   <div id="cases-list"></div>
@@ -1154,7 +1154,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 <!-- ============ CAREER ============ -->
 <section class="screen" id="scr-career">
-  <div class="brand"><div class="logo">MY <span>CAREER</span></div>
+  <div class="brand"><button class="btn-x" onclick="go('grow','pop')" style="margin-right:auto">✕</button><div class="logo">MY <span>CAREER</span></div>
     <div class="streak-pill"><span class="fire"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="currentColor" stroke="none"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-2.5-1.5-5-2-6.5C15 8 16 10 16 13a4 4 0 01-8 0c0-2.5 1.5-5.5 4-7z"/></svg></span><span id="streak-num2">0</span></div></div>
   <div id="career-tier-area"></div>
   <!-- career-head removed; stats now in career-tier-area -->
@@ -1241,13 +1241,19 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 </section>
 
 <nav>
-  <button id="nav-home" class="sel" onclick="go('home','tab');renderHome()"><span class="nic"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>ホーム</button>
-  <button id="nav-strength" onclick="go('career','tab');renderCareer()"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg></span>キャリア</button>
-  <button id="nav-others" onclick="renderOthers();go('others','tab')"><span class="nic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></span>その他</button>
+  <button id="nav-train" class="sel" onclick="go('home','tab');renderHome()"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>TRAIN</button>
+  <button id="nav-match" onclick="go('match','tab');renderMatch()"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="1"/><path d="M2 10h20M8 18v3M16 18v3"/></svg></span>MATCH</button>
+  <button id="nav-grow" onclick="go('grow','tab');renderGrow()"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg></span>GROW</button>
 </nav>
+
+<!-- ============ MATCH SCREEN ============ -->
+<section class="screen" id="scr-match">
+  <div class="brand" style="justify-content:center"><div class="logo">TOP <span>BINS</span></div></div>
+  <div id="match-area"></div>
+</section>
 <!-- ============ ROLEPLAY ============ -->
 <section class="screen" id="scr-roleplay">
-  <div class="quiz-top"><button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
+  <div class="quiz-top"><button class="btn-x" onclick="go('match','pop');renderMatch()">✕</button>
     <div style="font-weight:900;font-size:17px">ROLEPLAY</div></div>
   <div style="flex:1;overflow-y:auto;padding-bottom:32px" id="rp-menu-body"></div>
 </section>
@@ -1266,84 +1272,22 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 <!-- ============ FAVOURITES ============ -->
 <section class="screen" id="scr-fav">
-  <div class="quiz-top"><button class="btn-x" onclick="go('others','pop')">&#x2715;</button>
+  <div class="quiz-top"><button class="btn-x" onclick="go('grow','pop')">&#x2715;</button>
     <div style="font-weight:900;font-size:17px">⭐ お気に入り</div>
     <div id="fav-count" style="font-size:12px;font-weight:800;color:var(--grey)"></div>
   </div>
   <div id="fav-list" style="padding-bottom:20px"></div>
 </section>
 
-<!-- ============ OTHERS MENU ============ -->
-<section class="screen" id="scr-others">
-  <div class="quiz-top"><button class="btn-x" onclick="go('home')">&#x2715;</button>
-    <div style="font-weight:900;font-size:17px">その他のメニュー</div></div>
-  <div class="others-grid">
-    <div class="other-card hero tap-fx" onclick="openCoach()">
-      <span class="oc-ic">&#x1F4E2;</span>
-      <div>
-        <div class="hero-sub">PITCH VOCAB</div>
-        <h3>英語でどう言う？</h3>
-        <p>日本語→現場英語を即返答</p>
-      </div>
-    </div>
-    <div class="other-card hero tap-fx" onclick="openCases()">
-      <span class="oc-ic">&#x1F3AC;</span>
-      <div>
-        <div class="hero-sub">CASE STUDY</div>
-        <h3>ケーススタディ</h3>
-        <p>場面別フレーズを学ぶ</p>
-      </div>
-    </div>
-    <div class="other-card featured" onclick="renderWeek();go('week')">
-      <span class="oc-ic">&#x1F4C5;</span>
-      <h3>週間プログラム</h3>
-      <p>Week1&#xFF5E;4の段階的学習</p>
-    </div>
-    <div class="other-card" onclick="openCatPicker('cards')">
-      <span class="oc-ic">&#x1F0CF;</span>
-      <h3>単語カード</h3>
-      <p>スワイプで覚える復習デッキ</p>
-    </div>
-    <div class="other-card" onclick="openCatPicker('ear')">
-      <span class="oc-ic">&#x1F3A7;</span>
-      <h3>イヤーテスト</h3>
-      <p>音だけで意味を当てる</p>
-    </div>
-    <div class="other-card" onclick="startSession('comm',false)">
-      <span class="oc-ic">&#x1F399;</span>
-      <h3>実況英語</h3>
-      <p>中継で飛び交う定番表現</p>
-    </div>
-    <div class="other-card" onclick="startSession('paper',false)">
-      <span class="oc-ic">&#x1F4F0;</span>
-      <h3>移籍語彙</h3>
-      <p>契約・交渉・移籍の英語</p>
-    </div>
-    <div class="other-card" onclick="go('career');renderCareer()">
-      <span class="oc-ic">&#x1F3C6;</span>
-      <h3>キャリア</h3>
-      <p>成長記録とトロフィー</p>
-    </div>
-    <div class="other-card hero tap-fx" onclick="startDrill('mix')" style="background:linear-gradient(135deg,#1a0a00 0%,#2e1500 100%);border-color:rgba(255,140,0,.3)">
-      <span class="oc-ic"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg></span>
-      <div>
-        <div class="hero-sub">TODAY'S PHRASE DRILL</div>
-        <h3>今日の実戦フレーズ</h3>
-        <p>聞く → 真似る → 判定。チームに行く前に100回ミスしておく。</p>
-      </div>
-    </div>
-    <div class="other-card featured" onclick="renderFavs();go('fav')">
-      <span class="oc-ic">&#x2B50;</span>
-      <h3>お気に入り</h3>
-      <p>保存したフレーズを見返す</p>
-    </div>
-  </div>
-  <button class="logout-row" onclick="doLogout()">ログアウト</button>
+<!-- ============ GROW SCREEN ============ -->
+<section class="screen" id="scr-grow">
+  <div class="brand" style="justify-content:center"><div class="logo">TOP <span>BINS</span></div></div>
+  <div id="grow-area"></div>
 </section>
 
 <!-- ============ WEEK PROGRAM ============ -->
 <section class="screen" id="scr-week">
-  <div class="quiz-top"><button class="btn-x" onclick="renderOthers();go('others')">&#x2715;</button>
+  <div class="quiz-top"><button class="btn-x" onclick="renderGrow();go('grow')">&#x2715;</button>
     <div style="font-weight:900;font-size:17px">&#x1F4C5; 週間プログラム</div></div>
   <div id="week-list"></div>
 </section>
@@ -2989,7 +2933,7 @@ function go(id, dir){
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.getElementById("scr-"+id).classList.add("active");
     document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home",fav:"nav-others",drill:"nav-others",roleplay:"nav-home","rp-scene":"nav-home","quiz-daily":"nav-home"}[id];
+    const nv={home:"nav-train",cards:"nav-train",play:"nav-train",player:"nav-train",quiz:"nav-train",result:"nav-train",drill:"nav-train",speak:"nav-train",pick:"nav-train","quiz-daily":"nav-train",match:"nav-match",matchday:"nav-match",roleplay:"nav-match","rp-scene":"nav-match",grow:"nav-grow",career:"nav-grow",week:"nav-grow",cases:"nav-grow",case:"nav-grow",coach:"nav-grow",fav:"nav-grow"}[id];
     if(nv)document.getElementById(nv).classList.add("sel");
     document.getElementById("feedback").classList.remove("show");
     window.scrollTo(0,0);
@@ -3099,7 +3043,7 @@ function _startMdCountdown(){
     const now=new Date();
     const midnight=new Date(now);midnight.setHours(24,0,0,0);
     const diff=midnight-now;
-    if(diff<=0){clearInterval(_mdCountdownTimer);_mdCountdownTimer=null;renderHome();return;}
+    if(diff<=0){clearInterval(_mdCountdownTimer);_mdCountdownTimer=null;if(document.getElementById('scr-match').classList.contains('active'))renderMatch();return;}
     const h=String(Math.floor(diff/3600000)).padStart(2,'0');
     const m=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
     const s=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
@@ -3191,19 +3135,31 @@ function renderHome(){
     ${quizAllDone&&speakDone&&cardDone?`<div class="share-today-wrap"><button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button></div>`:''}
   </div>`;
 
-  const posShirtColors={fw:'#E53935',mf:'#43A047',df:'#1E88E5',gk:'#8E24AA'};
-  const posBadges=S.position?S.position.split(',').map(p=>`<span class="pos-shirt-badge ${p}">${p.toUpperCase()}</span>`).join(''):'';
-  const madeName=S.name?S.name:'YOU';
-  const posLabel=`<span class="made-for-text">Made for ${madeName}</span>${posBadges}`;
-  /* Matchday card — TODAY'S MATCH シーンプレビュー */
+  document.getElementById("home-session-area").innerHTML=missionsHtml;
+
+  const done=S.doneToday===today();
+  if(!done){
+    clearInterval(window._cdTimer);
+    window._cdTimer=setInterval(()=>{
+      const el=document.getElementById("streak-cd");
+      if(!el){clearInterval(window._cdTimer);return;}
+      const now=new Date();
+      const midnight=new Date();midnight.setHours(24,0,0,0);
+      const diff=midnight-now;
+      const h=String(Math.floor(diff/36e5)).padStart(2,'0');
+      const m=String(Math.floor(diff%36e5/6e4)).padStart(2,'0');
+      const s=String(Math.floor(diff%6e4/1e3)).padStart(2,'0');
+      el.textContent=h+':'+m+':'+s+' でリセット';
+    },1000);
+  }
+}
+function renderMatch(){
+  const td=today();
   const ticketsEarned=S.matchTickets||0;
   const hasTickets=ticketsEarned>0;
-  // 今日の日付からシーンを決定論的に選択（毎日変わる）
   const _mdDateSeed=parseInt(td.replace(/-/g,''))%MATCHDAY_SCENES.length;
   const _mdPreview=MATCHDAY_SCENES[_mdDateSeed];
-  // シーン設定文を短縮（最大20字）
   const _mdSettingShort=_mdPreview.setting.length>20?_mdPreview.setting.slice(0,20)+'…':_mdPreview.setting;
-  // チケットアイコンSVG
   const _ticketSvg=`<svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg>`;
   const matchdayCardHtml=`<div class="matchday-home-card" onclick="openMatchday()">
     <div class="md-card-header">
@@ -3226,29 +3182,19 @@ function renderHome(){
       }
     </div>
   </div>`;
-
   const MD_UNLOCK=28;
   const mdTotal=S.matchdayTotal||0;
   const rpUnlocked=mdTotal>=MD_UNLOCK;
   const rpPct=Math.min(100,Math.round(mdTotal/MD_UNLOCK*100));
   const aiRoleplayCardHtml=rpUnlocked
     ?`<div class="ai-roleplay-card unlocked tap-fx" onclick="openRoleplay()">
-        <div class="ai-rp-eyebrow">
-          <span class="ai-rp-badge-unlocked">ROLEPLAY</span>
-          <span style="font-size:11px;font-weight:800;color:rgba(255,80,80,.8)">UNLOCKED</span>
-        </div>
+        <div class="ai-rp-eyebrow"><span class="ai-rp-badge-unlocked">ROLEPLAY</span><span style="font-size:11px;font-weight:800;color:rgba(255,80,80,.8)">UNLOCKED</span></div>
         <div class="ai-rp-title-unlocked">本番ピッチに<br>立て。</div>
         <div class="ai-rp-sub">シーン別AIと実戦対話。声で返せ。</div>
-        <div class="ai-rp-footer">
-          <span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.3)">6カテゴリ・18シーン</span>
-          <span class="ai-rp-go">入る ›</span>
-        </div>
+        <div class="ai-rp-footer"><span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.3)">6カテゴリ・18シーン</span><span class="ai-rp-go">入る ›</span></div>
       </div>`
     :`<div class="ai-roleplay-card locked" onclick="toast('あと${MD_UNLOCK-mdTotal}シーンでROLEPLAYが解放される')">
-        <div class="ai-rp-eyebrow">
-          <span class="ai-rp-badge-locked">ROLEPLAY</span>
-          <span class="ai-rp-lock"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-        </div>
+        <div class="ai-rp-eyebrow"><span class="ai-rp-badge-locked">ROLEPLAY</span><span class="ai-rp-lock"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></div>
         <div class="ai-rp-title-locked">本番ピッチに<br>立て。</div>
         <div class="ai-rp-sub">MATCHDAYを28シーンクリアで解放</div>
         <div class="ai-rp-progress-wrap">
@@ -3256,34 +3202,59 @@ function renderHome(){
           <div class="ai-rp-progress-track"><div class="ai-rp-progress-fill" style="width:${rpPct}%"></div></div>
         </div>
       </div>`;
-
-  document.getElementById("home-session-area").innerHTML=`
-    <div class="home-feature-stack">
-      ${matchdayCardHtml}
-      ${aiRoleplayCardHtml}
-    </div>`+missionsHtml;
-
-  // チケットなし時のカウントダウン起動
-  if(!(S.matchTickets>0))_startMdCountdown();
-
-  const done=S.doneToday===today();
-  if(!done){
-    clearInterval(window._cdTimer);
-    window._cdTimer=setInterval(()=>{
-      const el=document.getElementById("streak-cd");
-      if(!el){clearInterval(window._cdTimer);return;}
-      const now=new Date();
-      const midnight=new Date();midnight.setHours(24,0,0,0);
-      const diff=midnight-now;
-      const h=String(Math.floor(diff/36e5)).padStart(2,'0');
-      const m=String(Math.floor(diff%36e5/6e4)).padStart(2,'0');
-      const s=String(Math.floor(diff%6e4/1e3)).padStart(2,'0');
-      el.textContent=h+':'+m+':'+s+' でリセット';
-    },1000);
-  }
+  document.getElementById('match-area').innerHTML=`<div class="home-feature-stack">${matchdayCardHtml}${aiRoleplayCardHtml}</div>`;
+  if(!hasTickets)_startMdCountdown();
 }
-function renderOthers(){
-  // static grid — nothing to render dynamically
+function renderGrow(){
+  const mastered=Object.values(S.box).filter(v=>v>=2).length;
+  const streak=S.streak||0;
+  document.getElementById('grow-area').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <div style="background:var(--white);border-radius:16px;padding:16px;border:1px solid var(--border2);text-align:center">
+        <div style="font-size:38px;font-weight:900;color:var(--green);line-height:1">${mastered}</div>
+        <div style="font-size:11px;font-weight:800;color:var(--grey);margin-top:5px">語マスター中</div>
+      </div>
+      <div style="background:var(--white);border-radius:16px;padding:16px;border:1px solid var(--border2);text-align:center">
+        <div style="font-size:38px;font-weight:900;color:#FF6B00;line-height:1">${streak}</div>
+        <div style="font-size:11px;font-weight:800;color:var(--grey);margin-top:5px">日ストリーク</div>
+      </div>
+    </div>
+    <div class="others-grid">
+      <div class="other-card hero tap-fx" onclick="openCoach()">
+        <span class="oc-ic">&#x1F4E2;</span>
+        <div><div class="hero-sub">PITCH VOCAB</div><h3>英語でどう言う？</h3><p>日本語→現場英語を即返答</p></div>
+      </div>
+      <div class="other-card hero tap-fx" onclick="openCases()">
+        <span class="oc-ic">&#x1F3AC;</span>
+        <div><div class="hero-sub">CASE STUDY</div><h3>ケーススタディ</h3><p>場面別フレーズを学ぶ</p></div>
+      </div>
+      <div class="other-card" onclick="startSession('comm',false)">
+        <span class="oc-ic">&#x1F399;</span>
+        <h3>実況英語</h3><p>中継で飛び交う定番表現</p>
+      </div>
+      <div class="other-card" onclick="startSession('paper',false)">
+        <span class="oc-ic">&#x1F4F0;</span>
+        <h3>移籍語彙</h3><p>契約・交渉・移籍の英語</p>
+      </div>
+      <div class="other-card" onclick="openCatPicker('ear')">
+        <span class="oc-ic">&#x1F3A7;</span>
+        <h3>イヤーテスト</h3><p>音だけで意味を当てる</p>
+      </div>
+      <div class="other-card" onclick="renderFavs();go('fav')">
+        <span class="oc-ic">&#x2B50;</span>
+        <h3>お気に入り</h3><p>保存したフレーズを見返す</p>
+      </div>
+      <div class="other-card" onclick="renderWeek();go('week')">
+        <span class="oc-ic">&#x1F4C5;</span>
+        <h3>週間プログラム</h3><p>Week1〜4の段階的学習</p>
+      </div>
+      <div class="other-card" onclick="go('career');renderCareer()">
+        <span class="oc-ic">&#x1F3C6;</span>
+        <h3>キャリア</h3><p>成長記録とトロフィー</p>
+      </div>
+    </div>
+    <button class="logout-row" onclick="doLogout()">ログアウト</button>
+  `;
 }
 function renderWeek(){
   const WEEKS=[
@@ -4875,7 +4846,7 @@ function finishDrill(){
       <div style="font-size:56px;font-weight:900;color:${drillMissCount>=5?'#FF6B00':'var(--ink)'};line-height:1">${drillMissCount}</div>
       <div style="font-size:12px;color:rgba(255,255,255,.3);font-weight:800;margin:12px 0 28px">${drillMissCount>=5?'いいぞ。それがトレーニングだ。':'次はもっとミスしていい。'}</div>
       <button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button>
-      <button onclick="go('others','pop')" style="background:transparent;color:rgba(255,255,255,.35);border:none;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:16px">ホームへ戻る</button>
+      <button onclick="go('home','pop');renderHome()" style="background:transparent;color:rgba(255,255,255,.35);border:none;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:16px">ホームへ戻る</button>
     </div>`;
 }
 
@@ -4998,7 +4969,7 @@ function openMatchday(){
           <div class="md-ticket-earn-row"><span>単語カード10枚正解</span><span class="md-ticket-earn-reward">+1</span></div>
           <div style="font-size:10px;color:var(--grey);margin-top:10px">※ 日付が変わると自動で1枚付与されます</div>
         </div>
-        <button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
+        <button class="md-complete-btn" onclick="go('match','pop');renderMatch()">ホームに戻る</button>
       </div>`;
     document.getElementById('md-dots').innerHTML='';
     return;
@@ -5110,7 +5081,7 @@ function mdNext(){
       <div class="md-complete">
         <div class="md-complete-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></div>
         <div class="md-complete-title">セッション完了！</div>
-        <button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>
+        <button class="md-complete-btn" onclick="go('match','pop');renderMatch()">ホームに戻る</button>
       </div>`;
     renderMdDots();
   } else {
