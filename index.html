@@ -2497,7 +2497,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:""};
 function save(){saveToSupabase();}
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 
@@ -3259,25 +3259,19 @@ function renderHome(){
     ${quizAllDone&&speakDone&&cardDone?`<div class="share-today-wrap"><button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button></div>`:''}
   </div>`;
 
-  const mdTotal=S.matchdayTotal||0;
-  const rpFull=mdTotal>=MD_UNLOCK;
-  const rpPreview=!rpFull&&mdTotal>=MD_PREVIEW;
-  const rpUnlocked=rpFull||rpPreview;
-  const rpCardHtml=rpUnlocked
-    ?`<div class="home-rp-card tap-fx" onclick="openRoleplay()">
-        <div class="train-rp-eyebrow"><span class="rp-live-dot"></span>${rpFull?'ROLEPLAY — UNLOCKED':'ROLEPLAY — PREVIEW'}</div>
-        <div class="train-rp-title">声で返せ。<br>現場英語。</div>
-        <div class="train-rp-sub">${rpFull?'6カテゴリ・全シーン解放中':'1カテゴリ解放中。あと'+(MD_UNLOCK-mdTotal)+'回で完全解放。'}</div>
-        <div class="train-rp-footer"><span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.25)">${rpFull?'選んで → 声に出す':'試合中の状況'}</span><span class="train-rp-go">入る ›</span></div>
+  const rpDoneToday=S.lastRpDate===td;
+  const rpCardHtml=rpDoneToday
+    ?`<div class="home-rp-card" style="animation:none;opacity:.7">
+        <div class="train-rp-eyebrow" style="color:rgba(255,196,0,.4)">ROLEPLAY — TODAY DONE</div>
+        <div class="train-rp-title" style="color:rgba(255,255,255,.4)">声で返せ。<br>現場英語。</div>
+        <div class="train-rp-sub">今日のシーンはクリア済み。また明日。</div>
+        <div class="train-rp-footer"><span></span><div class="mission-done-check">✓</div></div>
       </div>`
-    :`<div class="home-rp-card locked">
-        <div class="train-rp-eyebrow" style="color:rgba(255,255,255,.25)">ROLEPLAY — LOCKED</div>
-        <div class="train-rp-title" style="color:rgba(255,255,255,.3)">声で返せ。<br>現場英語。</div>
-        <div class="train-rp-sub">MATCHDAYを${MD_PREVIEW}回クリアで解放</div>
-        <div style="margin-top:8px">
-          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:900;color:rgba(255,255,255,.2);margin-bottom:4px"><span>${mdTotal} / ${MD_PREVIEW}</span><span>あと${MD_PREVIEW-mdTotal}回</span></div>
-          <div style="height:3px;background:rgba(255,255,255,.08);border-radius:99px"><div style="height:100%;width:${Math.min(100,Math.round(mdTotal/MD_PREVIEW*100))}%;background:rgba(255,255,255,.2);border-radius:99px"></div></div>
-        </div>
+    :`<div class="home-rp-card tap-fx" onclick="openRoleplay()">
+        <div class="train-rp-eyebrow"><span class="rp-live-dot"></span>ROLEPLAY — TODAY'S SCENE</div>
+        <div class="train-rp-title">声で返せ。<br>現場英語。</div>
+        <div class="train-rp-sub">今日のシーンに挑戦。明日は別のシーンが解放される。</div>
+        <div class="train-rp-footer"><span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.25)">選んで → 声に出す</span><span class="train-rp-go">入る ›</span></div>
       </div>`;
   document.getElementById("home-rp-area").innerHTML=rpCardHtml;
   document.getElementById("home-session-area").innerHTML=missionsHtml;
@@ -4526,16 +4520,12 @@ function openRoleplay(){
 function renderRoleplayMenu(){
   const body=document.getElementById('rp-menu-body');
   if(!body)return;
-  const mdTotal=S.matchdayTotal||0;
-  const rpFull=mdTotal>=MD_UNLOCK;
-  const rpPreview=!rpFull&&mdTotal>=MD_PREVIEW;
-  const cats=rpFull?RP_CATEGORIES:[RP_CATEGORIES[0]];
-  const lockedCats=rpFull?[]:RP_CATEGORIES.slice(1);
+  const rpDoneToday=S.lastRpDate===today();
   const html=`
     <p class="rp-intro">シーンを選んで、声で現場英語を磨け。<br>各カテゴリ5シーン連続チャレンジ。</p>
-    ${rpPreview?`<div style="font-size:11px;font-weight:800;color:#FFC400;text-align:center;margin-bottom:12px;letter-spacing:.05em">PREVIEW — あと${MD_UNLOCK-mdTotal}回で完全解放</div>`:''}
+    ${rpDoneToday?`<div style="font-size:11px;font-weight:800;color:rgba(255,196,0,.7);text-align:center;margin-bottom:12px;letter-spacing:.05em">TODAY DONE — また明日新しいシーンが解放される</div>`:''}
     <div class="rp-cat-grid">
-      ${cats.map(c=>{
+      ${RP_CATEGORIES.map(c=>{
         const done=ROLEPLAY_SCENES.filter(s=>s.cat===c.id).length;
         return `<div class="rp-cat-card tap-fx" onclick="startRoleplay('${c.id}')" style="border-color:${c.color}22">
           <div class="rp-cat-icon">${svgI(c.icon)}</div>
@@ -4544,11 +4534,6 @@ function renderRoleplayMenu(){
           <div class="rp-cat-count">${done} SCENES</div>
         </div>`;
       }).join('')}
-      ${lockedCats.map(c=>`<div class="rp-cat-card" style="opacity:.3;border-color:rgba(255,255,255,.1)">
-          <div class="rp-cat-icon">${svgI(c.icon)}</div>
-          <div class="rp-cat-name">${c.label}</div>
-          <div class="rp-cat-npc" style="font-size:10px;color:var(--grey)">LOCKED</div>
-        </div>`).join('')}
     </div>`;
   body.innerHTML=html;
 }
@@ -4767,6 +4752,7 @@ function nextRP(){
 }
 
 function finishRoleplay(){
+  S.lastRpDate=today();save();
   const avg=Math.round(rpTotalScore/rpScenes.length);
   const cat=RP_CATEGORIES.find(c=>c.id===rpCat);
   const grade=avg>=80?'EXCELLENT':avg>=60?'GREAT':avg>=40?'GOOD':'KEEP GOING';
