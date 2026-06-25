@@ -618,6 +618,26 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .other-card.hero .hero-sub{font-size:10px;font-weight:900;letter-spacing:.12em;color:rgba(255,215,0,.7);margin-bottom:4px}
 .other-card.hero p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.45}
 .other-card.hero:active{transform:scale(.98)}
+/* GROW screen cards */
+.grow-full-card{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#0d2416 0%,#162e1e 100%);border:1px solid var(--border2);border-radius:18px;padding:20px 18px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow)}
+.grow-full-card:active{transform:scale(.985);border-color:var(--green)}
+.grow-fc-ic{font-size:36px;flex-shrink:0}
+.grow-fc-body{flex:1;min-width:0}
+.grow-fc-label{font-size:10px;font-weight:900;letter-spacing:.12em;color:rgba(255,215,0,.7);margin-bottom:3px}
+.grow-fc-title{font-size:17px;font-weight:900;color:var(--ink);margin-bottom:2px}
+.grow-fc-desc{font-size:12px;color:rgba(255,255,255,.45);line-height:1.4}
+.grow-fc-arrow{width:18px;height:18px;flex-shrink:0;stroke:rgba(255,255,255,.3)}
+.grow-sm-card{display:flex;align-items:center;gap:14px;background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow)}
+.grow-sm-card:active{transform:scale(.985);border-color:var(--border2)}
+.grow-sm-ic{font-size:26px;flex-shrink:0}
+.grow-sm-body{flex:1;min-width:0}
+.grow-sm-title{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:2px}
+.grow-sm-desc{font-size:11px;color:var(--grey)}
+.grow-row-card{display:flex;align-items:center;gap:12px;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer}
+.grow-row-card:active{transform:scale(.985);border-color:var(--border2)}
+.grow-row-ic{font-size:22px;flex-shrink:0}
+.grow-row-title{font-size:13px;font-weight:900;color:var(--ink);flex:1}
+.grow-row-desc{font-size:11px;color:var(--grey);margin-right:4px}
 .logout-row{display:block;width:100%;margin-top:20px;background:none;border:1px solid var(--border);border-radius:12px;padding:12px;font-size:12px;font-weight:800;color:var(--grey);cursor:pointer;font-family:inherit;text-align:center;letter-spacing:.04em}
 .logout-row:active{background:var(--card2)}
 /* ---- streak card ---- */
@@ -3245,7 +3265,7 @@ function renderGrow(){
   const mastered=Object.values(S.box).filter(v=>v>=2).length;
   const streak=S.streak||0;
   document.getElementById('grow-area').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
       <div style="background:var(--white);border-radius:16px;padding:16px;border:1px solid var(--border2);text-align:center">
         <div style="font-size:38px;font-weight:900;color:var(--green);line-height:1">${mastered}</div>
         <div style="font-size:11px;font-weight:800;color:var(--grey);margin-top:5px">語マスター中</div>
@@ -3255,40 +3275,71 @@ function renderGrow(){
         <div style="font-size:11px;font-weight:800;color:var(--grey);margin-top:5px">日ストリーク</div>
       </div>
     </div>
-    <div class="others-grid">
-      <div class="other-card hero tap-fx" onclick="openCoach()">
-        <span class="oc-ic">&#x1F4E2;</span>
-        <div><div class="hero-sub">PITCH VOCAB</div><h3>英語でどう言う？</h3><p>日本語→現場英語を即返答</p></div>
+
+    <div class="grow-full-card tap-fx" onclick="renderWeek();go('week')">
+      <span class="grow-fc-ic">&#x1F4C5;</span>
+      <div class="grow-fc-body">
+        <div class="grow-fc-label">WEEKLY PROGRAM</div>
+        <div class="grow-fc-title">週間プログラム</div>
+        <div class="grow-fc-desc">Week1〜4の段階的学習</div>
       </div>
-      <div class="other-card hero tap-fx" onclick="openCases()">
-        <span class="oc-ic">&#x1F3AC;</span>
-        <div><div class="hero-sub">CASE STUDY</div><h3>ケーススタディ</h3><p>場面別フレーズを学ぶ</p></div>
-      </div>
-      <div class="other-card" onclick="startSession('comm',false)">
-        <span class="oc-ic">&#x1F399;</span>
-        <h3>実況英語</h3><p>中継で飛び交う定番表現</p>
-      </div>
-      <div class="other-card" onclick="startSession('paper',false)">
-        <span class="oc-ic">&#x1F4F0;</span>
-        <h3>移籍語彙</h3><p>契約・交渉・移籍の英語</p>
-      </div>
-      <div class="other-card" onclick="openCatPicker('ear')">
-        <span class="oc-ic">&#x1F3A7;</span>
-        <h3>イヤーテスト</h3><p>音だけで意味を当てる</p>
-      </div>
-      <div class="other-card" onclick="renderFavs();go('fav')">
-        <span class="oc-ic">&#x2B50;</span>
-        <h3>お気に入り</h3><p>保存したフレーズを見返す</p>
-      </div>
-      <div class="other-card" onclick="renderWeek();go('week')">
-        <span class="oc-ic">&#x1F4C5;</span>
-        <h3>週間プログラム</h3><p>Week1〜4の段階的学習</p>
-      </div>
-      <div class="other-card" onclick="go('career');renderCareer()">
-        <span class="oc-ic">&#x1F3C6;</span>
-        <h3>キャリア</h3><p>成長記録とトロフィー</p>
-      </div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
+
+    <div class="grow-full-card tap-fx" onclick="openCoach()">
+      <span class="grow-fc-ic">&#x1F4E2;</span>
+      <div class="grow-fc-body">
+        <div class="grow-fc-label">PITCH VOCAB</div>
+        <div class="grow-fc-title">英語でどう言う？</div>
+        <div class="grow-fc-desc">日本語→現場英語を即返答</div>
+      </div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
+    <div class="grow-full-card tap-fx" onclick="openCases()">
+      <span class="grow-fc-ic">&#x1F3AC;</span>
+      <div class="grow-fc-body">
+        <div class="grow-fc-label">CASE STUDY</div>
+        <div class="grow-fc-title">ケーススタディ</div>
+        <div class="grow-fc-desc">場面別フレーズを学ぶ</div>
+      </div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
+    <div class="grow-sm-card tap-fx" onclick="renderFavs();go('fav')">
+      <span class="grow-sm-ic">&#x2B50;</span>
+      <div class="grow-sm-body">
+        <div class="grow-sm-title">お気に入り</div>
+        <div class="grow-sm-desc">保存したフレーズを見返す</div>
+      </div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
+    <div class="grow-row-card tap-fx" onclick="startSession('comm',false)">
+      <span class="grow-row-ic">&#x1F399;</span>
+      <div class="grow-row-title">実況英語</div>
+      <div class="grow-row-desc">中継で飛び交う定番表現</div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="grow-row-card tap-fx" onclick="startSession('paper',false)">
+      <span class="grow-row-ic">&#x1F4F0;</span>
+      <div class="grow-row-title">移籍語彙</div>
+      <div class="grow-row-desc">契約・交渉・移籍の英語</div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="grow-row-card tap-fx" onclick="openCatPicker('ear')">
+      <span class="grow-row-ic">&#x1F3A7;</span>
+      <div class="grow-row-title">イヤーテスト</div>
+      <div class="grow-row-desc">音だけで意味を当てる</div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="grow-row-card tap-fx" onclick="go('career');renderCareer()">
+      <span class="grow-row-ic">&#x1F3C6;</span>
+      <div class="grow-row-title">キャリア</div>
+      <div class="grow-row-desc">成長記録とトロフィー</div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
     <button class="logout-row" onclick="doLogout()">ログアウト</button>
   `;
 }
