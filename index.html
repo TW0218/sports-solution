@@ -435,6 +435,9 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .missions-section{background:var(--white);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
 .missions-header{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;color:#FFD700;padding:11px 16px;background:linear-gradient(135deg,#0d1f14 0%,#122b1c 100%);letter-spacing:.12em;border-bottom:1px solid rgba(255,215,0,.15)}
 .missions-header-icon{font-size:16px;line-height:1}
+.share-today-wrap{padding:14px 0 4px;text-align:center}
+.share-today-btn{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1.5px solid rgba(29,158,117,.45);color:var(--green);border-radius:14px;padding:12px 24px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;transition:background .15s,border-color .15s}
+.share-today-btn:active{background:rgba(29,158,117,.12)}
 .missions-grid{display:flex;flex-direction:column;padding:4px 0}
 .mission-card{display:flex;align-items:center;gap:12px;padding:12px 16px;border:none;width:100%;font-family:inherit;text-align:left;background:transparent;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s}
 .mission-card:last-child{border-bottom:none}
@@ -2642,6 +2645,121 @@ function sfx(type){
   }catch(e){}
 }
 
+/* ================= SHARE ================= */
+async function generateShareCard(){
+  await document.fonts.ready;
+  const p=todayPhrases()[0]||DB[0];
+  const W=800,H=1400;
+  const cv=document.createElement('canvas');
+  cv.width=W;cv.height=H;
+  const c=cv.getContext('2d');
+
+  // 背景グラデーション
+  const bg=c.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#080e09');bg.addColorStop(.6,'#0c1a0e');bg.addColorStop(1,'#101f12');
+  c.fillStyle=bg;c.fillRect(0,0,W,H);
+
+  // グリーングロウ
+  const gw=c.createRadialGradient(W/2,H*.38,0,W/2,H*.38,380);
+  gw.addColorStop(0,'rgba(29,158,117,.2)');gw.addColorStop(1,'rgba(0,0,0,0)');
+  c.fillStyle=gw;c.fillRect(0,0,W,H);
+
+  // デコ円（右上）
+  c.strokeStyle='rgba(29,158,117,.1)';c.lineWidth=2;
+  [300,240,180].forEach(r=>{c.beginPath();c.arc(W*.9,0,r,0,Math.PI*2);c.stroke();});
+
+  // TOP BINSロゴ
+  c.textAlign='center';
+  c.fillStyle='rgba(255,215,0,.8)';
+  c.font='900 30px Barlow,sans-serif';
+  c.fillText('TOP BINS',W/2,108);
+
+  // ラベル
+  c.fillStyle='rgba(255,255,255,.28)';
+  c.font='800 22px Barlow,sans-serif';
+  c.fillText("TODAY'S PHRASE",W/2,158);
+
+  // 上区切り線
+  c.strokeStyle='rgba(29,158,117,.22)';c.lineWidth=1.5;
+  c.beginPath();c.moveTo(W*.18,196);c.lineTo(W*.82,196);c.stroke();
+
+  // 英語フレーズ（大きくイタリック）
+  c.fillStyle='#ffffff';
+  c.font='italic 900 72px Barlow,sans-serif';
+  const fullPhrase=`"${p.en}"`;
+  const words=fullPhrase.split(' ');
+  const maxW=W-160;
+  let line='',lines=[];
+  words.forEach(w=>{
+    const test=line?(line+' '+w):w;
+    if(c.measureText(test).width>maxW&&line){lines.push(line);line=w;}
+    else line=test;
+  });
+  if(line)lines.push(line);
+  const lh=90;
+  const phraseStartY=H*.4-(lines.length-1)*lh/2;
+  lines.forEach((l,i)=>c.fillText(l,W/2,phraseStartY+i*lh));
+
+  // 日本語訳
+  c.fillStyle='rgba(255,255,255,.45)';
+  c.font='700 34px "Noto Sans JP",Barlow,sans-serif';
+  c.fillText(p.ja,W/2,phraseStartY+lines.length*lh+52);
+
+  // 下区切り線
+  c.strokeStyle='rgba(29,158,117,.18)';
+  const divY=H*.7;
+  c.beginPath();c.moveTo(W*.28,divY);c.lineTo(W*.72,divY);c.stroke();
+
+  // ストリーク
+  if(S.streak>0){
+    c.fillStyle='#FFD700';
+    c.font='900 58px Barlow,sans-serif';
+    c.fillText(`${S.streak} DAY STREAK`,W/2,divY+86);
+  }
+
+  // 名前
+  if(S.name){
+    c.fillStyle='rgba(255,255,255,.32)';
+    c.font='800 26px Barlow,sans-serif';
+    c.fillText(S.name.toUpperCase(),W/2,divY+142);
+  }
+
+  // URLウォーターマーク
+  c.fillStyle='rgba(255,255,255,.16)';
+  c.font='700 24px Barlow,sans-serif';
+  c.fillText('topbins.vercel.app',W/2,H-72);
+
+  return cv;
+}
+
+async function shareToday(){
+  const btn=document.getElementById('share-today-btn');
+  if(btn){btn.disabled=true;btn.textContent='生成中...';}
+  try{
+    const cv=await generateShareCard();
+    const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+    const file=new File([blob],'topbins-today.png',{type:'image/png'});
+    const p=todayPhrases()[0]||DB[0];
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({
+        title:'TOP BINS',
+        text:`"${p.en}" — サッカー現場英語 #TOPBINS`,
+        files:[file]
+      });
+    }else{
+      // fallback: download
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='topbins-today.png';a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),5000);
+      toast('画像を保存しました');
+    }
+  }catch(e){if(e.name!=='AbortError')toast('シェアできませんでした');}
+  finally{if(btn){btn.disabled=false;btn.innerHTML=shareBtnInner();}}
+}
+function shareBtnInner(){
+  return `<svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> 今日の成果をシェア`;
+}
+
 /* ================= CELEBRATION ================= */
 function sfxGoal(){
   try{
@@ -2928,6 +3046,7 @@ function renderHome(){
         <div class="mission-end">${speakEnd}</div>
       </button>
     </div>
+    ${phraseDone&&quizAllDone&&speakDone?`<div class="share-today-wrap"><button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button></div>`:''}
   </div>`;
 
   const posShirtColors={fw:'#E53935',mf:'#43A047',df:'#1E88E5',gk:'#8E24AA'};
@@ -4543,8 +4662,9 @@ function finishDrill(){
       <div style="font-size:13px;color:var(--grey);margin-bottom:20px">10フレーズ練習</div>
       <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,.4);margin-bottom:6px">今日のミス</div>
       <div style="font-size:56px;font-weight:900;color:${drillMissCount>=5?'#FF6B00':'var(--ink)'};line-height:1">${drillMissCount}</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.3);font-weight:800;margin:12px 0 36px">${drillMissCount>=5?'いいぞ。それがトレーニングだ。':'次はもっとミスしていい。'}  </div>
-      <button onclick="go('others','pop')" style="background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px 40px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer">ホームへ</button>
+      <div style="font-size:12px;color:rgba(255,255,255,.3);font-weight:800;margin:12px 0 28px">${drillMissCount>=5?'いいぞ。それがトレーニングだ。':'次はもっとミスしていい。'}</div>
+      <button id="share-today-btn" class="share-today-btn" onclick="shareToday()">${shareBtnInner()}</button>
+      <button onclick="go('others','pop')" style="background:transparent;color:rgba(255,255,255,.35);border:none;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:16px">ホームへ戻る</button>
     </div>`;
 }
 
