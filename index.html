@@ -200,23 +200,27 @@ body{
 .motm{background:var(--yellow);border-radius:18px;padding:14px;font-weight:900;font-size:14px;margin-bottom:16px;display:none}
 .badge-pop{background:var(--card2);color:var(--ink);border:1px solid var(--border2);border-radius:18px;padding:14px;font-weight:800;font-size:14px;margin-bottom:10px;display:flex;gap:10px;align-items:center}
 
-/* ---------- flashcards ---------- */
-.card-stage{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:340px;perspective:1000px}
-.fcard{position:relative;width:100%;height:300px;transform-style:preserve-3d;transition:transform .45s;cursor:pointer}
-.fcard.flip{transform:rotateY(180deg)}
-.fface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--white);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
-.fface.back{transform:rotateY(180deg);background:#1a2b21;color:#fff}
-.fface .cat-mini{font-size:11px;font-weight:900;letter-spacing:.14em;color:var(--green);margin-bottom:12px}
-.fface .big{font-size:30px;font-weight:900;margin-bottom:10px;line-height:1.3}
-.fface .ex{font-size:14px;color:var(--grey);line-height:1.6}
-.fface.back .ex{color:#B9CDC2}
-.fface .tap-hint{position:absolute;bottom:14px;font-size:11px;color:var(--grey);font-weight:700}
-.card-actions{display:flex;gap:12px;margin-top:18px}
-.card-actions button{flex:1;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;color:#fff}
-.btn-again{background:var(--red);box-shadow:0 3px 0 #B33529}
-.btn-got{background:var(--green);box-shadow:0 3px 0 var(--green-dk)}
-.card-actions button:active{transform:translateY(2px);box-shadow:none}
-.card-count{text-align:center;font-size:12px;font-weight:800;color:var(--grey);margin-top:12px}
+/* ---------- flashcards (4択クイズ) ---------- */
+.card-stage{flex:1;display:flex;flex-direction:column;padding:0 0 12px;overflow-y:auto}
+.card-q-wrap{background:var(--white);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow);padding:22px 20px 18px;position:relative;margin-bottom:14px}
+.card-cat-badge{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--green);margin-bottom:8px}
+.card-ja-big{font-size:26px;font-weight:900;color:var(--ink);line-height:1.35;margin-bottom:8px}
+.card-exja{font-size:13px;color:var(--grey);line-height:1.6;font-style:italic}
+.card-fav-btn{position:absolute;top:14px;right:14px;background:none;border:none;cursor:pointer;padding:4px;line-height:1;transition:transform .1s}
+.card-fav-btn:active{transform:scale(.85)}
+.card-fav-btn svg{display:block}
+.card-choices{display:flex;flex-direction:column;gap:10px}
+@keyframes choiceShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes choicePop{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+.card-choice{width:100%;background:var(--white);border:1.5px solid var(--border2);border-radius:16px;padding:14px 16px;font-size:14px;font-weight:800;font-family:inherit;color:var(--ink);cursor:pointer;text-align:left;box-shadow:0 3px 0 rgba(0,0,0,.35);transition:transform .08s,box-shadow .08s,background .1s,border-color .1s;line-height:1.4}
+.card-choice:active:not([disabled]){transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.card-choice.correct{background:rgba(29,158,117,.18);border-color:var(--green);color:#fff;animation:choicePop .25s ease}
+.card-choice.wrong{background:rgba(226,73,59,.15);border-color:var(--red);animation:choiceShake .3s ease}
+.card-choice[disabled]{cursor:default}
+.card-next-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:16px;padding:15px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);margin-top:14px;display:none}
+.card-next-btn:active{transform:translateY(2px);box-shadow:none}
+.card-next-btn.show{display:block}
+.card-count{text-align:center;font-size:12px;font-weight:800;color:var(--grey);margin-top:10px}
 
 /* ---------- speaking ---------- */
 .speak-phrase{background:var(--white);border:1px solid var(--border);border-radius:24px;padding:26px 20px;box-shadow:var(--shadow);text-align:center;margin-bottom:16px}
@@ -1088,29 +1092,21 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 <!-- ============ FLASHCARDS ============ -->
 <section class="screen" id="scr-cards">
-  <div class="quiz-top"><button class="btn-x" onclick="go('home')">✕</button>
-    <div style="font-weight:900;font-size:17px">単語カード <span id="cards-cat" style="color:var(--grey);font-size:13px"></span></div></div>
-  <div class="card-stage">
-    <div class="fcard" id="fcard" onclick="flipCard()">
-      <div class="fface front">
-        <div class="cat-mini" id="fc-cat"></div>
-        <div class="big" id="fc-en"></div>
-        <div class="ex" id="fc-ex"></div>
-        <button class="fb-audio" style="margin-top:10px;font-size:26px" onclick="event.stopPropagation();playCurrentCard()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg></button>
-        <div class="tap-hint">タップで意味をみる</div>
-      </div>
-      <div class="fface back">
-        <div class="cat-mini">意味</div>
-        <div class="big" id="fc-ja"></div>
-        <div class="ex" id="fc-exja"></div>
-        <div class="tap-hint" style="color:#8AA095">タップで戻る</div>
-      </div>
+  <div class="quiz-top">
+    <button class="btn-x" onclick="go('home')">✕</button>
+    <div style="font-weight:900;font-size:17px">単語カード <span id="cards-cat" style="color:var(--grey);font-size:13px"></span></div>
+  </div>
+  <div class="card-stage" style="padding:12px 16px 20px">
+    <div class="card-q-wrap">
+      <div class="card-cat-badge" id="fc-cat"></div>
+      <div class="card-ja-big" id="fc-ja"></div>
+      <div class="card-exja" id="fc-exja"></div>
+      <button class="card-fav-btn" id="card-fav-btn" onclick="toggleFavCard()">
+        <svg id="card-fav-star" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </button>
     </div>
-    <div class="card-actions">
-      <button class="btn-again" onclick="gradeCard(false)">まだ</button>
-      <button id="card-fav-btn" onclick="toggleFavCard()" style="background:none;border:2px solid rgba(255,255,255,.2);border-radius:12px;width:44px;height:44px;font-size:18px;cursor:pointer;flex-shrink:0">☆</button>
-      <button class="btn-got" onclick="gradeCard(true)">知ってる <svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
-    </div>
+    <div class="card-choices" id="card-choices"></div>
+    <button class="card-next-btn" id="card-next-btn" onclick="cardNext()">次へ →</button>
     <div class="card-count" id="card-count"></div>
   </div>
 </section>
@@ -3558,41 +3554,82 @@ function finishSession(){
 
 /* ================= FLASHCARDS ================= */
 let cardDeck=[],ci=0,cardCat="mix";
+let _cardChoices=[];
 function startCards(cat){
   rate=unlockedLv()===1?0.7:1.0;
   cardCat=cat;
   const pool=poolFor(cat);
   cardDeck=shuffle(pool).sort((a,b)=>(S.box[a.en]||0)-(S.box[b.en]||0)).slice(0,12);
   ci=0;
-  document.getElementById("cards-cat").textContent=cat==="my"?"⭐ マイフレーズ":CATS[cat].name;
+  document.getElementById("cards-cat").textContent=cat==="my"?"マイフレーズ":CATS[cat].name;
   go("cards");renderCard();
 }
 function renderCard(){
   const c=cardDeck[ci];
-  document.getElementById("fcard").classList.remove("flip");
-  document.getElementById("fc-cat").textContent=CATS[c.c].ic+" "+CATS[c.c].name+(c.note?"　"+c.note.split(" ")[0]:"");
-  document.getElementById("fc-en").textContent=c.en;
-  document.getElementById("fc-ex").textContent=c.ex;
+  // 問題カード
+  document.getElementById("fc-cat").textContent=CATS[c.c]?CATS[c.c].name:c.c.toUpperCase();
   document.getElementById("fc-ja").textContent=c.ja;
   document.getElementById("fc-exja").textContent=c.exJa+(c.note?"〔"+c.note+"〕":"");
-  document.getElementById("card-count").textContent=(ci+1)+" / "+cardDeck.length+"　習得度: "+"⭐".repeat(S.box[c.en]||0)+"☆".repeat(3-(S.box[c.en]||0));
-  const cfb=document.getElementById("card-fav-btn");if(cfb)cfb.textContent=isFaved(c.en)?"⭐":"☆";
-  setTimeout(()=>speak(c.en,null,c.c),300);
+  // お気に入りスター
+  _updateCardFavStar();
+  // 4択選択肢生成（正解1 + 他カテゴリから3つ）
+  const pool=poolFor(cardCat);
+  const distractors=shuffle(pool.filter(p=>p.en!==c.en)).slice(0,3);
+  _cardChoices=shuffle([c,...distractors]);
+  const choicesEl=document.getElementById("card-choices");
+  choicesEl.innerHTML=_cardChoices.map((ch,i)=>
+    `<button class="card-choice" onclick="selectCardAnswer(${i})">${ch.en}</button>`
+  ).join('');
+  // 次へボタン非表示
+  const nb=document.getElementById("card-next-btn");
+  if(nb){nb.classList.remove("show");}
+  document.getElementById("card-count").textContent=(ci+1)+" / "+cardDeck.length;
+  // 音声自動再生
+  setTimeout(()=>speak(c.en,null,c.c),250);
 }
-function flipCard(){document.getElementById("fcard").classList.toggle("flip")}
-function playCurrentCard(){speak(cardDeck[ci].en+". "+cardDeck[ci].ex,null,cardDeck[ci].c)}
-function gradeCard(known){
-  const c=cardDeck[ci];
-  S.box[c.en]=known?Math.min(3,(S.box[c.en]||0)+1):0;
+function _updateCardFavStar(){
+  const c=cardDeck[ci];if(!c)return;
+  const faved=isFaved(c.en);
+  const star=document.getElementById("card-fav-star");
+  if(star){
+    star.setAttribute('fill',faved?'#FFD700':'none');
+    star.setAttribute('stroke',faved?'#FFD700':'rgba(255,255,255,.3)');
+  }
+}
+function selectCardAnswer(idx){
+  const correct=cardDeck[ci];
+  const chosen=_cardChoices[idx];
+  const isCorrect=chosen.en===correct.en;
+  // 全ボタン無効化 & 色付け
+  document.querySelectorAll('.card-choice').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(_cardChoices[i].en===correct.en)btn.classList.add('correct');
+    else if(i===idx)btn.classList.add('wrong');
+  });
+  sfx(isCorrect?'good':'bad');
+  // スコア更新
+  S.box[correct.en]=isCorrect?Math.min(3,(S.box[correct.en]||0)+1):0;
   const mastered=Object.values(S.box).filter(v=>v>=2).length;
   if(mastered>=50)awardOnce("fifty","📖 50語マスター達成！");
-  if(known){S.cardsSinceTicket=(S.cardsSinceTicket||0)+1;if(S.cardsSinceTicket>=15){S.cardsSinceTicket=0;earnMatchTicket();}}
+  if(isCorrect){
+    S.cardsSinceTicket=(S.cardsSinceTicket||0)+1;
+    if(S.cardsSinceTicket>=15){S.cardsSinceTicket=0;earnMatchTicket();}
+  }
   save();
-  sfx(known?"good":"bad");
+  // 次へボタン表示
+  const nb=document.getElementById("card-next-btn");
+  if(nb){nb.textContent=ci>=cardDeck.length-1?'完了！':'次へ →';nb.classList.add("show");}
+}
+function cardNext(){
   ci++;
-  if(ci>=cardDeck.length){toast("デッキ完了！💪 "+mastered+"語マスター中");go("home");renderHome();return;}
+  if(ci>=cardDeck.length){
+    const mastered=Object.values(S.box).filter(v=>v>=2).length;
+    toast("デッキ完了！💪 "+mastered+"語マスター中");
+    go("home");renderHome();return;
+  }
   renderCard();
 }
+function playCurrentCard(){speak(cardDeck[ci].en+". "+cardDeck[ci].ex,null,cardDeck[ci].c)}
 
 /* ================= SPEAKING ================= */
 let spDeck=[],si=0,recording=false;
@@ -4800,9 +4837,8 @@ function toggleFavCurrent(source){
 }
 function toggleFavCard(){
   const c=cardDeck[ci];if(!c)return;
-  const added=toggleFav(c.en,c.ja,'cards');
-  const btn=document.getElementById("card-fav-btn");
-  if(btn)btn.textContent=added?"⭐":"☆";
+  toggleFav(c.en,c.ja,'cards');
+  _updateCardFavStar();
 }
 function toggleFavSpeak(){
   const c=spDeck[si];if(!c)return;
