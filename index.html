@@ -949,15 +949,21 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .match-countdown{font-size:12px;font-weight:900;color:rgba(226,73,59,.75);text-align:center;margin-bottom:10px;letter-spacing:.04em}
 .match-earn-hint{font-size:12px;font-weight:800;color:rgba(255,255,255,.25);text-align:center;margin-bottom:16px}
 .match-demo-label{font-size:12px;font-weight:800;color:rgba(255,196,0,.65);text-align:center;margin-bottom:10px}
-/* TRAIN画面のROLEPLAYカード */
-.train-rp-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#1a0505 0%,#2a0808 50%,#1f0606 100%);border:1px solid rgba(220,50,50,.3);border-radius:18px;padding:20px;cursor:pointer;margin-top:4px}
-.train-rp-card.locked{background:linear-gradient(135deg,#0e1219,#141b22);border-color:rgba(255,255,255,.08);cursor:default}
-.train-rp-card::before{content:'ROLEPLAY';position:absolute;right:-6px;top:-6px;font-size:54px;font-weight:900;color:rgba(220,50,50,.05);letter-spacing:-.02em;line-height:1;pointer-events:none;font-family:Barlow,sans-serif}
-.train-rp-eyebrow{font-size:10px;font-weight:900;letter-spacing:.14em;color:rgba(220,80,80,.7);margin-bottom:8px}
-.train-rp-title{font-size:22px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:6px;font-family:Barlow,sans-serif}
+/* ホーム画面のROLEPLAYカード（ヒーロー直下） */
+.home-rp-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#0e0018 0%,#1a0030 45%,#0a0020 100%);border:1.5px solid rgba(180,60,255,.45);border-radius:18px;padding:22px 20px 18px;cursor:pointer;margin:0 0 10px;box-shadow:0 0 28px rgba(160,40,255,.18),0 2px 16px rgba(0,0,0,.6)}
+.home-rp-card::after{content:'';position:absolute;inset:0;border-radius:18px;background:linear-gradient(135deg,rgba(180,60,255,.06) 0%,transparent 60%);pointer-events:none}
+.home-rp-card:active{filter:brightness(1.08)}
+.home-rp-card::before{content:'ROLEPLAY';position:absolute;right:-4px;top:-8px;font-size:58px;font-weight:900;color:rgba(180,60,255,.07);letter-spacing:-.02em;line-height:1;pointer-events:none;font-family:Barlow,sans-serif}
+.home-rp-card.locked{background:linear-gradient(135deg,#0e1219,#141b22);border-color:rgba(255,255,255,.08);box-shadow:none;cursor:default}
+/* TRAIN画面のROLEPLAYカード（後方互換） */
+.train-rp-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#0e0018 0%,#1a0030 45%,#0a0020 100%);border:1.5px solid rgba(180,60,255,.45);border-radius:18px;padding:20px;cursor:pointer;margin-top:4px;box-shadow:0 0 24px rgba(160,40,255,.15)}
+.train-rp-card.locked{background:linear-gradient(135deg,#0e1219,#141b22);border-color:rgba(255,255,255,.08);cursor:default;box-shadow:none}
+.train-rp-card::before{content:'ROLEPLAY';position:absolute;right:-6px;top:-6px;font-size:54px;font-weight:900;color:rgba(180,60,255,.06);letter-spacing:-.02em;line-height:1;pointer-events:none;font-family:Barlow,sans-serif}
+.train-rp-eyebrow{font-size:10px;font-weight:900;letter-spacing:.14em;color:rgba(180,100,255,.85);margin-bottom:8px}
+.train-rp-title{font-size:22px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:6px;font-family:Barlow,sans-serif;text-shadow:0 0 20px rgba(180,60,255,.4)}
 .train-rp-sub{font-size:12px;color:rgba(255,255,255,.4);line-height:1.5;margin-bottom:12px}
 .train-rp-footer{display:flex;justify-content:space-between;align-items:center}
-.train-rp-go{font-size:13px;font-weight:900;color:rgba(220,80,80,.8)}
+.train-rp-go{font-size:13px;font-weight:900;color:rgba(200,120,255,.9);text-shadow:0 0 10px rgba(180,60,255,.5)}
 .rp-choice-btn{width:100%;background:var(--white);border:1.5px solid var(--border2);border-radius:14px;padding:15px 18px;font-size:15px;font-weight:900;font-family:Barlow,sans-serif;color:var(--ink);cursor:pointer;text-align:left;letter-spacing:.02em}
 .rp-choice-btn:active{background:rgba(29,158,117,.15);border-color:var(--green)}
 .rp-speak-prompt{background:linear-gradient(135deg,#0d2416,#162e1e);border:1px solid var(--border2);border-radius:18px;padding:24px 20px;text-align:center;margin-bottom:8px}
@@ -1076,7 +1082,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   </div>
 
   <div id="home-hero-area"></div>
-
+  <div id="home-rp-area"></div>
   <div id="home-session-area"></div>
 </section>
 
@@ -3240,13 +3246,13 @@ function renderHome(){
   const rpPreview=!rpFull&&mdTotal>=MD_PREVIEW;
   const rpUnlocked=rpFull||rpPreview;
   const rpCardHtml=rpUnlocked
-    ?`<div class="train-rp-card tap-fx" onclick="openRoleplay()">
+    ?`<div class="home-rp-card tap-fx" onclick="openRoleplay()">
         <div class="train-rp-eyebrow">${rpFull?'ROLEPLAY — UNLOCKED':'ROLEPLAY — PREVIEW'}</div>
         <div class="train-rp-title">声で返せ。<br>現場英語。</div>
         <div class="train-rp-sub">${rpFull?'6カテゴリ・全シーン解放中':'1カテゴリ解放中。あと'+(MD_UNLOCK-mdTotal)+'回で完全解放。'}</div>
         <div class="train-rp-footer"><span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.25)">${rpFull?'選んで → 声に出す':'試合中の状況'}</span><span class="train-rp-go">入る ›</span></div>
       </div>`
-    :`<div class="train-rp-card locked">
+    :`<div class="home-rp-card locked">
         <div class="train-rp-eyebrow" style="color:rgba(255,255,255,.25)">ROLEPLAY — LOCKED</div>
         <div class="train-rp-title" style="color:rgba(255,255,255,.3)">声で返せ。<br>現場英語。</div>
         <div class="train-rp-sub">MATCHDAYを${MD_PREVIEW}回クリアで解放</div>
@@ -3255,7 +3261,8 @@ function renderHome(){
           <div style="height:3px;background:rgba(255,255,255,.08);border-radius:99px"><div style="height:100%;width:${Math.min(100,Math.round(mdTotal/MD_PREVIEW*100))}%;background:rgba(255,255,255,.2);border-radius:99px"></div></div>
         </div>
       </div>`;
-  document.getElementById("home-session-area").innerHTML=missionsHtml+rpCardHtml;
+  document.getElementById("home-rp-area").innerHTML=rpCardHtml;
+  document.getElementById("home-session-area").innerHTML=missionsHtml;
 
   const done=S.doneToday===today();
   if(!done){
