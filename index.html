@@ -2351,7 +2351,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:""},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false},data.progress);
   }
 }
 
@@ -2400,7 +2400,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:""};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -3201,6 +3201,9 @@ function renderMatch(){
       ${hasTickets
         ?`<span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.35)">チケット ${ticketsEarned}枚保持中</span>
            <button class="md-card-play-btn" onclick="event.stopPropagation();openMatchday()">▶ 試合に出る</button>`
+        :!S.matchdayDemoDone
+        ?`<span style="font-size:11px;font-weight:800;color:rgba(255,196,0,.7)">1問だけ無料で体験</span>
+           <button class="md-card-play-btn" style="background:#FFC400;color:#1a1a00" onclick="event.stopPropagation();openMatchdayDemo()">▶ DEMO を試す</button>`
         :`<div style="display:flex;flex-direction:column;gap:3px">
              <span style="font-size:10px;font-weight:900;letter-spacing:.06em;color:rgba(226,73,59,.85)">あと <span id="md-card-countdown">--:--:--</span> で消える</span>
              <span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.3)">ミッションをクリアして参戦</span>
@@ -4287,7 +4290,7 @@ const MD_LEVELS={1:{label:"BEGINNER",cls:"lv1"},2:{label:"INTERMEDIATE",cls:"lv2
 const MD_XP_TABLE={100:100,50:40,0:10};
 function mdXpFor(score){return 0;} // XP廃止 — 関数は互換のため残すが常に0を返す
 
-let mdQueue=[],mdQueueIdx=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null;
+let mdQueue=[],mdQueueIdx=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null,mdDemoMode=false;
 
 const MD_TICKET_MAX=3;
 const MD_PREVIEW=7;
@@ -5012,7 +5015,15 @@ function mdCelebrate(){
   setTimeout(()=>ol.remove(),2200);
 }
 
+function openMatchdayDemo(){
+  mdDemoMode=true;
+  mdQueue=shuffleMd().slice(0,1);
+  mdQueueIdx=0;
+  go('matchday','push');
+  renderMdScene();
+}
 function openMatchday(){
+  mdDemoMode=false;
   go('matchday','push');
   if((S.matchTickets||0)<=0){
     document.getElementById('md-scene-wrap').innerHTML=`
@@ -5133,6 +5144,28 @@ function mdNext(){
   save();
   mdQueueIdx++;
   if(mdQueueIdx>=1){
+    if(mdDemoMode){
+      mdDemoMode=false;
+      S.matchdayDemoDone=true;
+      save();
+      document.getElementById('md-scene-wrap').innerHTML=`
+        <div class="md-complete">
+          <div class="md-complete-icon" style="font-size:40px">⚡</div>
+          <div class="md-complete-title">DEMO 完了！</div>
+          <div class="md-complete-sub" style="text-align:center;max-width:280px;margin:0 auto 20px">
+            どうだった？<br>ミッションをこなしてチケットを手に入れれば、毎日参戦できる。
+          </div>
+          <div style="width:100%;max-width:280px;margin:0 auto 20px;background:var(--card2);border-radius:14px;padding:14px 16px">
+            <div style="font-size:10px;font-weight:800;color:var(--grey);letter-spacing:.08em;margin-bottom:10px">チケットの手に入れ方</div>
+            <div class="md-ticket-earn-row"><span>日付が変わる（毎日自動）</span><span class="md-ticket-earn-reward">+1</span></div>
+            <div class="md-ticket-earn-row"><span>TODAY'S MISSIONS 全4完了</span><span class="md-ticket-earn-reward">+1</span></div>
+          </div>
+          <button class="md-complete-btn" onclick="go('home','pop');renderHome()" style="background:var(--green)">ミッションをやる →</button>
+          <button onclick="go('match','pop');renderMatch()" style="background:transparent;border:none;color:rgba(255,255,255,.35);font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:14px">MATCHに戻る</button>
+        </div>`;
+      renderMdDots();
+      return;
+    }
     document.getElementById('md-scene-wrap').innerHTML=`
       <div class="md-complete">
         <div class="md-complete-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></div>
