@@ -483,6 +483,40 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .player-complete-title{font-size:28px;font-weight:900;margin-bottom:8px}
 .player-complete-sub{font-size:14px;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:36px}
 .player-complete-btn{background:var(--green);color:#fff;border:none;border-radius:20px;padding:20px 40px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 0 var(--green-dk)}
+/* ---- SPEAKING DRILL ---- */
+.drill-topbar{display:flex;align-items:center;gap:12px;padding:14px 18px 8px}
+.drill-prog{flex:1}
+.drill-prog-track{height:4px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin-bottom:5px}
+.drill-prog-fill{height:100%;background:linear-gradient(90deg,#FF6B00,#FFD700);border-radius:999px;transition:width .35s}
+.drill-prog-meta{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:rgba(255,255,255,.35)}
+.drill-phrase-card{background:var(--white);border:1px solid var(--border);border-radius:24px;padding:24px 20px;margin:0 18px;text-align:center}
+.drill-cat-badge{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--green);background:var(--green-lt);border-radius:99px;padding:4px 12px;display:inline-block;margin-bottom:14px}
+.drill-ja{font-size:22px;font-weight:900;color:var(--ink);line-height:1.4;margin-bottom:10px}
+.drill-en-hidden{font-size:14px;color:rgba(255,255,255,.12);font-weight:900;letter-spacing:.3em}
+.drill-en-reveal{font-size:17px;font-weight:800;color:#FFD700;font-style:italic;margin-top:10px;line-height:1.4}
+.drill-heard{font-size:12px;color:var(--grey);margin-top:6px}
+.drill-cta{text-align:center;padding:24px 18px 0}
+.drill-play-btn{background:var(--green);color:#fff;border:none;border-radius:20px;padding:18px 44px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 0 var(--green-dk)}
+.drill-play-btn:active{transform:translateY(2px);box-shadow:none}
+.drill-play-btn:disabled{opacity:.5}
+.drill-mic-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+.drill-mic-big{width:80px;height:80px;border-radius:50%;background:#E53935;border:none;font-size:30px;cursor:pointer;color:#fff;box-shadow:0 4px 16px rgba(229,57,53,.45);display:flex;align-items:center;justify-content:center}
+.drill-mic-big.rec{animation:drill-mic-pulse .8s ease-in-out infinite}
+@keyframes drill-mic-pulse{0%,100%{box-shadow:0 4px 16px rgba(229,57,53,.45)}50%{box-shadow:0 0 0 18px rgba(229,57,53,.12),0 4px 16px rgba(229,57,53,.45)}}
+.drill-timer{font-size:30px;font-weight:900;color:var(--yellow);font-variant-numeric:tabular-nums;min-height:38px}
+.drill-hint{font-size:11px;color:rgba(255,255,255,.3);font-weight:800;letter-spacing:.04em}
+.drill-score-area{text-align:center;padding:16px 18px 0}
+.drill-score-num{font-size:68px;font-weight:900;line-height:1;color:#FFD700}
+.drill-score-sub{font-size:10px;font-weight:900;letter-spacing:.14em;color:rgba(255,255,255,.35);margin-bottom:12px}
+.drill-metrics{display:flex;gap:10px;justify-content:center;margin-bottom:14px}
+.drill-metric{background:var(--card2);border-radius:12px;padding:10px 20px;text-align:center}
+.drill-metric-val{font-size:20px;font-weight:900;color:var(--ink)}
+.drill-metric-lbl{font-size:10px;font-weight:800;color:var(--grey);letter-spacing:.06em;margin-top:2px}
+.drill-feedback{font-size:14px;font-weight:800;color:rgba(255,255,255,.65);padding:0 24px;line-height:1.6;margin-bottom:16px}
+.drill-actions{display:flex;gap:10px;padding:0 18px}
+.drill-btn-retry{flex:1;background:var(--card2);border:1px solid var(--border);color:var(--ink);border-radius:14px;padding:14px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer}
+.drill-btn-next{flex:2;background:var(--green);color:#fff;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer}
+.drill-tagline{text-align:center;font-size:10px;font-weight:800;color:rgba(255,255,255,.15);letter-spacing:.04em;padding:0 20px 24px}
 /* ---- missed phrases ---- */
 .missed-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
 .missed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -1009,6 +1043,12 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   <button id="nav-strength" onclick="go('career','tab');renderCareer()"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg></span>キャリア</button>
   <button id="nav-others" onclick="renderOthers();go('others','tab')"><span class="nic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></span>その他</button>
 </nav>
+<!-- ============ SPEAKING DRILL ============ -->
+<section class="screen" id="scr-drill" style="padding:0;display:flex;flex-direction:column">
+  <div id="drill-top"></div>
+  <div id="drill-body" style="flex:1;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:20px"></div>
+</section>
+
 <!-- ============ FAVOURITES ============ -->
 <section class="screen" id="scr-fav">
   <div class="quiz-top"><button class="btn-x" onclick="go('others','pop')">&#x2715;</button>
@@ -1073,6 +1113,14 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       <span class="oc-ic">&#x1F3C6;</span>
       <h3>キャリア</h3>
       <p>成長記録とトロフィー</p>
+    </div>
+    <div class="other-card hero tap-fx" onclick="startDrill('mix')" style="background:linear-gradient(135deg,#1a0a00 0%,#2e1500 100%);border-color:rgba(255,140,0,.3)">
+      <span class="oc-ic">🎙️</span>
+      <div>
+        <div class="hero-sub">SPEAKING DRILL</div>
+        <h3>スピーキング練習</h3>
+        <p>聞く → 真似る → 判定。チームに行く前に100回ミスしておく。</p>
+      </div>
     </div>
     <div class="other-card featured" onclick="renderFavs();go('fav')">
       <span class="oc-ic">&#x2B50;</span>
@@ -2098,7 +2146,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[]},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[],lastDrillDate:""},data.progress);
   }
 }
 
@@ -2142,7 +2190,7 @@ const TROPHIES=[
  {id:"ten",ic:"🔟",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"🗣️",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[]};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,combo:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",totalXP:0,matchdayDate:"",matchdayCount:0,matchTickets:1,cardsSinceTicket:0,favs:[],lastDrillDate:""};
 function save(){saveToSupabase();}
 function today(){return new Date().toISOString().slice(0,10)}
 
@@ -2340,7 +2388,7 @@ function go(id, dir){
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.getElementById("scr-"+id).classList.add("active");
     document.querySelectorAll("nav button").forEach(b=>b.classList.remove("sel"));
-    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home",fav:"nav-others"}[id];
+    const nv={home:"nav-home",cards:"nav-home",play:"nav-home",player:"nav-home",career:"nav-strength",others:"nav-others",week:"nav-others",cases:"nav-others",case:"nav-others",coach:"nav-others",speak:"nav-others",pick:"nav-home",fav:"nav-others",drill:"nav-others"}[id];
     if(nv)document.getElementById(nv).classList.add("sel");
     document.getElementById("feedback").classList.remove("show");
     window.scrollTo(0,0);
@@ -3534,6 +3582,184 @@ function earnMatchTicket(){
   if((S.matchTickets||0)>=MD_TICKET_MAX)return;
   S.matchTickets=(S.matchTickets||0)+1;save();
   toast(`🎟️ MATCH TICKET +1（残り${S.matchTickets}枚）`);
+}
+
+/* ================= SPEAKING DRILL ================= */
+let drillDeck=[],drillIdx=0,drillMissCount=0,drillCat='mix';
+let drillRecog=null,drillTimerInterval=null,drillStartMs=0,drillGotResult=false;
+
+function startDrill(cat){
+  drillCat=cat||'mix';
+  drillDeck=pick(poolFor(drillCat),10);
+  drillIdx=0;drillMissCount=0;
+  go('drill');
+  renderDrillPhrase();
+}
+
+function _drillTopHtml(){
+  const pct=Math.round(drillIdx/drillDeck.length*100);
+  return `<div class="drill-topbar">
+    <button class="btn-x" onclick="quitDrill()">✕</button>
+    <div class="drill-prog">
+      <div class="drill-prog-track"><div class="drill-prog-fill" style="width:${pct}%"></div></div>
+      <div class="drill-prog-meta"><span>${drillIdx+1} / ${drillDeck.length}</span><span id="drill-miss-lbl">ミス <b style="color:rgba(255,110,110,.9)">${drillMissCount}</b></span></div>
+    </div>
+  </div>`;
+}
+
+function renderDrillPhrase(){
+  const p=drillDeck[drillIdx];
+  const catName=CATS[p.c]?CATS[p.c].name:p.c.toUpperCase();
+  document.getElementById('drill-top').innerHTML=_drillTopHtml();
+  document.getElementById('drill-body').innerHTML=`
+    <div class="drill-phrase-card" style="margin-top:16px">
+      <div class="drill-cat-badge">${catName}</div>
+      <div class="drill-ja">${p.ja}</div>
+      <div class="drill-en-hidden">• • • • •</div>
+    </div>
+    <div class="drill-cta">
+      <button class="drill-play-btn" id="drill-play-btn" onclick="playDrillPhrase()">▶&nbsp; 聞く</button>
+      <div class="drill-hint" style="margin-top:14px">聞いてから、すぐ真似て言う</div>
+    </div>
+    <div style="flex:1"></div>
+    <div class="drill-tagline">チームに行く前に、AI相手に100回ミスしておく</div>`;
+  setTimeout(()=>playDrillPhrase(),450);
+}
+
+function playDrillPhrase(){
+  const p=drillDeck[drillIdx];
+  const btn=document.getElementById('drill-play-btn');
+  if(btn){btn.textContent='⏸ 再生中...';btn.disabled=true;}
+  let ended=false;
+  function onEnd(){if(ended)return;ended=true;showDrillSpeak();}
+  const a=new Audio(textToAudioSrc(p.en));
+  a.onerror=()=>{speakTTS(p.en,null,p.c);setTimeout(onEnd,1800);};
+  a.onended=onEnd;
+  a.play().catch(()=>{speakTTS(p.en,null,p.c);setTimeout(onEnd,1800);});
+}
+
+function showDrillSpeak(){
+  const p=drillDeck[drillIdx];
+  const catName=CATS[p.c]?CATS[p.c].name:p.c.toUpperCase();
+  document.getElementById('drill-body').innerHTML=`
+    <div class="drill-phrase-card" style="margin-top:16px">
+      <div class="drill-cat-badge">${catName}</div>
+      <div class="drill-ja">${p.ja}</div>
+      <div class="drill-en-hidden">• • • • •</div>
+    </div>
+    <div class="drill-cta">
+      <div class="drill-mic-wrap">
+        <div class="drill-timer" id="drill-timer">0.0s</div>
+        <button class="drill-mic-big" id="drill-mic-btn" onclick="startDrillRec()">🎙️</button>
+        <div class="drill-hint">タップして話す</div>
+      </div>
+    </div>
+    <div style="flex:1"></div>
+    <div class="drill-tagline">チームに行く前に、AI相手に100回ミスしておく</div>`;
+}
+
+function startDrillRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const micBtn=document.getElementById('drill-mic-btn');
+  if(!SR){showDrillResult('',0);return;}
+  if(micBtn){micBtn.classList.add('rec');micBtn.disabled=true;}
+  drillStartMs=Date.now();drillGotResult=false;
+  clearInterval(drillTimerInterval);
+  drillTimerInterval=setInterval(()=>{
+    const el=document.getElementById('drill-timer');
+    if(el)el.textContent=((Date.now()-drillStartMs)/1000).toFixed(1)+'s';
+  },100);
+  drillRecog=new SR();drillRecog.lang='en-GB';drillRecog.interimResults=false;drillRecog.maxAlternatives=1;
+  drillRecog.onresult=e=>{
+    drillGotResult=true;
+    clearInterval(drillTimerInterval);
+    showDrillResult(e.results[0][0].transcript,Date.now()-drillStartMs);
+  };
+  drillRecog.onerror=()=>{if(!drillGotResult){drillGotResult=true;clearInterval(drillTimerInterval);showDrillResult('',0);}};
+  drillRecog.onend=()=>{if(!drillGotResult){drillGotResult=true;clearInterval(drillTimerInterval);showDrillResult('',0);}};
+  drillRecog.start();
+}
+
+function showDrillResult(heard,timeMs){
+  const p=drillDeck[drillIdx];
+  const catName=CATS[p.c]?CATS[p.c].name:p.c.toUpperCase();
+  const target=p.en.toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/);
+  const got=heard?heard.toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/):[];
+  const hit=target.filter(w=>got.includes(w)).length;
+  const accuracy=heard?Math.round(hit/target.length*100):0;
+  const speedLabel=timeMs>0&&timeMs<2500?'A':timeMs<4500?'B':'C';
+  const speedBonus=timeMs>0&&timeMs<2500?30:timeMs<4500?15:0;
+  const total=Math.min(100,Math.round(accuracy*0.7+speedBonus));
+  const isMiss=total<60;
+  if(isMiss)drillMissCount++;
+  // update miss label
+  const ml=document.getElementById('drill-miss-lbl');
+  if(ml)ml.innerHTML=`ミス <b style="color:rgba(255,110,110,.9)">${drillMissCount}</b>`;
+
+  const msgs={
+    high:['完璧だ。チームで使え。','これが現場英語だ。','Top bins！次も行け。'],
+    mid:['惜しい。感覚はある。続けろ。','いい方向だ。もう一回行けるぞ。'],
+    low:['これが100回のうちの1回だ。','ミスしてOK。また行け。','チームの前でなくてよかった。ここで潰せ。']
+  };
+  const pool=total>=80?msgs.high:total>=50?msgs.mid:msgs.low;
+  const msg=pool[Math.floor(Math.random()*pool.length)];
+  const isLast=drillIdx>=drillDeck.length-1;
+
+  document.getElementById('drill-body').innerHTML=`
+    <div class="drill-phrase-card" style="margin-top:16px">
+      <div class="drill-cat-badge">${catName}</div>
+      <div class="drill-ja">${p.ja}</div>
+      <div class="drill-en-reveal">${p.en}</div>
+      ${heard?`<div class="drill-heard">あなた:「${heard}」</div>`:`<div class="drill-heard" style="color:rgba(255,90,90,.6)">聞き取れず — もう一回試せ</div>`}
+    </div>
+    <div class="drill-score-area">
+      <div class="drill-score-num">${total}</div>
+      <div class="drill-score-sub">SCORE</div>
+      <div class="drill-metrics">
+        <div class="drill-metric">
+          <div class="drill-metric-val">${accuracy}%</div>
+          <div class="drill-metric-lbl">伝わり度</div>
+        </div>
+        <div class="drill-metric">
+          <div class="drill-metric-val" style="color:${speedLabel==='A'?'#FFD700':speedLabel==='B'?'var(--green)':'var(--grey)'}">${speedLabel}</div>
+          <div class="drill-metric-lbl">反射速度</div>
+        </div>
+      </div>
+      <div class="drill-feedback">${msg}</div>
+    </div>
+    <div class="drill-actions">
+      <button class="drill-btn-retry" onclick="retryDrill()">もう一回</button>
+      <button class="drill-btn-next" onclick="${isLast?'finishDrill()':'nextDrill()'}">${isLast?'完了！':'NEXT →'}</button>
+    </div>`;
+}
+
+function retryDrill(){
+  if(drillRecog){try{drillRecog.stop();}catch(e){}}
+  renderDrillPhrase();
+}
+function nextDrill(){
+  if(drillRecog){try{drillRecog.stop();}catch(e){}}
+  drillIdx++;
+  if(drillIdx>=drillDeck.length){finishDrill();return;}
+  renderDrillPhrase();
+}
+function quitDrill(){
+  if(drillRecog){try{drillRecog.stop();}catch(e){}}
+  clearInterval(drillTimerInterval);
+  go('home');renderHome();
+}
+function finishDrill(){
+  S.lastDrillDate=today();save();
+  document.getElementById('drill-body').innerHTML=`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">
+      <div style="font-size:52px;margin-bottom:16px">💪</div>
+      <div style="font-size:26px;font-weight:900;color:#FFD700;margin-bottom:6px">セッション完了</div>
+      <div style="font-size:13px;color:var(--grey);margin-bottom:20px">10フレーズ練習</div>
+      <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,.4);margin-bottom:6px">今日のミス</div>
+      <div style="font-size:56px;font-weight:900;color:${drillMissCount>=5?'#FF6B00':'var(--ink)'};line-height:1">${drillMissCount}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.3);font-weight:800;margin:12px 0 36px">${drillMissCount>=5?'いいぞ。それがトレーニングだ。':'次はもっとミスしていい。'}  </div>
+      <button onclick="go('others','pop')" style="background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px 40px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer">ホームへ</button>
+    </div>`;
 }
 
 /* ================= FAVOURITES ================= */
