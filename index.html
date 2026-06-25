@@ -639,8 +639,19 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .pos-skip{background:none;border:none;color:rgba(255,255,255,.25);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:14px}
 .onboard-back{background:none;border:none;color:rgba(255,255,255,.35);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:20px;align-self:flex-start}
 
+/* ===== FEATURE CAROUSEL ===== */
+.feature-carousel-wrap{margin-bottom:4px}
+.feature-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none;-ms-overflow-style:none;padding-right:28px}
+.feature-carousel::-webkit-scrollbar{display:none}
+.feature-carousel-slide{scroll-snap-align:start;flex-shrink:0;width:calc(100% - 28px)}
+.feature-carousel-dots{display:flex;justify-content:center;gap:6px;margin-top:10px;margin-bottom:8px}
+.feature-dot{height:6px;border-radius:3px;background:rgba(255,255,255,.18);transition:width .25s,background .25s;width:6px}
+.feature-dot.active{width:18px;background:var(--green)}
+
 /* ===== MATCHDAY HOME CARD ===== */
-.matchday-home-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#0d2e1a 0%,#1a3d22 50%,#0d2416 100%);border:1px solid rgba(29,158,117,.35);border-radius:18px;padding:18px 18px 16px;cursor:pointer;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}
+@keyframes mdCardGlow{0%,100%{box-shadow:0 4px 24px rgba(0,0,0,.5),0 0 0 0 rgba(29,158,117,.0),inset 0 1px 0 rgba(29,158,117,.1)}50%{box-shadow:0 4px 32px rgba(0,0,0,.55),0 0 28px 2px rgba(29,158,117,.18),inset 0 1px 0 rgba(29,158,117,.2)}}
+@keyframes mdBorderPulse{0%,100%{border-color:rgba(29,158,117,.35)}50%{border-color:rgba(29,158,117,.75)}}
+.matchday-home-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#0d2e1a 0%,#1a3d22 50%,#0d2416 100%);border:1px solid rgba(29,158,117,.35);border-radius:18px;padding:18px 18px 16px;cursor:pointer;display:flex;flex-direction:column;gap:10px;animation:mdCardGlow 3s ease-in-out infinite,mdBorderPulse 3s ease-in-out infinite}
 .matchday-home-card::before{content:'MATCHDAY';position:absolute;right:-8px;top:-8px;font-size:60px;font-weight:900;color:rgba(29,158,117,.06);letter-spacing:-.02em;line-height:1;pointer-events:none}
 .matchday-home-eyebrow{display:flex;align-items:center;gap:8px}
 .matchday-home-badge{background:var(--green);color:#fff;font-size:10px;font-weight:900;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
@@ -654,12 +665,12 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .matchday-xp-label{font-size:10px;color:var(--grey);font-weight:700}
 .matchday-home-go{font-size:13px;font-weight:900;color:var(--green)}
 .matchday-done-badge{background:rgba(29,158,117,.2);border:1px solid rgba(29,158,117,.4);color:var(--green);font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px}
-/* AI ROLEPLAY card */
-.ai-roleplay-card{position:relative;overflow:hidden;border-radius:18px;padding:18px 18px 16px;cursor:pointer;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}
+/* ROLEPLAY card */
+.ai-roleplay-card{position:relative;overflow:hidden;border-radius:18px;padding:18px 18px 16px;cursor:pointer;display:flex;flex-direction:column;gap:10px}
 .ai-roleplay-card.locked{background:linear-gradient(135deg,#0e1219 0%,#141b22 100%);border:1px solid rgba(255,255,255,.1)}
-.ai-roleplay-card.locked::before{content:'AI ROLEPLAY';position:absolute;right:-8px;top:-8px;font-size:56px;font-weight:900;color:rgba(255,255,255,.03);letter-spacing:-.02em;line-height:1;pointer-events:none}
+.ai-roleplay-card.locked::before{content:'ROLEPLAY';position:absolute;right:-8px;top:-8px;font-size:56px;font-weight:900;color:rgba(255,255,255,.03);letter-spacing:-.02em;line-height:1;pointer-events:none}
 .ai-roleplay-card.unlocked{background:linear-gradient(135deg,#2e0a0a 0%,#1f0808 50%,#2a0d0d 100%);border:1px solid rgba(220,50,50,.35)}
-.ai-roleplay-card.unlocked::before{content:'AI ROLEPLAY';position:absolute;right:-8px;top:-8px;font-size:56px;font-weight:900;color:rgba(220,50,50,.06);letter-spacing:-.02em;line-height:1;pointer-events:none}
+.ai-roleplay-card.unlocked::before{content:'ROLEPLAY';position:absolute;right:-8px;top:-8px;font-size:56px;font-weight:900;color:rgba(220,50,50,.06);letter-spacing:-.02em;line-height:1;pointer-events:none}
 .ai-rp-eyebrow{display:flex;align-items:center;gap:8px}
 .ai-rp-badge-locked{background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:10px;font-weight:900;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
 .ai-rp-badge-unlocked{background:#DC3232;color:#fff;font-size:10px;font-weight:900;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
@@ -748,7 +759,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .md-complete-xp{font-size:15px;color:var(--green);font-weight:800}
 .md-complete-sub{font-size:13px;color:var(--grey);font-weight:600}
 .md-complete-btn{background:var(--green);color:#fff;border:none;border-radius:16px;padding:16px 40px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 3px 0 var(--green-dk);margin-top:8px}
-/* ===== AI ROLEPLAY ===== */
+/* ===== ROLEPLAY ===== */
 .rp-cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0 24px}
 .rp-cat-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px 12px;cursor:pointer;transition:border-color .15s,transform .1s;position:relative;overflow:hidden}
 .rp-cat-card:active{transform:scale(.97)}
@@ -1106,14 +1117,14 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
   <button id="nav-strength" onclick="go('career','tab');renderCareer()"><span class="nic"><svg viewBox="0 0 24 24"><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg></span>キャリア</button>
   <button id="nav-others" onclick="renderOthers();go('others','tab')"><span class="nic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></span>その他</button>
 </nav>
-<!-- ============ AI ROLEPLAY ============ -->
+<!-- ============ ROLEPLAY ============ -->
 <section class="screen" id="scr-roleplay">
   <div class="quiz-top"><button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
-    <div style="font-weight:900;font-size:17px">AI ROLEPLAY</div></div>
+    <div style="font-weight:900;font-size:17px">ROLEPLAY</div></div>
   <div style="flex:1;overflow-y:auto;padding-bottom:32px" id="rp-menu-body"></div>
 </section>
 
-<!-- ============ AI ROLEPLAY SCENE ============ -->
+<!-- ============ ROLEPLAY SCENE ============ -->
 <section class="screen" id="scr-rp-scene">
   <div id="rp-scene-top"></div>
   <div id="rp-scene-body" style="flex:1;overflow-y:auto"></div>
@@ -2687,7 +2698,7 @@ function renderHome(){
   const aiRoleplayCardHtml=rpUnlocked
     ?`<div class="ai-roleplay-card unlocked tap-fx" onclick="openRoleplay()">
         <div class="ai-rp-eyebrow">
-          <span class="ai-rp-badge-unlocked">AI ROLEPLAY</span>
+          <span class="ai-rp-badge-unlocked">ROLEPLAY</span>
           <span style="font-size:11px;font-weight:800;color:rgba(255,80,80,.8)">UNLOCKED</span>
         </div>
         <div class="ai-rp-title-unlocked">本番ピッチに<br>立て。</div>
@@ -2697,9 +2708,9 @@ function renderHome(){
           <span class="ai-rp-go">入る ›</span>
         </div>
       </div>`
-    :`<div class="ai-roleplay-card locked" onclick="toast('あと${MD_UNLOCK-mdTotal}シーンでAI ROLEPLAYが解放される')">
+    :`<div class="ai-roleplay-card locked" onclick="toast('あと${MD_UNLOCK-mdTotal}シーンでROLEPLAYが解放される')">
         <div class="ai-rp-eyebrow">
-          <span class="ai-rp-badge-locked">AI ROLEPLAY</span>
+          <span class="ai-rp-badge-locked">ROLEPLAY</span>
           <span class="ai-rp-lock">🔒</span>
         </div>
         <div class="ai-rp-title-locked">本番ピッチに<br>立て。</div>
@@ -2710,10 +2721,28 @@ function renderHome(){
         </div>
       </div>`;
 
-  document.getElementById("home-session-area").innerHTML=
-    matchdayCardHtml
-    +aiRoleplayCardHtml
-    +missionsHtml;
+  document.getElementById("home-session-area").innerHTML=`
+    <div class="feature-carousel-wrap">
+      <div class="feature-carousel" id="feature-carousel">
+        <div class="feature-carousel-slide">${matchdayCardHtml}</div>
+        <div class="feature-carousel-slide">${aiRoleplayCardHtml}</div>
+      </div>
+      <div class="feature-carousel-dots">
+        <div class="feature-dot active" id="fdot-0"></div>
+        <div class="feature-dot" id="fdot-1"></div>
+      </div>
+    </div>`+missionsHtml;
+
+  const fc=document.getElementById('feature-carousel');
+  if(fc){
+    fc.addEventListener('scroll',()=>{
+      const idx=Math.round(fc.scrollLeft/fc.offsetWidth);
+      [0,1].forEach(i=>{
+        const d=document.getElementById('fdot-'+i);
+        if(d)d.classList.toggle('active',i===idx);
+      });
+    },{passive:true});
+  }
 
   const done=S.doneToday===today();
   if(!done){
@@ -3680,7 +3709,7 @@ function mdXpFor(score){if(score>=80)return 100;if(score>=40)return 40;return 10
 let mdQueue=[],mdQueueIdx=0,mdSessionXP=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null;
 
 const MD_TICKET_MAX=3;
-/* ================= AI ROLEPLAY DATA ================= */
+/* ================= ROLEPLAY DATA ================= */
 const RP_CATEGORIES=[
   {id:'pitch',   label:'試合中の状況',   npc:'On the pitch / Captain',     icon:'⚽', color:'#1D9E75'},
   {id:'manager', label:'監督との会話',   npc:'Manager / Gaffer',           icon:'📋', color:'#FF6B00'},
@@ -3735,7 +3764,7 @@ const ROLEPLAY_SCENES=[
   {cat:'daily',title:'食事の確認',situation:'クラブのシェフが食事制限を確認。',npc:'Chef',line:"The chef's asking - any dietary requirements we should know about?",keys:['no','nothing','all good','not really','just halal']},
 ];
 
-/* ================= AI ROLEPLAY LOGIC ================= */
+/* ================= ROLEPLAY LOGIC ================= */
 let rpCat=null,rpScenes=[],rpIdx=0,rpTotalScore=0;
 let rpRecog=null,rpTimerInterval=null,rpStartMs=0,rpGotResult=false,rpRecording=false;
 
@@ -3904,7 +3933,7 @@ function finishRoleplay(){
   document.getElementById('rp-scene-top').innerHTML=`
     <div class="rp-topbar">
       <button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
-      <div style="font-weight:900;font-size:15px">AI ROLEPLAY 完了</div>
+      <div style="font-weight:900;font-size:15px">ROLEPLAY 完了</div>
     </div>`;
   document.getElementById('rp-scene-body').innerHTML=`
     <div class="rp-finish-wrap">
