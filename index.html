@@ -4403,7 +4403,7 @@ const ROLEPLAY_SCENES=[
 
 /* ================= ROLEPLAY LOGIC ================= */
 let rpCat=null,rpScenes=[],rpIdx=0,rpTotalScore=0;
-let rpTimerInterval=null,rpStartMs=0,rpRecording=false;
+let rpTimerInterval=null,rpStartMs=0,rpRecording=false,_rpStarting=false;
 let _rpStream=null,_rpMediaRec=null,_rpChunks=[],_rpProcessing=false;
 
 function openRoleplay(){
@@ -4488,7 +4488,7 @@ function rpPlayLine(){
 
 function toggleRPRec(){
   _resumeAudioCtx();
-  if(_rpProcessing)return;
+  if(_rpProcessing||_rpStarting)return;
   if(rpRecording){stopRPRec();return;}
   startRPRec();
 }
@@ -4507,11 +4507,27 @@ async function _ensureRPStream(){
   return _rpStream;
 }
 async function startRPRec(){
-  if(_rpProcessing)return;
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast('このブラウザは録音非対応です');return;}
+  if(_rpProcessing||_rpStarting||rpRecording)return;
+  _rpStarting=true;
+  // 即座にUI更新（awaitより前）
+  const btn0=document.getElementById('rp-mic-btn');
+  const hint0=document.getElementById('rp-hint');
+  if(btn0){btn0.textContent='…';btn0.disabled=true;}
+  if(hint0)hint0.textContent='マイク準備中...';
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    toast('このブラウザは録音非対応です');_rpStarting=false;
+    if(btn0){btn0.innerHTML=_rpMicSvg();btn0.disabled=false;}
+    if(hint0)hint0.textContent='タップして返答 → もう一度タップで停止';
+    return;
+  }
   let stream;
   try{stream=await _ensureRPStream();}
-  catch(e){toast('マイクの許可が必要です（設定→プライバシー→マイク）');return;}
+  catch(e){
+    toast('マイクの許可が必要です（設定→プライバシー→マイク）');_rpStarting=false;
+    if(btn0){btn0.innerHTML=_rpMicSvg();btn0.disabled=false;}
+    if(hint0)hint0.textContent='タップして返答 → もう一度タップで停止';
+    return;
+  }
   _rpChunks=[];
   const mimeType=_rpMimeType();
   try{_rpMediaRec=new MediaRecorder(stream,mimeType?{mimeType}:{});}
@@ -4533,9 +4549,10 @@ async function startRPRec(){
     showRPResult(heard,elapsed);
   };
   _rpMediaRec.start(100);
-  rpRecording=true;rpStartMs=Date.now();_rpProcessing=false;
+  rpRecording=true;rpStartMs=Date.now();_rpProcessing=false;_rpStarting=false;
   const btn=document.getElementById('rp-mic-btn');
-  if(btn){btn.textContent='■';btn.classList.add('rec');}
+  if(btn){btn.textContent='■';btn.classList.add('rec');btn.disabled=false;}
+  if(hint0)hint0.textContent='タップして止める';
   clearInterval(rpTimerInterval);
   rpTimerInterval=setInterval(()=>{
     const t=document.getElementById('rp-timer');
