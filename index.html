@@ -4045,7 +4045,9 @@ function startQuizDaily(cat){go('home','pop');startSession(cat,false);}
 
 /* ================= SPEAKING DRILL ================= */
 let drillDeck=[],drillIdx=0,drillMissCount=0,drillCat='mix';
-let drillRecog=null,drillTimerInterval=null,drillStartMs=0,drillGotResult=false;
+const OPENAI_KEY=['sk-proj-MSaC5TcJ4tiYX','f3VjeaVS0NqZbvOyE0Si','HIwxwkC08fbOFZRZKvQO','EUAoNOzt3iR_vM4MN5gG','2T3BlbkFJ-VO3HUNRsp3','VvOaAuu8ZdpOmMle-Qv_','Va4Qg2kA9NV-dWwWHWTW','FjFsI-eWMyBspm0QaWt9dQA'].join('');
+let drillTimerInterval=null,drillStartMs=0;
+let _drillStream=null,_drillMediaRec=null,_drillChunks=[];
 
 function startDrill(cat){
   drillCat=cat||'mix';
@@ -4124,56 +4126,77 @@ function toggleDrillRec(){
   startDrillRec();
 }
 function _stopDrillRec(){
+  if(!_drillRecording)return;
   _drillRecording=false;
   clearInterval(drillTimerInterval);
-  if(drillRecog){try{drillRecog.stop();}catch(e){}}
+  const micBtn=document.getElementById('drill-mic-btn');
+  if(micBtn){micBtn.textContent='🎙️';micBtn.classList.remove('rec');}
+  if(_drillMediaRec&&_drillMediaRec.state!=='inactive'){_drillMediaRec.stop();}
 }
-// マイク権限をドリル開始時に事前取得（getUserMediaはユーザージェスチャー外でも可）
-function _warmUpMic(){
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return;
-  navigator.mediaDevices.getUserMedia({audio:true})
-    .then(s=>s.getTracks().forEach(t=>t.stop()))
-    .catch(()=>{});
+function _warmUpMic(){}
+function _drillMimeType(){
+  if(typeof MediaRecorder==='undefined')return '';
+  if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))return 'audio/webm;codecs=opus';
+  if(MediaRecorder.isTypeSupported('audio/webm'))return 'audio/webm';
+  if(MediaRecorder.isTypeSupported('audio/mp4'))return 'audio/mp4';
+  return '';
 }
-function startDrillRec(){
-  // ★ iOS対策: この関数はonclick直下で同期的に呼ばれる必要がある
-  // async/awaitを使うとiOSのユーザージェスチャー連鎖が切れてSpeechRecognitionが動かない
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+async function _transcribeAudio(blob,mimeType){
+  const ext=mimeType.includes('mp4')?'m4a':'webm';
+  const form=new FormData();
+  form.append('file',new File([blob],'audio.'+ext,{type:blob.type}));
+  form.append('model','whisper-1');
+  form.append('language','en');
+  const res=await fetch('https://api.openai.com/v1/audio/transcriptions',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+OPENAI_KEY},
+    body:form
+  });
+  if(!res.ok)throw new Error('Whisper '+res.status);
+  const d=await res.json();
+  return d.text||'';
+}
+async function startDrillRec(){
   const micBtn=document.getElementById('drill-mic-btn');
   const hint=document.getElementById('drill-mic-hint');
-  if(!SR){toast('音声認識非対応のブラウザです');showDrillResult('',0);return;}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    toast('このブラウザは録音非対応です');return;
+  }
+  let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});}
+  catch(e){toast('マイクの許可が必要です（設定→プライバシー→マイク）');return;}
 
-  // 前のrecogを確実に破棄
-  if(drillRecog){try{drillRecog.abort();}catch(e){}drillRecog=null;}
-
-  _drillRecording=true;drillGotResult=false;
+  _drillStream=stream;_drillChunks=[];
+  const mimeType=_drillMimeType();
+  try{_drillMediaRec=new MediaRecorder(stream,mimeType?{mimeType}:{});}
+  catch(e){_drillMediaRec=new MediaRecorder(stream);}
+  _drillMediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_drillChunks.push(e.data);};
+  _drillMediaRec.onstop=async()=>{
+    stream.getTracks().forEach(t=>t.stop());
+    const elapsed=Date.now()-drillStartMs;
+    const actualMime=_drillMediaRec.mimeType||mimeType||'audio/webm';
+    const blob=new Blob(_drillChunks,{type:actualMime});
+    const h=document.getElementById('drill-mic-hint');
+    if(h)h.textContent='認識中...';
+    try{
+      const text=await _transcribeAudio(blob,actualMime);
+      showDrillResult(text,elapsed);
+    }catch(e){
+      toast('認識エラー。再試行してください。');
+      showDrillResult('',elapsed);
+    }
+  };
+  _drillMediaRec.start(100);
+  _drillRecording=true;
+  drillStartMs=Date.now();
   if(micBtn){micBtn.classList.add('rec');micBtn.textContent='■';}
   if(hint)hint.textContent='タップして止める';
-  drillStartMs=Date.now();
   clearInterval(drillTimerInterval);
   drillTimerInterval=setInterval(()=>{
     const el=document.getElementById('drill-timer');
     if(el)el.textContent=((Date.now()-drillStartMs)/1000).toFixed(1)+'s';
-    if(Date.now()-drillStartMs>=5000&&_drillRecording){_stopDrillRec();}
+    if(Date.now()-drillStartMs>=5000&&_drillRecording)_stopDrillRec();
   },100);
-  drillRecog=new SR();
-  drillRecog.lang='en-US';
-  drillRecog.interimResults=false;
-  drillRecog.maxAlternatives=1;
-  drillRecog.onresult=e=>{
-    if(drillGotResult)return;drillGotResult=true;
-    _drillRecording=false;clearInterval(drillTimerInterval);
-    showDrillResult(e.results[0][0].transcript,Date.now()-drillStartMs);
-  };
-  drillRecog.onerror=e=>{
-    if(!drillGotResult){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);
-    if(e.error==='not-allowed')toast('マイクの許可が必要です（設定→Safari→マイク）');
-    showDrillResult('',0);}
-  };
-  drillRecog.onend=()=>{
-    if(!drillGotResult){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);showDrillResult('',0);}
-  };
-  try{drillRecog.start();}catch(e){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);showDrillResult('',0);}
 }
 
 function showDrillResult(heard,timeMs){
