@@ -4086,18 +4086,18 @@ function _startVAD(stream, stopFn){
     src.connect(an);
     const buf=new Uint8Array(an.frequencyBinCount);
     let silenceMs=0,voiceDetected=false,prevTick=Date.now(),done=false;
+    _dbg(`VAD開始: ctx.state=${ctx.state}`);
     const tick=()=>{
       if(done)return;
-      // AudioContextがsuspendedなら何もしない（setIntervalのタイマーに任せる）
       if(ctx.state==='suspended'){requestAnimationFrame(tick);return;}
       an.getByteFrequencyData(buf);
       const avg=buf.reduce((s,v)=>s+v,0)/buf.length;
       const now=Date.now();
       const dt=now-prevTick; prevTick=now;
-      if(avg>12){voiceDetected=true;silenceMs=0;}
+      if(avg>12){if(!voiceDetected)_dbg(`VAD音声検知: avg=${avg.toFixed(1)}`);voiceDetected=true;silenceMs=0;}
       else if(voiceDetected){silenceMs+=dt;}
-      // 発話後700ms無音で停止（タイムアウトはsetIntervalに任せる）
       if(voiceDetected&&silenceMs>700){
+        _dbg(`VAD無音停止: silenceMs=${silenceMs}`);
         done=true;stopFn();return;
       }
       requestAnimationFrame(tick);
@@ -4206,10 +4206,14 @@ function _drillMimeType(){
   if(MediaRecorder.isTypeSupported('audio/mp4'))return 'audio/mp4';
   return '';
 }
+const _DEBUG=new URLSearchParams(location.search).get('debug')==='1';
+function _dbg(msg){if(_DEBUG){const el=document.getElementById('_dbg-box');if(el){el.textContent+='\n'+msg;el.scrollTop=el.scrollHeight;}}}
 async function _transcribeAudio(blob,mimeType){
+  _dbg(`Whisper送信: size=${blob.size}B mime=${mimeType} blobType=${blob.type}`);
+  if(blob.size<800){throw new Error('blob too small: '+blob.size+'B');}
   const ext=mimeType.includes('mp4')?'m4a':'webm';
   const form=new FormData();
-  form.append('file',new File([blob],'audio.'+ext,{type:blob.type}));
+  form.append('file',new File([blob],'audio.'+ext,{type:blob.type||mimeType}));
   form.append('model','whisper-1');
   form.append('language','en');
   const res=await fetch('https://api.openai.com/v1/audio/transcriptions',{
@@ -4217,8 +4221,13 @@ async function _transcribeAudio(blob,mimeType){
     headers:{'Authorization':'Bearer '+OPENAI_KEY},
     body:form
   });
-  if(!res.ok)throw new Error('Whisper '+res.status);
+  if(!res.ok){
+    const errText=await res.text().catch(()=>'');
+    _dbg(`Whisperエラー: ${res.status} ${errText.slice(0,120)}`);
+    throw new Error('Whisper '+res.status+' '+errText.slice(0,60));
+  }
   const d=await res.json();
+  _dbg(`Whisper結果: "${d.text}"`);
   return d.text||'';
 }
 async function _ensureDrillStream(){
@@ -4248,13 +4257,17 @@ async function startDrillRec(){
     const elapsed=Date.now()-drillStartMs;
     const actualMime=_drillMediaRec.mimeType||mimeType||'audio/webm';
     const blob=new Blob(_drillChunks,{type:actualMime});
+    _dbg(`録音停止: chunks=${_drillChunks.length} blob=${blob.size}B elapsed=${elapsed}ms mime=${actualMime}`);
     const h=document.getElementById('drill-mic-hint');
     if(h)h.textContent='認識中...';
     try{
       const text=await _transcribeAudio(blob,actualMime);
       showDrillResult(text,elapsed);
     }catch(e){
-      toast('認識エラー。再試行してください。');
+      _dbg(`エラー: ${e.message}`);
+      const errMsg=e.message.includes('small')?'音声が短すぎます。もう一度タップして話してください。':'認識エラー: '+e.message;
+      if(h)h.textContent=errMsg;
+      toast(errMsg.slice(0,40));
       showDrillResult('',elapsed);
     }
   };
@@ -4600,6 +4613,15 @@ function mdNext(){
 }
 
 /* init — renderHome() はログイン後に呼ばれる */
+</script>
+<script>
+if(_DEBUG){
+  const box=document.createElement('div');
+  box.id='_dbg-box';
+  box.style.cssText='position:fixed;bottom:90px;left:0;right:0;height:160px;background:rgba(0,0,0,.88);color:#0f0;font:11px monospace;overflow-y:auto;padding:6px;z-index:9999;white-space:pre-wrap;pointer-events:auto';
+  box.textContent='[DEBUG MODE]\nAudioCtx: '+(_sharedAudioCtx?_sharedAudioCtx.state:'none')+'\nMIME: '+_drillMimeType();
+  document.body.appendChild(box);
+}
 </script>
 </body>
 </html>
