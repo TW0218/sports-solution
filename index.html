@@ -947,8 +947,8 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .match-ticket-badge-num{font-size:22px;font-weight:900;color:#FFC400;font-family:Barlow,sans-serif;line-height:1}
 .match-ticket-badge-label{font-size:11px;font-weight:900;color:rgba(255,196,0,.5);letter-spacing:.08em}
 .match-ticket-badge-sub{font-size:10px;color:rgba(255,255,255,.18);font-weight:700;margin-top:1px}
-.match-cta-btn{width:100%;background:#fff;color:#080e08;border:none;border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.05em;box-shadow:0 4px 40px rgba(255,255,255,.25),0 0 0 1px rgba(255,255,255,.12);transition:transform .12s}
-.match-cta-btn:active{transform:scale(.97);background:#e6ece6}
+.match-cta-btn{width:100%;background:#fff;color:#060c06;border:none;border-radius:20px;padding:22px 24px;font-size:19px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 0 0 2px rgba(255,255,255,.35),0 8px 48px rgba(255,255,255,.35),0 2px 12px rgba(0,0,0,.5);transition:transform .12s,box-shadow .12s}
+.match-cta-btn:active{transform:scale(.96);box-shadow:0 0 0 2px rgba(255,255,255,.2),0 4px 20px rgba(255,255,255,.2)}
 .match-demo-btn{width:100%;background:#FFC400;color:#0e0a00;border:none;border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.05em;box-shadow:0 6px 28px rgba(255,196,0,.35)}
 .match-disabled-btn{width:100%;background:rgba(255,255,255,.04);color:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:20px;font-size:18px;font-weight:900;font-family:Barlow,sans-serif;cursor:default;letter-spacing:.05em}
 .match-countdown{font-size:12px;font-weight:900;color:rgba(226,73,59,.7);text-align:center;margin-bottom:10px;letter-spacing:.04em}
@@ -3328,7 +3328,7 @@ function renderMatch(){
     <rect x="398" y="105" width="8" height="50" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/>
   </svg>`;
   const ctaHtml=hasTickets
-    ?`<button class="match-cta-btn" onclick="openMatchday()">▶ 試合に出る</button>`
+    ?`<button class="match-cta-btn" onclick="openMatchday()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9" fill="#060c06" fill-opacity=".1" stroke="#060c06" stroke-width="1.5"/><path d="M8 6.5 L13 10 L8 13.5" stroke="#060c06" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>試合に出る</button>`
     :!S.matchdayDemoDone
     ?`<div class="match-demo-label">1問だけ無料で体験できる</div>
       <button class="match-demo-btn" onclick="openMatchdayDemo()">▶ DEMO を試す</button>`
