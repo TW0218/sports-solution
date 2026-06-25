@@ -3615,7 +3615,7 @@ function renderDrillPhrase(){
     <div class="drill-phrase-card" style="margin-top:16px">
       <div class="drill-cat-badge">${catName}</div>
       <div class="drill-ja">${p.ja}</div>
-      <div class="drill-en-hidden">• • • • •</div>
+      <div class="drill-en-reveal" style="font-size:15px;color:rgba(255,215,0,.75)">${p.en}</div>
     </div>
     <div class="drill-cta">
       <button class="drill-play-btn" id="drill-play-btn" onclick="playDrillPhrase()">▶&nbsp; 聞く</button>
@@ -3645,38 +3645,53 @@ function showDrillSpeak(){
     <div class="drill-phrase-card" style="margin-top:16px">
       <div class="drill-cat-badge">${catName}</div>
       <div class="drill-ja">${p.ja}</div>
-      <div class="drill-en-hidden">• • • • •</div>
+      <div class="drill-en-reveal" style="font-size:15px;color:rgba(255,215,0,.75)">${p.en}</div>
     </div>
     <div class="drill-cta">
       <div class="drill-mic-wrap">
         <div class="drill-timer" id="drill-timer">0.0s</div>
-        <button class="drill-mic-big" id="drill-mic-btn" onclick="startDrillRec()">🎙️</button>
-        <div class="drill-hint">タップして話す</div>
+        <button class="drill-mic-big" id="drill-mic-btn" onclick="toggleDrillRec()">🎙️</button>
+        <div class="drill-hint" id="drill-mic-hint">タップして話す</div>
       </div>
     </div>
     <div style="flex:1"></div>
     <div class="drill-tagline">チームに行く前に、AI相手に100回ミスしておく</div>`;
 }
 
+let _drillRecording=false;
+function toggleDrillRec(){
+  if(_drillRecording){_stopDrillRec();return;}
+  startDrillRec();
+}
+function _stopDrillRec(){
+  _drillRecording=false;
+  clearInterval(drillTimerInterval);
+  if(drillRecog){try{drillRecog.stop();}catch(e){}}
+}
 function startDrillRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   const micBtn=document.getElementById('drill-mic-btn');
+  const hint=document.getElementById('drill-mic-hint');
   if(!SR){showDrillResult('',0);return;}
-  if(micBtn){micBtn.classList.add('rec');micBtn.disabled=true;}
-  drillStartMs=Date.now();drillGotResult=false;
+  _drillRecording=true;drillGotResult=false;
+  if(micBtn){micBtn.classList.add('rec');micBtn.textContent='■';}
+  if(hint)hint.textContent='タップして止める';
+  drillStartMs=Date.now();
   clearInterval(drillTimerInterval);
   drillTimerInterval=setInterval(()=>{
     const el=document.getElementById('drill-timer');
     if(el)el.textContent=((Date.now()-drillStartMs)/1000).toFixed(1)+'s';
+    // 5秒で自動停止
+    if(Date.now()-drillStartMs>=5000&&_drillRecording){_stopDrillRec();}
   },100);
   drillRecog=new SR();drillRecog.lang='en-GB';drillRecog.interimResults=false;drillRecog.maxAlternatives=1;
   drillRecog.onresult=e=>{
-    drillGotResult=true;
-    clearInterval(drillTimerInterval);
+    if(drillGotResult)return;drillGotResult=true;
+    _drillRecording=false;clearInterval(drillTimerInterval);
     showDrillResult(e.results[0][0].transcript,Date.now()-drillStartMs);
   };
-  drillRecog.onerror=()=>{if(!drillGotResult){drillGotResult=true;clearInterval(drillTimerInterval);showDrillResult('',0);}};
-  drillRecog.onend=()=>{if(!drillGotResult){drillGotResult=true;clearInterval(drillTimerInterval);showDrillResult('',0);}};
+  drillRecog.onerror=()=>{if(!drillGotResult){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);showDrillResult('',0);}};
+  drillRecog.onend=()=>{if(!drillGotResult){drillGotResult=true;_drillRecording=false;clearInterval(drillTimerInterval);showDrillResult('',0);}};
   drillRecog.start();
 }
 
