@@ -3185,7 +3185,8 @@ function gradeCard(known){
 }
 
 /* ================= SPEAKING ================= */
-let spDeck=[],si=0,recog=null,recording=false,_recogGotResult=false;
+let spDeck=[],si=0,recording=false;
+let _spMediaRec=null,_spChunks=[],_spStream=null;
 function startSpeak(cat){
   rate=unlockedLv()===1?0.7:1.0;
   spDeck=pick(poolFor(cat),5);si=0;
@@ -3209,49 +3210,56 @@ function showSpeakNext(){
   fb.textContent=isFaved(spDeck[si].ex)?"⭐":"☆";
 }
 function playSpeak(){speak(spDeck[si].ex,null,spDeck[si].c)}
-function toggleRec(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){
-    document.getElementById("sp-heard").textContent="このブラウザは音声認識非対応。お手本のあとに声に出して自己チェック→";
+async function toggleRec(){
+  if(recording){_stopSpRec();return;}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    document.getElementById("sp-heard").textContent="このブラウザは録音非対応です";
     showSpeakNext();return;
   }
-  if(recording){stopRec();return;}
-  recog=new SR();recog.lang="en-GB";recog.interimResults=false;recog.maxAlternatives=1;
-  recording=true;_recogGotResult=false;
+  let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});}
+  catch(e){
+    document.getElementById("sp-heard").textContent="マイクの許可が必要です（設定→プライバシー→マイク）";
+    showSpeakNext();return;
+  }
+  _spStream=stream;_spChunks=[];
+  const mimeType=_drillMimeType();
+  try{_spMediaRec=new MediaRecorder(stream,mimeType?{mimeType}:{});}
+  catch(e){_spMediaRec=new MediaRecorder(stream);}
+  _spMediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_spChunks.push(e.data);};
+  _spMediaRec.onstop=async()=>{
+    stream.getTracks().forEach(t=>t.stop());
+    const actualMime=_spMediaRec.mimeType||mimeType||'audio/webm';
+    const blob=new Blob(_spChunks,{type:actualMime});
+    document.getElementById("sp-heard").textContent="認識中...";
+    try{
+      const heard=await _transcribeAudio(blob,actualMime);
+      const target=spDeck[si].ex.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
+      const got=heard.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
+      const hit=target.filter(w=>got.includes(w)).length;
+      const score=Math.round(hit/target.length*100);
+      document.getElementById("sp-heard").textContent="あなた:『"+heard+"』";
+      const sc=document.getElementById("sp-score");
+      sc.textContent=score+"%";sc.style.color=score>=80?"var(--green)":score>=50?"var(--yellow)":"var(--red)";
+      sfx(score>=80?"good":"bad");
+      if(score>=80){S.speakCount++;if(S.speakCount>=20)awardOnce("poly","🗣️ 声出し職人！");save();}
+    }catch(e){
+      document.getElementById("sp-heard").textContent="うまく聞き取れず。もう一度🎙️をタップ";
+    }
+    showSpeakNext();
+  };
+  _spMediaRec.start(100);
+  recording=true;
   document.getElementById("mic-btn").classList.add("rec");
   document.getElementById("sp-heard").textContent="🎙️ 聞き取り中… 話してみて";
-  recog.onresult=e=>{
-    _recogGotResult=true;
-    const heard=e.results[0][0].transcript;
-    const target=spDeck[si].ex.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
-    const got=heard.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
-    const hit=target.filter(w=>got.includes(w)).length;
-    const score=Math.round(hit/target.length*100);
-    document.getElementById("sp-heard").textContent="あなた:『"+heard+"』";
-    const sc=document.getElementById("sp-score");
-    sc.textContent=score+"%";sc.style.color=score>=80?"var(--green)":score>=50?"var(--yellow)":"var(--red)";
-    sfx(score>=80?"good":"bad");
-    if(score>=80){S.speakCount++;if(S.speakCount>=20)awardOnce("poly","🗣️ 声出し職人！");save();}
-    showSpeakNext();
-    stopRec();
-  };
-  recog.onerror=e=>{
-    _recogGotResult=true;
-    const msg=e.error==="not-allowed"?"マイク許可が必要です。ブラウザ設定を確認":"うまく聞き取れず。もう一度🎙️をタップ";
-    document.getElementById("sp-heard").textContent=msg;
-    showSpeakNext();
-    stopRec();
-  };
-  recog.onend=()=>{
-    stopRec();
-    if(!_recogGotResult){
-      document.getElementById("sp-heard").textContent="聞き取れませんでした。声を出して試してみてください";
-      showSpeakNext();
-    }
-  };
-  recog.start();
 }
-function stopRec(){recording=false;document.getElementById("mic-btn").classList.remove("rec");try{recog&&recog.stop()}catch(e){}}
+function _stopSpRec(){
+  if(!recording)return;
+  recording=false;
+  document.getElementById("mic-btn").classList.remove("rec");
+  if(_spMediaRec&&_spMediaRec.state!=='inactive')_spMediaRec.stop();
+}
+function stopRec(){_stopSpRec();}
 function nextSpeak(){
   si++;
   if(si>=spDeck.length){S.lastSpeakDate=today();save();earnMatchTicket();toast("シャドーイング完了！🎙️");go("home");renderHome();return;}
