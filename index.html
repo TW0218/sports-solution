@@ -889,6 +889,22 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .rp-npc-play-btn{margin-top:10px;background:rgba(220,50,50,.15);border:1px solid rgba(220,50,50,.3);color:#DC3232;border-radius:99px;padding:6px 16px;font-size:12px;font-weight:900;cursor:pointer;font-family:inherit}
 .rp-mic-section{text-align:center;padding:20px 0 8px}
 .rp-timer{font-size:30px;font-weight:900;color:#DC3232;font-variant-numeric:tabular-nums;min-height:38px;letter-spacing:-.02em}
+/* ROLEPLAY chat UI */
+.rp-situation-tag{font-size:11px;font-weight:800;color:var(--grey);background:var(--white);border:1px solid var(--border);border-radius:99px;padding:4px 12px;display:inline-block;margin-bottom:12px}
+.rp-chat-wrap{display:flex;flex-direction:column;gap:10px;padding:4px 0 8px}
+.rp-npc-row{display:flex;align-items:flex-end;gap:8px}
+.rp-npc-avatar{width:34px;height:34px;border-radius:50%;background:rgba(220,50,50,.18);border:1.5px solid rgba(220,50,50,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#DC3232;flex-shrink:0;font-family:Barlow,sans-serif}
+.rp-npc-bubble-wrap{display:flex;flex-direction:column;gap:3px;max-width:82%}
+.rp-npc-name{font-size:10px;font-weight:900;letter-spacing:.08em;color:rgba(220,80,80,.7)}
+.rp-npc-bubble{background:var(--card2);border:1px solid rgba(220,50,50,.2);border-radius:18px 18px 18px 4px;padding:12px 14px;font-size:15px;font-weight:800;color:var(--ink);line-height:1.55;font-style:italic}
+.rp-play-bubble-btn{margin-top:4px;background:none;border:none;color:rgba(220,80,80,.7);font-size:11px;font-weight:900;cursor:pointer;padding:0;font-family:inherit;text-align:left}
+.rp-chat-divider{text-align:center;font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--grey);padding:4px 0 2px}
+.rp-user-choices{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.rp-user-bubble{background:rgba(29,158,117,.15);border:1.5px solid rgba(29,158,117,.35);border-radius:18px 18px 4px 18px;padding:13px 16px;font-size:14px;font-weight:900;color:var(--ink);cursor:pointer;text-align:right;width:88%;font-family:inherit;transition:background .12s,border-color .12s}
+.rp-user-bubble:active{background:rgba(29,158,117,.3);border-color:var(--green)}
+/* speak phase chat */
+.rp-chosen-bubble{background:rgba(29,158,117,.2);border:1.5px solid var(--green);border-radius:18px 18px 4px 18px;padding:14px 18px;font-size:22px;font-weight:900;color:var(--ink);text-align:right;line-height:1.3;margin-bottom:4px}
+.rp-speak-instruction{font-size:11px;font-weight:900;letter-spacing:.08em;color:var(--grey);text-align:right;margin-bottom:10px}
 .rp-mic-big{width:76px;height:76px;border-radius:50%;background:#DC3232;border:none;font-size:28px;cursor:pointer;color:#fff;box-shadow:0 4px 18px rgba(220,50,50,.45);display:flex;align-items:center;justify-content:center;margin:0 auto;font-family:inherit}
 .rp-mic-big.rec{animation:rpMicPulse .8s ease-in-out infinite}
 @keyframes rpMicPulse{0%,100%{box-shadow:0 4px 18px rgba(220,50,50,.4)}50%{box-shadow:0 0 0 18px rgba(220,50,50,.1),0 4px 18px rgba(220,50,50,.4)}}
@@ -4475,19 +4491,22 @@ function renderRPScene(){
 
 function renderRPChoose(){
   const scene=rpScenes[rpIdx];
+  const initials=scene.npc.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
   document.getElementById('rp-scene-body').innerHTML=`
-    <div class="rp-situation-card">
-      <div class="rp-section-lbl">SITUATION</div>
-      <div class="rp-situation-text">${scene.situation}</div>
-    </div>
-    <div class="rp-npc-card">
-      <div class="rp-npc-who">${scene.npc.toUpperCase()}</div>
-      <div class="rp-npc-line">"${scene.line}"</div>
-      <button class="rp-npc-play-btn" onclick="rpPlayLine()">▶ 聞く</button>
-    </div>
-    <div style="text-align:center;padding:6px 0 10px;font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--grey)">なんと返す？</div>
-    <div style="display:flex;flex-direction:column;gap:9px">
-      ${rpCurrentKeys.map((k,i)=>`<button class="rp-choice-btn tap-fx" onclick="rpChoose(${i})">"${k}"</button>`).join('')}
+    <div style="text-align:center"><span class="rp-situation-tag">${scene.situation}</span></div>
+    <div class="rp-chat-wrap">
+      <div class="rp-npc-row">
+        <div class="rp-npc-avatar">${initials}</div>
+        <div class="rp-npc-bubble-wrap">
+          <div class="rp-npc-name">${scene.npc.toUpperCase()}</div>
+          <div class="rp-npc-bubble">"${scene.line}"</div>
+          <button class="rp-play-bubble-btn" onclick="rpPlayLine()">▶ もう一度聞く</button>
+        </div>
+      </div>
+      <div class="rp-chat-divider">── なんと返す？ ──</div>
+      <div class="rp-user-choices">
+        ${rpCurrentKeys.map((k,i)=>`<button class="rp-user-bubble" onclick="rpChoose(${i})">"${k}"</button>`).join('')}
+      </div>
     </div>`;
 }
 
@@ -4498,11 +4517,21 @@ function rpChoose(idx){
 
 function renderRPSpeak(){
   const scene=rpScenes[rpIdx];
+  const initials=scene.npc.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
   document.getElementById('rp-scene-body').innerHTML=`
-    <div class="rp-speak-prompt">
-      <div class="rp-speak-label">声に出して言ってみよう</div>
-      <div class="rp-speak-phrase">"${rpChosenKey}"</div>
-      <button class="rp-npc-play-btn" style="margin-top:10px" onclick="rpPlayChosenAudio()">▶ 手本を聞く</button>
+    <div class="rp-chat-wrap">
+      <div class="rp-npc-row">
+        <div class="rp-npc-avatar">${initials}</div>
+        <div class="rp-npc-bubble-wrap">
+          <div class="rp-npc-name">${scene.npc.toUpperCase()}</div>
+          <div class="rp-npc-bubble" style="font-size:13px;opacity:.6">"${scene.line}"</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="rp-speak-instruction">声に出して言ってみよう</div>
+        <div class="rp-chosen-bubble">"${rpChosenKey}"</div>
+        <button class="rp-play-bubble-btn" style="text-align:right" onclick="rpPlayChosenAudio()">▶ 手本を聞く</button>
+      </div>
     </div>
     <div class="rp-mic-section">
       <div class="rp-timer" id="rp-timer">00.0</div>
