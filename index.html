@@ -2293,6 +2293,11 @@ async function saveToSupabase(){
   if(session&&!loginExpired()){
     currentUser=session.user;
     await loadFromSupabase();
+    // ?reset=missions でその日の完了フラグを消去
+    if(new URLSearchParams(location.search).get('reset')==='missions'){
+      S.doneToday='';S.lastSpeakDate='';S.lastQuizDate='';S.lastLockerQuizDate='';
+      save();history.replaceState({},'',location.pathname);
+    }
     document.getElementById("scr-login").classList.add("hidden");
     maybeShowPosPicker();
   }else if(session&&loginExpired()){
