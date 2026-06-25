@@ -641,9 +641,10 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
 /* ===== FEATURE CAROUSEL ===== */
 .feature-carousel-wrap{margin-bottom:4px}
-.feature-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none;-ms-overflow-style:none;padding-right:28px}
+.feature-carousel{display:flex;align-items:stretch;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none;-ms-overflow-style:none;padding-right:28px}
 .feature-carousel::-webkit-scrollbar{display:none}
-.feature-carousel-slide{scroll-snap-align:start;flex-shrink:0;width:calc(100% - 28px)}
+.feature-carousel-slide{scroll-snap-align:start;flex-shrink:0;width:calc(100% - 28px);display:flex;flex-direction:column}
+.feature-carousel-slide>.matchday-home-card,.feature-carousel-slide>.ai-roleplay-card{flex:1}
 .feature-carousel-dots{display:flex;justify-content:center;gap:6px;margin-top:10px;margin-bottom:8px}
 .feature-dot{height:6px;border-radius:3px;background:rgba(255,255,255,.18);transition:width .25s,background .25s;width:6px}
 .feature-dot.active{width:18px;background:var(--green)}
