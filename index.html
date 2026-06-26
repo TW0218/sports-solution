@@ -5438,6 +5438,10 @@ function mdShowResult(heard){
     <button class="md-next-btn" onclick="mdFinishScene()">結果を見る</button>
   `;
   mdAnswered=true;
+  setTimeout(()=>{
+    const btn=document.querySelector('#md-result .md-next-btn');
+    if(btn)btn.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },100);
 }
 
 function mdFinishScene(){
