@@ -2084,7 +2084,7 @@ const DB = [
 {c:"locker",en:"mate",ja:"相棒",ex:"Cheers, mate.",exJa:"ありがとう。",lv:3},
 {c:"locker",en:"pal",ja:"友達",ex:"See you later, pal.",exJa:"またな。",lv:2},
 {c:"locker",en:"buddy",ja:"相棒",ex:"Thanks buddy.",exJa:"ありがとう。",lv:1},
-{c:"locker",en:"lad",ja:"若い男",ex:"Good lad.",exJa:"いい奴だ。",lv:3},
+{c:"locker",en:"lad",ja:"友達・チームメイト（イギリス英語のfriendで、mateとも言う）",ex:"Good lad.",exJa:"いい奴だ。",lv:3},
 {c:"locker",en:"bloke",ja:"男",ex:"Nice bloke.",exJa:"いい人だ。",lv:3},
 {c:"locker",en:"fella",ja:"奴",ex:"Good fella.",exJa:"いい奴だ。",lv:3},
 {c:"locker",en:"fancy a coffee?",ja:"コーヒーどう？",ex:"Fancy a coffee?",exJa:"コーヒー飲む？",lv:3},
@@ -2124,7 +2124,7 @@ const DB = [
 {c:"locker",en:"pass the tape",ja:"テーピング取って",ex:"Pass the tape.",exJa:"テーピング取って。",lv:3},
 {c:"locker",en:"who's on music?",ja:"誰が音楽担当？",ex:"Who's on music today?",exJa:"今日誰がDJ？",lv:3},
 {c:"locker",en:"this tune is quality",ja:"この曲最高",ex:"This tune is quality.",exJa:"この曲最高。",lv:3},
-{c:"locker",en:"that's a banger",ja:"神曲だ",ex:"That's a banger.",exJa:"めちゃくちゃ良い曲だ。",lv:3},
+{c:"locker",en:"that's a banger",ja:"スーパーゴール",ex:"That's a banger.",exJa:"めちゃくちゃ良い曲だ。",lv:3},
 {c:"locker",en:"ice bath time",ja:"アイスバスの時間",ex:"Ice bath time.",exJa:"アイスバス行こう。",lv:2},
 {c:"locker",en:"stretch properly",ja:"ちゃんと伸ばせ",ex:"Stretch properly.",exJa:"ちゃんとストレッチしろ。",lv:2},
 {c:"locker",en:"grab a shake",ja:"プロテイン飲もう",ex:"Grab a shake.",exJa:"プロテイン飲もう。",lv:3},
@@ -2648,10 +2648,10 @@ function maybeShowPosPicker(){
   }
 }
 function textToAudioSrc(text){
-  return "audio/"+text.replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
+  return "audio/"+text.toLowerCase().replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
 }
 function exToAudioSrc(text){
-  return "audio/"+text.replace(/[!?',.\/\-]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
+  return "audio/"+text.toLowerCase().replace(/[!?',.\/\-]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
 }
 let _exPhrases;
 function getExPhrases(){
