@@ -1,71 +1,660 @@
-He's got a good feet.
-Well done, son!
-Nearly there, son!
-Keep going, son!
-Oi mate, where you from? You settling in alright?
-Press from the front! Don't let 'em play out the back!
-That first half was a bloody disgrace! What was that?!
-You're coming off! Warm down, well done son.
-When we win it back, get it wide QUICK. Don't sit on it.
-WALL! Four man wall! Tighten up!
-Swap shirts, yeah? You were class today, mate.
-You scored the winner today. How do you feel?
-Tell me about your game back home. What are you about?
-Any questions? I need you all to know your roles inside out.
-It's on you, mate. Back yourself.
-Yeah, all good! Tokyo, mate. Still finding me feet.
-Got it, gaffer!
-YES! HERE! GIVE!
-We'll sort it out, gaffer. Second half's ours.
-THAT'S IT! LOVELY BALL!
-GET IN THERE!! LET'S GO LADS!!
-Cheers gaffer!
-Yeah, switch it early. Got you, gaffer.
-MAN ON! TURN!
-ON IT!
-REF! Come on! He got me!
-Heads up, mate. We got this together.
-Gaffer! I've rolled me ankle, might need to come off.
-Near post! Flick it on!
-Dig in, lads! See it out! Keep it tight!
-Deffo, cheers mate. You lot were tidy as well.
-Over the moon, mate. But it's all about the three points.
-I'm a high-energy runner. I press hard and I'm good in tight spaces.
-Gaffer, when they play out from the back, do we press or hold shape?
-Born ready. Let's do this.
-Get in behind! Don't be a ball-watcher, make the run!
-Oi! Pick him up and stay tight! He's in behind you!
-Wall! Five man wall! Hold your position!
-YES! HERE! Give it now, I have space!
-Drop deep lads! See it out! Keep it tight!
-You're not pressing high enough. What's going on out there?
-When we win it back, get it wide quick. Don't sit on it. Got it?
-You're coming off. Warm down. Well done, son.
-Good session today. But I need more from you in tight spaces. Work on it.
-Any questions? I need you all to know your roles inside out.
-What happened? Can you walk it off?
-How's the hamstring feeling today? Any tightness?
-Did you lose consciousness at all? Any blurred vision?
-Be honest with me - can you carry on or do you need to come off?
-You're not training tomorrow. Ice it tonight and we reassess in the morning.
-Oi mate, where you from? You settling in alright?
-Swap shirts? You were class today, mate.
-That first half was a disgrace. Second half - we go again, yeah?
-GET IN!! That's what I'm talking about! Come on lads!
-You nervous? Mate, you've trained for this. Back yourself.
-You scored the winner today. How do you feel?
-A tough result tonight. What went wrong out there?
-There's been a lot of speculation about your future. Can you comment on that?
-The team looks to be hitting form at the right time. Would you agree?
-You've had a difficult few weeks personally. How have you kept your focus?
-There's an offer on the table. Championship club, decent wages. Worth considering?
-The club wants to extend, but the terms aren't great. What are your priorities?
-You're 26 now. Where do you see yourself in three years?
-You're not getting enough minutes. Do you want me to push for a loan?
-There's interest from Germany. Good money, good lifestyle. Open to it?
-Good morning. Can I see your passport and booking reference please?
-Welcome. You have a reservation for two nights? Can I take your name?
-The gym opens at seven. Physio room is down the hall on the left.
-Oi, you're in my seat mate! Only joking - sit wherever, long journey ahead.
-The chef's asking - any dietary requirements we should know about?
-Use your cover shadow to block the pass.
+Step up! Hold the line, don't drop off!
+Take the big man! Don't lose him at the near post!
+Quick throw! Don't waste time, get it in!
+Slow it down! Keep possession, no risks now!
+Overlap! Go on, get past him!
+Hold it! Shield it, wait for support!
+Second ball! Be first to it, react!
+Switch it! Far side is free, switch now!
+One-two! Give and go, right now!
+Press back! Close him down, now!
+Keeper! Play it back, he's free!
+Feet! Play it to feet, he's in!
+Six-yard box! Don't move until I say!
+Don't dive in! Stay on your feet!
+Extra time lads! Everything we've got!
+Who's taking the penalty? Who wants it?
+Watch the long ball! Drop, don't get caught!
+Commit! Show desire, don't let him turn!
+Cross it! Put it in the box now!
+Forget it! Reset, next ball is yours!
+We're going to a back four second half. You comfortable with that?
+You're starting tomorrow. I need you focused from the first whistle.
+You're on the bench this one. Stay sharp, I'll need you.
+You're not risking it on Saturday. We need you fit for next week.
+I want to try you at number ten. Are you comfortable with that?
+Sit down. I want to talk about where you are this season.
+You're miles away today. Head in the game, what's going on?
+I'm giving you the armband today. Lead by example.
+Today we go direct. Win it, flick it, second ball. Simple.
+Stop trying to beat three men. Keep it simple, we win as a team.
+When we lose the ball, track their eight. Don't let him run.
+I'm watching your warm-up and I'm not impressed. Do it properly.
+Loan's up next month. We're bringing you back in January.
+You're my number nine. I need goals. That's your job, simple.
+Brilliant today son. That's the level I need from you every week.
+Late again. One more time and you're fined. I don't care who you are.
+Watch this clip. What were you thinking here? Talk me through it.
+You've played a lot of games. How are the legs? Be honest.
+That's it. Nothing more to say. Go out and fight for each other.
+The last manager didn't use you right. I see something different in you.
+You flagged your knee earlier. Where exactly does it hurt?
+Three games in a week. How are the legs? One to ten.
+Two weeks in. Can you jog without any discomfort?
+Where do you want the strapping? Same as last week?
+You look pale. Have you been drinking enough water today?
+How's the sleep been? We're tracking everything this week.
+Ice it for twenty minutes, three times today. Don't skip it.
+Good news. You're cleared for contact training from Thursday.
+Lower back stiffness. Is it sharp or more of an ache?
+Pre-match meal is at noon. Carbs, lean protein, nothing heavy.
+And mentally, how are you feeling? Everything okay off the pitch?
+Stay down, don't push it. Which muscle is it, calf or hamstring?
+The scan's come back. There's a slight strain but nothing serious.
+Stop. When does it hurt, on impact or at rest?
+Big day tomorrow. Everything feel good? Any nerves about coming back?
+Any supplements you're taking need to go through us first. Anything new?
+Squeeze my hand. Any numbness in the fingers?
+Ten extra minutes on hip flexors every day. Non-negotiable.
+When can I realistically expect to be back training with the squad?
+You look short of breath. Do you have your inhaler on you?
+Good session today mate. You looked sharp in those crossing drills.
+Lads, this is the new signing. Make him feel welcome!
+Class result today. Your assist was top drawer mate.
+I need more from you. You're too good to be invisible.
+Oi everyone, it's his birthday! Get in!
+Your playlist again? We need something with energy mate.
+Heard you might be leaving. Is that true? We don't want to lose you.
+Listen, I've been around a long time. Be patient, your time will come.
+How did you not close him down? Come on, that's on you!
+You alright? You look nervous. First big derby is it?
+The fans were unreal today. That atmosphere was something else.
+We're all going out tonight to celebrate. You coming or what?
+You not eating? Is it Ramadan? Sorry mate, I didn't know.
+Hard watching from the stands isn't it? You'll be back, I know it.
+Right, we're not pressing right and we're soft in midfield. Sort it.
+Oi, that was my protein bar! Put it back, I mean it!
+Look who it is! Only joking mate. How are you? Miss us?
+First game today yeah? Enjoy every second. It goes too fast.
+End of season. Clear your stuff out before Friday, new lads are coming.
+It's been a pleasure. You've made me a better player.
+Your first senior appearance. What was going through your mind out there?
+Three goals today. Is this the best night of your career so far?
+You've been called up for the first time. What does this mean to you?
+There are reports of tension in the dressing room. Is everything okay?
+Your opponent said you'd be easy to play against. Any response?
+A post from last night is causing controversy. Can you clarify?
+You've announced your retirement. Take us back to when you decided.
+Relegation confirmed tonight. How are you and the squad feeling right now?
+After six months out, you're back. What was the hardest part of the recovery?
+There's a lot of young talent coming through. What advice would you give them?
+The crowds are back and louder than ever. How does that energy affect the team?
+You're in your thirties now. Has the way you approach the game changed?
+Playing abroad. Has it been everything you expected?
+That handball decision. Was that a turning point in the game?
+You visited the children's hospital this week. How was that experience?
+You've just lifted the trophy. Describe this moment in one word.
+Critics say you struggle in the big games. Does that motivate or frustrate you?
+Take us back to the beginning. How did you get spotted as a kid?
+The supporters have been brilliant through a tough season. A message for them?
+Last game ever. What do you want people to remember about your career?
+Three clubs are in. Different leagues, different projects. How do we prioritise?
+The club won't move above that number. This is their final offer.
+Between us, the club has financial issues. It might be time to consider moving.
+Your social media needs to be smarter. Clubs watch everything these days.
+A boot company wants you as an ambassador. Good money, fits your profile.
+The loan club wants to extend. They're happy with you. What do you want?
+I'm moving to a bigger agency. I'd like you to come with me. Think about it.
+MLS money is serious now. Have you ever considered America?
+The chairman wants to meet you personally. Be professional.
+Your release clause is triggering interest. Three clubs could activate it.
+The club's asking for a ten percent wage cut. Lots of players are accepting.
+The club signed someone for your position. We need to assess your options.
+It's a great move professionally but you've got family here. What do they say?
+Smart players think ahead. Coaching, punditry, anything interest you?
+Big brand wants you for their campaign. It's global. Good for your profile.
+You weren't selected again. I know it hurts. How do you want to handle this?
+Deadline day tomorrow. Last-minute offer. Decision in two hours.
+Lower league club want you as their main man. Regular football vs big club bench.
+Your teammate is looking for representation. Can I approach him through you?
+Ten years together. You've been with me through everything.
+Where to mate? Traffic's bad, want me to go round the back?
+What can I get you? We have oat, almond, soy if you don't want dairy.
+Do you have a loyalty card? It's free to sign up if you'd like.
+We'll need proof of address and your passport for ID verification.
+It's available from the first. Would you like to book a viewing?
+Any allergies to medication? And is this for yourself?
+Sorry to hear that. Can I take your order number please?
+We're doing a BBQ at mine Sunday. Nothing fancy, just the lads. You in?
+Do you live in the borough? We'll need a bill or bank statement.
+Saw that new film last night. Didn't rate it honestly. You seen it yet?
+The number twelve goes past the ground. Stop's on the high street.
+Oh you just moved in? Welcome to the street. Let us know if you need anything.
+Can I have your autograph please? You're my favourite player ever!
+Sorry mate, could you say that again? You were speaking really fast.
+Your flight's been delayed by three hours. We'll update you at the gate.
+Day pass is fifteen pounds. Changing rooms are down the stairs on the left.
+We can redirect your mail for up to twelve months. Shall we set that up?
+Looking for a gift? What are they into? We've got loads around thirty pounds.
+Return to Manchester? That's forty-two pounds off-peak. How do you want to pay?
+Are you alright? You've gone really pale. Do you want me to call someone?
+Yes, I'm making the run!
+On it, going behind!
+Got it, I'm moving now!
+I've got him, staying tight!
+On him, won't let him go!
+Sorry, tracking him now!
+Set boss, holding my position!
+Got it, I'm in the wall!
+Yes boss, standing firm!
+Play it to me, I'm free!
+Here! I've got space now!
+Give it! Making the run!
+Yes, dropping deep right now!
+Got it, keeping it tight!
+I'm holding the line!
+Sorry gaffer, pressing harder now!
+We'll fix it second half!
+Won't happen again, I promise!
+Yes gaffer, moving it quick!
+Got it, playing it wide fast!
+Understood, no holding on it!
+Thanks gaffer, gave everything today!
+Cheers boss, warming down now!
+Thank you, I'll cool down!
+Will do gaffer, I'll improve!
+Understood, working harder on it!
+I'll put more in gaffer!
+All clear, I know my role!
+No questions, I'm fully ready!
+Crystal clear gaffer, no worries!
+I twisted my ankle badly!
+Think I can walk it off!
+It really hurts to turn!
+Feeling good, no issues at all!
+Bit tight but I'll manage!
+Little stiff, getting looser now!
+No, I feel okay now!
+Felt dazed but I'm clear!
+Head's fine, vision is clear!
+I can carry on doc!
+It's getting worse, not sure!
+Think I need to come off!
+Okay, I'll ice it tonight!
+Understood, I'll rest up well!
+Thanks doc, I'll take care!
+Yeah, loving it here so far!
+Still getting used to it!
+Yeah, the lads have been great!
+Yeah sure, love to swap!
+Cheers mate, you were brilliant too!
+Definitely, great game out there!
+Yeah, let's go again lads!
+Come on, we can do this!
+Second half, we show up!
+Yes! Let's keep pushing lads!
+Get in! Come on, more!
+That's what I'm talking about!
+Little bit, but I'm ready!
+Nah, I feel good mate!
+Yeah, but I've prepared well!
+Absolutely delighted, what a feeling!
+Amazing, honestly just a team effort!
+Over the moon, unbelievable today!
+Very disappointing, we were poor!
+Credit to them, they were better!
+We need to do much better!
+I'm fully focused on here!
+No comment, I'm happy here!
+Not thinking about that right now!
+Absolutely, we're feeling very sharp!
+Definitely, momentum is with us now!
+Yeah, timing couldn't be better!
+My family kept me going!
+The manager and lads supported me!
+Just stayed focused on the training!
+Tell me more about the club!
+What's the playing time like?
+Interesting, but I need details!
+Playing time is my priority!
+I want first team football!
+I need a better deal!
+Playing in the top flight!
+I want to play in Europe!
+Winning trophies at a big club!
+Yes, I need to be playing!
+Push for it, I want minutes!
+Open to it, what clubs?
+Open to it, Germany excites me!
+Interesting, what's the contract like?
+Of course, here you go!
+Sure, one moment please!
+Yes, here's my passport!
+Yes, that's correct, two nights!
+The booking is under my name!
+Sure, let me find my ID!
+Perfect, thanks for letting me know!
+Got it, I'll remember that!
+Great, appreciate the tour!
+Ha, you had me there mate!
+Good one, cheers for that!
+Haha, long one ahead then!
+Yes gaffer, stepping up now!
+Got it, holding the line!
+On it, moving up now!
+On him, I've got the big man!
+Got it, watching near post!
+I'm on him, won't lose him!
+Here! Throw it to me!
+Quick, I'm free on the line!
+Play it short, I'm here!
+Yes, keeping it calm now!
+Got it, no rush from me!
+Slowing it right down!
+Going, overlapping now!
+On my way, overlapping!
+Yes, making the run!
+Holding it, waiting for you!
+Got it, shielding the ball!
+Keeping it, come to me!
+On it, going for it!
+Reacting, I'm there!
+First to it, I'm moving!
+Switching it, far side!
+Got it, playing it wide!
+Switching now, far post!
+Yes, give and go!
+On it, one-two!
+Playing it, run!
+Pressing, on him now!
+Closing him down!
+Got it, pressing hard!
+Playing it back, keeper!
+Back to the keeper!
+Yes, keeper's ball!
+Playing it to feet now!
+Through ball, go on!
+Feet, he's in behind!
+Set, not moving boss!
+Got it, six-yard box!
+I'm set, not moving!
+Staying on my feet!
+Got it, staying patient!
+Not diving, staying up!
+Let's go, everything now!
+Come on, all of us!
+Fighting, every second!
+I'll take it, give it to me!
+I want it, let me take it!
+I've got this, my penalty!
+Dropping, watching it!
+Got it, dropping deep!
+Eyes on the ball!
+Committing, stopping him!
+On him, won't let him turn!
+Going in strong now!
+Crossing it, heads up!
+Ball in, I'm ready!
+Coming over, get on the end!
+Forgotten, I'm ready!
+Reset, come on!
+Next one, I'm there!
+Yes gaffer, no problem!
+Comfortable with that, I'm ready!
+Got it, back four, I'm set!
+Yes gaffer, fully focused!
+I'm ready, won't let you down!
+Starting tomorrow, I'll deliver!
+Understood gaffer, staying sharp!
+I'll be ready when you need me!
+No problem, ready to come on!
+Understood, I'll rest up!
+Thanks gaffer, I'll get fit!
+Got it, focusing on recovery!
+Yes gaffer, I can do that!
+Happy to try it gaffer!
+Comfortable there, I'll give it a go!
+Of course gaffer, I'm listening!
+Ready to hear your thoughts!
+Thanks for the chat gaffer!
+Sorry gaffer, I'm here now!
+My head's in it now gaffer!
+Sorry, focused from here!
+Honoured gaffer, I'll lead well!
+I'll give everything for the lads!
+Thank you gaffer, won't let you down!
+Got it gaffer, keeping it simple!
+Direct football, I'm ready!
+Simple and direct, understood!
+Sorry gaffer, keeping it simple!
+You're right, passing from now!
+Got it, no more solo runs!
+Got it, tracking their eight!
+I'll track him every time!
+On their eight, understood!
+Sorry gaffer, doing it right now!
+Picking it up immediately!
+My apologies, going again!
+Great to hear, looking forward to it!
+I'm ready to come back!
+Can't wait to return gaffer!
+Goals are coming gaffer!
+I'll deliver, you have my word!
+Leave it to me gaffer!
+Thank you gaffer, I'll keep it up!
+That means a lot, thank you!
+I'll bring that every week!
+Sorry gaffer, it won't happen again!
+Completely my fault, I apologise!
+I'm sorry, never again gaffer!
+I lost focus there gaffer!
+I should have tracked him, my mistake!
+I got it wrong, won't happen again!
+Feeling good gaffer, keep playing me!
+A bit tired but I'm ready!
+Legs are heavy but I want to play!
+Let's go lads, for each other!
+Fighting for every second!
+For the badge, let's go!
+Thank you gaffer, I appreciate that!
+I'll prove you right every day!
+That means everything, thank you!
+Just below the kneecap doc!
+On the inside of the knee!
+Here, when I bend it!
+About a six, I'll be okay!
+Seven, but I'm managing fine!
+Maybe a five, I'm alright!
+Jogging fine, no pain at all!
+Little discomfort but getting better!
+Feeling good, ready to push on!
+Same as last week please!
+Just the ankle this time!
+Both ankles if that's okay!
+I think I'm overheating doc!
+Not enough water, I feel dizzy!
+I need to sit down please!
+Sleeping well, no issues!
+About seven hours, feeling rested!
+Sleep's been good this week!
+Got it, won't skip it!
+Twenty minutes, three times, understood!
+I'll do it properly, I promise!
+Brilliant, can't wait to get back!
+That's great news, thank you!
+Finally, I'm ready to go!
+More of an ache, not sharp!
+It's a dull ache doc!
+Stiff more than sharp pain!
+Got it, I'll be there at noon!
+Understood, keeping it light!
+Carbs and protein, no problem!
+All good mentally, feeling positive!
+Yeah I'm good, thanks for asking!
+Head's in a great place right now!
+It's my calf, cramp!
+Hamstring, it went tight!
+Calf cramp, really painful!
+That's a relief, thank you!
+So when can I start training?
+Good news, how long to recover?
+Only on impact, when I sprint!
+Just when I kick the ball!
+At rest it's fine, only on impact!
+Feel great, ready to go!
+A few nerves but feeling good!
+I'm ready, can't wait!
+Just vitamin D and protein doc!
+Nothing new, same as always!
+I'll bring everything in for you!
+Little numb on this finger doc!
+No numbness, just painful!
+Numb on two fingers here!
+Every day, I'll do it!
+Ten minutes, understood!
+Got it, hip flexors daily!
+Two more weeks minimum doc!
+Could be back by next week!
+At least ten days I'd say!
+Yes, inhaler's in my bag!
+I've got it here with me!
+Just catching my breath doc!
+Cheers mate, felt good out there!
+Yeah, finding my form finally!
+Thanks, starting to click now!
+Good to meet you all!
+Excited to be here lads!
+Looking forward to it with you all!
+Cheers, just doing my job!
+Thank you, team effort though!
+Glad it came off, great finish from you!
+You're right, stepping up now!
+Sorry captain, more from me!
+I hear you, I'll deliver!
+Ha, you lot remembered!
+Thanks lads, means a lot!
+Cheers boys, what a surprise!
+This is energy mate, trust me!
+Fine, what do you want on?
+I'll put something better on!
+Nothing confirmed, just rumours!
+I'm focused on here for now!
+No decision made yet mate!
+I appreciate that, thank you!
+Really needed to hear that mate!
+Cheers, means a lot from you!
+My fault, I'll fix it!
+Sorry, won't happen again!
+I know, I got it wrong!
+Yeah, never played one before!
+Little nervous but I'm ready!
+First derby, can't wait though!
+Gave me goosebumps out there!
+Best atmosphere I've ever played in!
+The fans were incredible today!
+Yeah, I'm in, where are we going?
+Definitely, lead the way!
+Count me in, what time?
+Yes, it's Ramadan, no worries!
+All good, thanks for asking mate!
+Don't worry about it, all fine!
+Thanks mate, keeping the faith!
+Means a lot, I'll be back!
+Cheers, motivates me every day!
+I'll press harder second half!
+Tighter in midfield, understood!
+Fixing it second half captain!
+Sorry mate, thought it was spare!
+My bad, here you go!
+Didn't know it was yours, sorry!
+Of course I miss you lot!
+Every day mate, every day!
+Wouldn't admit it but yeah!
+I'm so ready, can't wait!
+Nervous but excited, thank you!
+Thanks, I'll take it all in!
+Will do, clearing it out today!
+Got it, I'll sort it now!
+Friday, understood, I'll get it done!
+The honour was mine, thank you!
+You made me who I am, cheers!
+I've learned so much from you!
+Honestly just pure adrenaline!
+Tried to stay calm and focused!
+Dreams do come true, incredible!
+Without a doubt, incredible feeling!
+Top of the list right now!
+I'll never forget this night!
+It means absolutely everything!
+Greatest honour of my career!
+Words can't describe how I feel!
+No tension, we're all focused!
+I can only speak for myself!
+That's not what I see inside!
+Let the football do the talking!
+Results speak for themselves!
+I'll show my answer on the pitch!
+It was taken out of context!
+I apologise if it caused offence!
+Not what I meant at all!
+It wasn't an easy decision!
+I knew the time was right!
+My body told me it was time!
+Devastated, we let everyone down!
+We're hurting but we'll come back!
+It's the lowest I've ever felt!
+Watching from the sidelines was brutal!
+Mentally more than physically tough!
+Staying patient was the hardest part!
+Work harder than everyone else!
+Believe in yourself and keep going!
+Enjoy every moment, it's special!
+It drives us on massively!
+The fans are our twelfth man!
+That energy is everything to us!
+Smarter not just harder now!
+Experience counts for a lot!
+I read the game better now!
+Better than I ever imagined!
+Challenging but I love every day!
+Greatest decision of my career!
+I prefer not to comment on that!
+The ref makes the calls, not me!
+We should have been better before that!
+Puts everything in perspective!
+Most humbling experience of my life!
+Those kids inspire me every day!
+Unbelievable, absolutely unbelievable!
+Incredible, that's the only word!
+Surreal, totally surreal moment!
+Motivates me more than anything!
+I use that criticism as fuel!
+Big games bring out my best!
+I was spotted at a local tournament!
+Grassroots football opened every door!
+My dad took me to trials at seven!
+Thank you, we won't let you down!
+You never stopped believing in us!
+Your loyalty means everything to us!
+That I gave everything every time!
+Passion and dedication above all!
+That I loved this game with everything!
+Tell me the details on each one!
+Which one suits my game best?
+First team football is the priority!
+Then I need to think this through!
+Is there any flexibility on bonuses?
+What are my other options then?
+I appreciate you telling me that!
+How serious is the situation?
+What are my options right now?
+You're right, I'll be more careful!
+What should I avoid posting?
+I'll keep it clean from now on!
+Tell me more about the brand!
+Sounds interesting, what's the deal?
+What would that involve exactly?
+I want to stay and keep playing!
+How long would the extension be?
+I need to think it over first!
+That's a lot to think about!
+What would that mean for me?
+I need some time to decide!
+Open to it, tell me more!
+Never thought about it but why not?
+What clubs are interested there?
+Of course, when and where?
+I'll be fully professional!
+Ready for it, set it up!
+Who are the three clubs?
+Is this happening this window?
+What are our options here?
+I need to think about this carefully!
+What happens if I say no?
+How long would the cut last?
+I'll fight for my place!
+What clubs should we approach?
+I won't be pushed out easily!
+Family supports whatever I decide!
+I need to talk it through with them!
+Family comes first for me!
+Coaching is something I'd love!
+Punditry sounds interesting to me!
+Not thinking that far ahead yet!
+Definitely interested, who is it?
+Global campaign sounds amazing!
+I'll let my club form speak!
+No comment publicly, just work harder!
+Disappointed but I'll keep pushing!
+Tell me everything right now!
+Two hours is tight, talk me through it!
+What club, what terms, quickly!
+Regular football is what I need!
+I need to be playing every week!
+Let me think about it carefully!
+Sure, I'll put in a good word!
+Let me ask him first, I'll check!
+He's a great lad, go for it!
+Thank you for everything truly!
+Couldn't have done it without you!
+You've been more than an agent!
+To the stadium please!
+The training ground if you know it!
+Yes, take the back roads please!
+Large flat white with oat milk please!
+Oat milk cappuccino please!
+Just a black Americano thanks!
+No I don't, how do I sign up?
+No thanks, just paying today!
+I'll sign up please, how does it work?
+I have both here with me!
+I have my passport, is that enough?
+Here's my ID and a utility bill!
+Yes please, as soon as possible!
+Can I see it this week?
+Tomorrow if that's available please!
+No allergies, it's for me!
+None that I know of!
+No allergies, just a cold!
+Yes, it's on my confirmation email!
+Let me find it, one moment!
+I have it here, just a second!
+Definitely in, what time?
+Yes, what should I bring?
+I'm there, sounds brilliant!
+Yes I do, here's a bill!
+I have a bank statement with me!
+Just moved here, got my rental agreement!
+Not yet, was it that bad?
+I've heard mixed things about it!
+I'll skip it then by the sounds of it!
+Thank you, really appreciate it!
+Which side of the road?
+How often does it run please?
+Thank you so much, lovely to meet you!
+Really appreciate that, thank you!
+Great to meet you, I'm settling in well!
+Of course, what's your name?
+Absolutely, here you go!
+No problem, who shall I make it out to?
+No worries, let me slow it down!
+Of course, sorry about that!
+Happy to repeat, here we go!
+Okay, is there a lounge I can use?
+Three hours, alright, thank you!
+Can I get a meal voucher please?
+Perfect, I'll take a day pass please!
+Great, can I pay by card?
+Thanks, I'll head down now!
+Yes please, twelve months!
+Just six months for now please!
+Yes, how much does that cost?
+He loves sport, any ideas?
+Something personal would be great!
+I'm open to suggestions, thank you!
+Card please, contactless!
+I'll pay by card thank you!
+Tap to pay, is that fine?
+I feel dizzy, please help me!
+Thank you, I just need to sit down!
+Could you call my teammate please?

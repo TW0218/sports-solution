@@ -18,8 +18,8 @@ const DRY_RUN    = process.argv.includes('--dry-run');
 const FORCE      = process.argv.includes('--force');
 
 function toFilename(text) {
-  // Same rule as textToAudioSrc() in index.html
-  return text.replace(/[!?',.\/]/g, '').replace(/\s+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '') + '.mp3';
+  // Same rule as textToAudioSrc() in index.html — always lowercase
+  return text.toLowerCase().replace(/[!?',.\/]/g, '').replace(/\s+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '') + '.mp3';
 }
 
 function fetchMp3(text) {
