@@ -75,16 +75,52 @@ const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
 **モデル**: `eleven_multilingual_v2`  
 **設定**: stability=1.0, similarity_boost=1.0, style=0.0, use_speaker_boost=true, speed=1.0
 
-### ファイル名ルール（`textToAudioSrc` と一致させること）
+### ファイル名ルール
+
+**すべて小文字**で生成・参照する。変換ロジックは以下で統一：
 
 ```js
-// index.html 内
+// index.html 内 textToAudioSrc() — 再生時のパス生成
 function textToAudioSrc(text) {
-  return "audio/" + text.replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_") + ".mp3";
+  return "audio/" + text.toLowerCase().replace(/[!?',.\/]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_") + ".mp3";
 }
 
-// scripts/elevenlabs_generate.js 内 toFilename() も同じロジック
+// scripts/elevenlabs_generate.js 内 toFilename() — 生成時のファイル名
+function toFilename(text) {
+  return text.toLowerCase().replace(/[!?',.\/]/g,'').replace(/\s+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'') + '.mp3';
+}
 ```
+
+- 記号 `!?',.\/` はファイル名から除去される
+- スペースは `_` に変換
+- 特殊文字（em dash `—` など）はファイル名が崩れるので使わない
+- ハイフン `-` はそのまま残る（例: `ball-watcher` → `ball-watcher`）
+
+### ROLEPLAYシーンのaudio/keyAudioキー設計
+
+**ROLEPLAYシーンは表示テキストとファイル名を分離するため、`audio`・`keyAudio` キーを明示的に持つ。**
+
+```js
+// ROLEPLAY_SCENES の各エントリ構造
+{
+  cat: 'pitch',
+  title: '走り込め',
+  situation: '...',
+  npc: 'Captain',
+  line: "Get in behind! Don't be a ball-watcher, make the run!",  // 表示・発話テキスト（正しい英語大文字）
+  audio: 'get_in_behind_dont_be_a_ball-watcher_make_the_run',     // ← lineのファイル名キー（小文字）
+  keys: ["Yes, I'm making the run!", "On it, going behind!", "Got it, I'm moving now!"],  // 選択肢テキスト
+  keyAudio: ['yes_im_making_the_run', 'on_it_going_behind', 'got_it_im_moving_now'],      // ← keysのファイル名キー
+}
+```
+
+**設計の理由**: `textToAudioSrc()` によるテキスト→ファイル名の動的変換は、表記の揺れ（大文字・記号の有無）でファイル名不一致が起き音が鳴らなくなるリスクがある。`audio`/`keyAudio` キーで対応関係を固定することでこれを防ぐ。
+
+**新規ROLEPLAYシーン追加時の手順**:
+1. `ROLEPLAY_SCENES` にエントリを追加（`audio`・`keyAudio` キーを必ず設定）
+2. `audio`・`keyAudio` の値は `toFilename()` と同じ変換ルールで生成（小文字・記号除去・スペース→`_`）
+3. `scripts/phrases_to_record.txt` に `line` と `keys` の各フレーズを追記
+4. `ELEVEN_API_KEY=xxx node scripts/elevenlabs_generate.js` で生成
 
 ### 音声生成手順
 
@@ -99,8 +135,8 @@ ELEVEN_API_KEY=xxx node scripts/elevenlabs_generate.js
 ```
 
 - 出力先: `audio/*.mp3`
-- フレーズに `!?',.\/` などの記号が含まれる場合、ファイル名から除去される
-- 特殊文字（em dash `—` など）はファイル名が崩れるので使わない
+- **単語カード・クイズ・フレーズカードは `textToAudioSrc()` で動的変換（既存ファイルはすべて小文字）**
+- **ROLEPLAYのみ `audio`/`keyAudio` キーで明示管理**
 
 ---
 
