@@ -138,6 +138,23 @@ ELEVEN_API_KEY=xxx node scripts/elevenlabs_generate.js
 - **単語カード・クイズ・フレーズカードは `textToAudioSrc()` で動的変換（既存ファイルはすべて小文字）**
 - **ROLEPLAYのみ `audio`/`keyAudio` キーで明示管理**
 
+### 音声整合性チェック（push前に必須）
+
+```bash
+node scripts/validate_audio.js
+```
+
+- ROLEPLAY全シーンの `audio`/`keyAudio`/`hint` の存在、`keys`↔`keyAudio` の数一致、参照mp3の実在を検証
+- `en:` フィールド全件について `textToAudioSrc()` 変換後のmp3実在を検証（`(` 始まりの非発話プレースホルダは除外）
+- **音声・シーンデータを触ったら必ずこれを実行し、OKになってからcommit/pushする**
+- 記号ルール: `!?',./—–` はファイル名から除去。em dash `—` を含むフレーズも生成可能
+
+### ROLEPLAY_SCENESを機械的に加工する際の鉄則
+
+- 配列の抽出は **必ずブラケット対応（bracket matching）で行う**。正規表現の非貪欲マッチ（`[\s\S]*?\];` 等）は途中の `];` で誤って切れ、**古い・ズレた一覧を掴む事故が起きた実績がある**（hintフィールドが全シーンでズレた）
+- 一括挿入・置換をしたら、**挿入に使ったリストと実ファイルを title で1:1照合してから**書き込む
+- 加工後は `node scripts/validate_audio.js` + 数カ所のスポットチェックで意味的整合も確認する
+
 ---
 
 ## デプロイ
