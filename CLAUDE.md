@@ -214,6 +214,11 @@ node scripts/validate_audio.js
 ### MATCHDAYカード
 - 1日1問制限（`S.matchdayCount >= 1` で完了扱い）
 - MATCH TICKET制: 最大3枚、クイズ/シャドーイング/単語カードで獲得
+- **失敗駆動復習**: `S.mdReviewQueue`（`[{key, due, fails}]`）でスコアの低かったシーンを管理
+  - `mdShowResult()` でAI採点後、スコア<50なら復習キューに登録・延長（1回目の失敗は翌日、2回目以降は3日後）。スコア>=50なら卒業としてキューから除去
+  - `shuffleMd()` は毎回 `mdDueReviewScenes()`（`due<=today()`）を最優先で返す。復習期限が来たシーンがあればそれ以外は出題しない
+  - `renderMdScene()` は `S.mdReviewQueue` に該当キーがあれば「もう一度挑戦」バッジ（`.md-review-badge`）を表示
+  - `key` は `${scene.cat}||${scene.title}` 形式（`mdUsedSceneKeys`と同じキー設計）
 
 ### CSS specificity注意
 - `#id.active { display: flex }` のように `.active` を組み合わせる（IDセレクタ単体は `.screen { display: none }` に負ける場合がある）

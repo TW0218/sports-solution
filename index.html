@@ -811,6 +811,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .md-level-badge.lv2{background:rgba(255,196,0,.12);color:#FFC400}
 .md-level-badge.lv3{background:rgba(226,73,59,.12);color:#E2493B}
 .md-setting{font-size:13px;color:rgba(238,244,241,.55);font-weight:600;line-height:1.6;border-left:2px solid rgba(255,255,255,.12);padding-left:10px}
+.md-review-badge{display:inline-block;background:rgba(255,196,0,.14);color:var(--yellow);font-size:10px;font-weight:900;letter-spacing:.1em;padding:5px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase}
 .md-speaker-card{background:var(--white);border:1px solid var(--border2);border-radius:16px;padding:16px 18px}
 .md-speaker-name{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:6px}
 .md-speaker-line{font-size:18px;font-weight:800;color:var(--ink);line-height:1.4;font-style:italic}
@@ -2470,7 +2471,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[]},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[]},data.progress);
   }
 }
 
@@ -2519,9 +2520,10 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[]};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[]};
 function save(){saveToSupabase();}
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function addDaysStr(dateStr,n){const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 
 /* ================= AUDIO (en-GB TTS + SFX) ================= */
 let voices=[],gbVoice=null;
@@ -5446,10 +5448,11 @@ function openMatchday(){
   S.matchTickets--;save();
   const _mdPool=shuffleMd();
   if(_mdPool.length===0){
+    const pendingReview=(S.mdReviewQueue||[]).length>0;
     document.getElementById('md-scene-wrap').innerHTML=`
       <div class="md-complete">
         <div class="md-complete-title">全シーンクリア</div>
-        <div class="md-complete-sub">ROLEPLAYで新しいシーンをこなすと、MATCHDAYに追加されます。</div>
+        <div class="md-complete-sub">${pendingReview?'苦手だったシーンは、復習のタイミングでまた出題される。それまではROLEPLAYで新しいシーンをこなそう。':'ROLEPLAYで新しいシーンをこなすと、MATCHDAYに追加されます。'}</div>
         <button class="md-complete-btn" onclick="go('match','pop');renderMatch()">戻る</button>
       </div>`;
     go('matchday','push');
@@ -5462,7 +5465,19 @@ function openMatchday(){
 }
 
 const MD_EASY_KEYS=['pitch||走り込め','locker||シャツ交換','manager||交代'];
+// スコアの低かったシーンを期限が来たら優先的に再出題する（失敗駆動復習）
+function mdDueReviewScenes(){
+  const t=today();
+  const dueKeys=(S.mdReviewQueue||[]).filter(r=>r.due<=t).map(r=>r.key);
+  return ROLEPLAY_SCENES.filter(s=>dueKeys.includes(`${s.cat}||${s.title}`));
+}
 function shuffleMd(){
+  const dueReviews=mdDueReviewScenes();
+  if(dueReviews.length>0){
+    const arr=[...dueReviews];
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+    return arr;
+  }
   const completed=S.rpCompletedSceneKeys||[];
   const used=S.mdUsedSceneKeys||[];
   const mdTotal=S.matchdayTotal||0;
@@ -5487,8 +5502,11 @@ function renderMdScene(){
   mdAnswered=false;_mdRecording=false;_mdProcessing=false;
   mdCurrentScene=mdQueue[mdQueueIdx];
   const scene=mdCurrentScene;
+  const scKey=`${scene.cat}||${scene.title}`;
+  const isReview=(S.mdReviewQueue||[]).some(r=>r.key===scKey);
   renderMdDots();
   document.getElementById('md-scene-wrap').innerHTML=`
+    ${isReview?'<div class="md-review-badge">もう一度挑戦</div>':''}
     <div class="md-setting">${scene.situation}</div>
     <div class="md-speaker-card">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
@@ -5619,7 +5637,20 @@ async function mdShowResult(heard){
 
   // Mark scene as used in MATCHDAY
   const scKey=`${scene.cat}||${scene.title}`;
-  if(!(S.mdUsedSceneKeys||[]).includes(scKey)){S.mdUsedSceneKeys=[...(S.mdUsedSceneKeys||[]),scKey];save();}
+  if(!(S.mdUsedSceneKeys||[]).includes(scKey)){S.mdUsedSceneKeys=[...(S.mdUsedSceneKeys||[]),scKey];}
+
+  // 失敗駆動復習: スコアが低ければ復習キューに登録（再挑戦で失敗するほど間隔を延ばす）。GOOD以上なら卒業として除去
+  const rq=S.mdReviewQueue||[];
+  const rIdx=rq.findIndex(r=>r.key===scKey);
+  if(score<50){
+    const fails=(rIdx>=0?rq[rIdx].fails||0:0)+1;
+    const entry={key:scKey,due:addDaysStr(today(),fails>=2?3:1),fails};
+    if(rIdx>=0)rq[rIdx]=entry;else rq.push(entry);
+  }else if(rIdx>=0){
+    rq.splice(rIdx,1);
+  }
+  S.mdReviewQueue=rq;
+  save();
 
   resultEl.innerHTML=`
     <div class="md-voice-result">
