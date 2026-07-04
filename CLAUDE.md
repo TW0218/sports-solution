@@ -165,6 +165,16 @@ node scripts/validate_audio.js
 
 ---
 
+## Service Worker（`sw.js`）
+
+- **アプリシェル（`/`, `/index.html`, `/manifest.json`）は network-first**: オンライン時は常に最新のindex.htmlを取得・キャッシュ更新し、オフライン時のみキャッシュにフォールバックする。cache-firstにすると新しいデプロイが反映されず古いコードに固定されてしまうため、シェルには使わない。
+- **`audio/*.mp3`・`images/*` は cache-first**: 一度再生・表示したファイルはservice worker が `topbins-runtime-v1` キャッシュに保存し、以降はオフラインでも再生できる。全音声を事前ダウンロードはしない（2445ファイル・62MBあるため、再生したものだけ順次キャッシュする設計）
+- **`/api/*` は一切インターセプトしない**: AIコール・音声認識・採点は常に最新のレスポンスが必要なため、fetchイベントで早期returnしてservice workerを素通りさせる
+- キャッシュ名は `topbins-shell-v1` / `topbins-runtime-v1`。シェルの挙動を変える変更をしたら `v1`→`v2`のようにバージョンを上げて古いキャッシュを破棄させる（`activate`イベントで自動削除される）
+- 登録は `index.html` 末尾の `navigator.serviceWorker.register('/sw.js')`（`window.load`時、feature detection付き）
+
+---
+
 ## APIキーの扱い（重要・鉄則）
 
 **外部APIキー（Anthropic・OpenAI等）は絶対にクライアント側コード（`index.html`）に書かない。** 過去に `OPENAI_KEY` が文字列分割で難読化されて`index.html`にハードコードされ、本番公開ページのView Sourceから誰でも取得できる状態になっていた事故がある。
