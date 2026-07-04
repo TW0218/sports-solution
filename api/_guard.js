@@ -2,20 +2,31 @@
 // レート制限はサーバレス関数のウォームインスタンス内メモリのみで有効（再起動・スケールアウトでリセットされる）。
 // 本格運用にはUpstash等の外部ストアが必要だが、鍵を盗まれた場合の被害を減らす簡易防波堤として設置。
 
-const ALLOWED_ORIGINS = [
-  "https://topbins.vercel.app",
-  "http://localhost:3000",
-  "http://localhost:5173",
-];
+const FIXED_HOSTS = new Set(["topbins.vercel.app", "localhost"]);
 
 const hits = new Map(); // ip -> {count, windowStart}
 const WINDOW_MS = 60_000;
 const MAX_PER_WINDOW = 20;
 
+// 本番のカスタムドメイン(topbins.vercel.app)に加え、Vercelのデフォルトドメイン
+// (sports-solution.vercel.app)とプレビューデプロイ(sports-solution-<hash>-*.vercel.app)も許可する。
+// プレビューURLはデプロイごとに変わるためホスト名パターンで判定する。localhostはポート問わず許可（ローカル開発用）。
+function isAllowedHost(hostname) {
+  if (!hostname) return false;
+  if (FIXED_HOSTS.has(hostname)) return true;
+  return /^sports-solution(-[a-z0-9-]+)?\.vercel\.app$/.test(hostname);
+}
+
 function checkOrigin(req) {
   const origin = req.headers.origin || "";
   const referer = req.headers.referer || "";
-  return ALLOWED_ORIGINS.some(o => origin === o || referer.startsWith(o));
+  try {
+    if (origin && isAllowedHost(new URL(origin).hostname)) return true;
+  } catch (e) {}
+  try {
+    if (referer && isAllowedHost(new URL(referer).hostname)) return true;
+  } catch (e) {}
+  return false;
 }
 
 function checkRateLimit(req) {
