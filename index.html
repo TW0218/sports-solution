@@ -5037,7 +5037,6 @@ function _startVAD(stream, stopFn){
 }
 /* ================= SPEAKING DRILL ================= */
 let drillDeck=[],drillIdx=0,drillMissCount=0,drillCat='mix';
-const OPENAI_KEY=['sk-proj-MSaC5TcJ4tiYX','f3VjeaVS0NqZbvOyE0Si','HIwxwkC08fbOFZRZKvQO','EUAoNOzt3iR_vM4MN5gG','2T3BlbkFJ-VO3HUNRsp3','VvOaAuu8ZdpOmMle-Qv_','Va4Qg2kA9NV-dWwWHWTW','FjFsI-eWMyBspm0QaWt9dQA'].join('');
 let drillTimerInterval=null,drillStartMs=0;
 let _drillStream=null,_drillMediaRec=null,_drillChunks=[];
 
@@ -5155,9 +5154,8 @@ async function _transcribeAudio(blob,mimeType){
   form.append('file',new File([blob],'audio.'+ext,{type:blob.type||mimeType}));
   form.append('model','whisper-1');
   form.append('language','en');
-  const res=await fetch('https://api.openai.com/v1/audio/transcriptions',{
+  const res=await fetch('/api/transcribe',{
     method:'POST',
-    headers:{'Authorization':'Bearer '+OPENAI_KEY},
     body:form
   });
   if(!res.ok){
@@ -5566,9 +5564,9 @@ function mdStopRec(){
 async function mdAiScore(heard,keys){
   if(!heard||!heard.trim())return 0;
   try{
-    const res=await fetch('https://api.openai.com/v1/chat/completions',{
+    const res=await fetch('/api/score',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+OPENAI_KEY},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'gpt-4o-mini',
         max_tokens:10,

@@ -165,6 +165,22 @@ node scripts/validate_audio.js
 
 ---
 
+## APIキーの扱い（重要・鉄則）
+
+**外部APIキー（Anthropic・OpenAI等）は絶対にクライアント側コード（`index.html`）に書かない。** 過去に `OPENAI_KEY` が文字列分割で難読化されて`index.html`にハードコードされ、本番公開ページのView Sourceから誰でも取得できる状態になっていた事故がある。
+
+- **すべての外部AI呼び出しは `api/*.js`（Vercel Serverless Function）経由にする**
+- キー本体は Vercel プロジェクトの環境変数に設定（`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`）
+- 現在のプロキシ構成:
+  - `api/coach.js` — Anthropic Messages API（AIコーチのコール提案）
+  - `api/transcribe.js` — OpenAI Whisper（音声文字起こし、multipart/form-dataをそのまま転送）
+  - `api/score.js` — OpenAI Chat Completions（MATCHDAYのAI採点）
+  - `api/_guard.js` — 全プロキシ共通のOrigin検査＋簡易レート制限（`_`始まりはVercelがルート化しないため共有ヘルパーに使える）
+- 新しい外部AI連携を追加するときは、必ず `api/` に新規プロキシを立て、`guard(req,res)` を通してからキーを使うこと
+- `api/_guard.js` のレート制限はウォームインスタンス内メモリのみ有効（本格的な多重防御にはUpstash等の外部ストアが必要）
+
+---
+
 ## UIルール
 
 ### 基本方針
