@@ -1,5 +1,8 @@
 .DS_Store
-.claude/
+.claude/*
+!.claude/skills
+.claude/skills/*
+!.claude/skills/roleplay-scene-edit
 .env
 .vercel
 node_modules/
