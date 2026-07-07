@@ -901,6 +901,18 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .rp-day-badge{position:absolute;top:4px;right:5px;width:14px;height:14px;color:var(--green)}
 .rp-day-badge.lock{color:var(--grey)}
 .rp-scene-cat-tag{font-size:10px;font-weight:900;letter-spacing:.06em;color:var(--grey);text-transform:uppercase;margin-bottom:2px}
+/* MAKE IT YOURS */
+.miy-wrap{display:flex;flex-direction:column;gap:14px;padding:8px 2px 24px}
+.miy-eyebrow{font-size:10px;font-weight:900;letter-spacing:.14em;color:var(--yellow);text-transform:uppercase;text-align:center}
+.miy-lead{font-size:16px;font-weight:900;color:var(--ink);line-height:1.6;text-align:center}
+.miy-base-card{background:var(--white);border:1px solid var(--border2);border-radius:16px;padding:16px;text-align:center}
+.miy-base-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:6px;text-transform:uppercase}
+.miy-base-en{font-size:17px;font-weight:900;color:var(--ink);line-height:1.5}
+.miy-base-play{background:none;border:1px solid rgba(255,255,255,.2);border-radius:16px;color:rgba(255,255,255,.6);font-size:11px;font-weight:900;padding:6px 14px;margin-top:10px;cursor:pointer;font-family:inherit}
+.miy-hint-txt{font-size:11px;font-weight:700;color:var(--grey);text-align:center;line-height:1.6}
+.miy-skip{background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;padding:8px;text-align:center}
+.miy-listen-btn{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:14px;color:var(--ink);font-size:12px;font-weight:900;padding:12px 8px;cursor:pointer;font-family:inherit}
+.miy-listen-btn:active{opacity:.7}
 .rp-topbar{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .rp-prog{flex:1}
 .rp-prog-track{height:4px;background:rgba(220,50,50,.18);border-radius:999px;overflow:hidden;margin-bottom:5px}
@@ -4940,7 +4952,12 @@ function nextRP(){
 
 function finishRoleplay(){
   S.lastRpDate=today();save();
-  const avg=Math.round(rpTotalScore/rpScenes.length);
+  _rpDayAvg=Math.round(rpTotalScore/rpScenes.length);
+  miyStart();
+}
+
+function renderRPDayComplete(){
+  const avg=_rpDayAvg;
   const grade=avg>=80?'EXCELLENT':avg>=60?'GREAT':avg>=40?'GOOD':'KEEP GOING';
   if(avg>=80)setTimeout(()=>showCelebration(avg,'現場英語、完璧だ。','ROLEPLAY!'),200);
   document.getElementById('rp-scene-top').innerHTML=`
@@ -4958,6 +4975,178 @@ function finishRoleplay(){
       <div class="rp-finish-sub">${rpScenes.length}シーン完了。<br>声で現場を制す — 続けることが力になる。</div>
       <button class="rp-finish-btn" onclick="go('roleplay','pop');renderRoleplayMenu()">Dayを選ぶ</button>
     </div>`;
+}
+
+/* ================= MAKE IT YOURS =================
+   Dayの締めに1問。今日やったフレーズの「形」を借りて、自分の本当のことを声にする。
+   自己関連付け効果＋生成効果でセンテンスを自分事として定着させる。
+   ユーザー発話側のみなので事前生成mp3は不要（Whisper認識→AI品質チェックのみ）。 */
+let _rpDayAvg=0;
+let _miyBase=null,_miyBlobUrl='',_miyRec=null,_miyChunks=[],_miyRecording=false,_miyBusy=false,_miyTimer=null,_miyStartMs=0;
+
+function miyStart(){
+  // 今日の7シーンから返答フレーズを1つ選ぶ（keys[0]=ベストフレーズ）
+  const scene=rpScenes[Math.floor(Math.random()*rpScenes.length)];
+  _miyBase={phrase:scene.keys[0],audio:scene.keyAudio?scene.keyAudio[0]:null,cat:scene.cat,title:scene.title};
+  _miyBlobUrl='';_miyRecording=false;_miyBusy=false;
+  renderMIY();
+}
+
+function renderMIY(){
+  document.getElementById('rp-scene-top').innerHTML=`
+    <div class="rp-topbar">
+      <button class="btn-x" onclick="miyAbort()">✕</button>
+      <div style="font-weight:900;font-size:15px">MAKE IT YOURS</div>
+    </div>`;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div class="miy-wrap">
+      <div class="miy-eyebrow">DAY ${rpDay+1} 締めの一言</div>
+      <div class="miy-lead">この文の「形」を借りて、<br><b>自分の本当のこと</b>を声にしろ。</div>
+      <div class="miy-base-card">
+        <div class="miy-base-label">今日のフレーズ</div>
+        <div class="miy-base-en">"${_miyBase.phrase}"</div>
+        ${_miyBase.audio?`<button class="miy-base-play" onclick="mdPlaySrc('audio/${_miyBase.audio}.mp3')">▶ 聞く</button>`:''}
+      </div>
+      <div class="miy-hint-txt">例: 練習・学校・バイト・推しクラブ — ウソじゃない自分の話ならなんでもいい</div>
+      <div class="md-voice-area" style="padding-top:12px">
+        <button class="md-mic-btn" id="miy-mic-btn" onclick="miyToggleRec()">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="11" y="3" width="10" height="16" rx="5" fill="currentColor"/>
+            <path d="M6 16a10 10 0 0020 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <line x1="16" y1="26" x2="16" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="md-voice-hint" id="miy-voice-hint">タップして話す</div>
+      </div>
+      <button class="miy-skip" onclick="renderRPDayComplete()">今日はスキップ</button>
+      <div id="miy-result"></div>
+    </div>`;
+}
+
+function miyAbort(){
+  if(_miyRec&&_miyRec.state!=='inactive'){try{_miyRec.stop();}catch(e){}}
+  clearInterval(_miyTimer);
+  renderRPDayComplete();
+}
+
+async function miyToggleRec(){
+  if(_miyBusy)return;
+  if(_miyRecording){
+    _miyRecording=false;_miyBusy=true;
+    clearInterval(_miyTimer);
+    if(_miyRec&&_miyRec.state!=='inactive')_miyRec.stop();
+    const hint=document.getElementById('miy-voice-hint');
+    if(hint)hint.textContent='判定中…';
+    return;
+  }
+  try{
+    if(!_rpStream||_rpStream.getTracks().some(t=>t.readyState==='ended')){
+      _rpStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    }
+  }catch(e){toast('マイクの許可が必要です（設定→プライバシー→マイク）');return;}
+  _miyChunks=[];
+  const mime=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4',''].find(m=>!m||MediaRecorder.isTypeSupported(m))||'';
+  _miyRec=new MediaRecorder(_rpStream,mime?{mimeType:mime}:{});
+  _miyRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_miyChunks.push(e.data);};
+  _miyRec.onstop=async()=>{
+    const blob=new Blob(_miyChunks,{type:_miyRec.mimeType||'audio/webm'});
+    if(_miyBlobUrl)URL.revokeObjectURL(_miyBlobUrl);
+    _miyBlobUrl=URL.createObjectURL(blob);
+    const heard=await _transcribeAudio(blob,_miyRec.mimeType||'audio/webm').catch(()=>'');
+    miyCheck(heard);
+  };
+  _miyRec.start();
+  _miyRecording=true;_miyStartMs=Date.now();
+  const btn=document.getElementById('miy-mic-btn');
+  const hint=document.getElementById('miy-voice-hint');
+  if(btn)btn.style.borderColor='var(--red)';
+  if(hint)hint.textContent='タップして止める';
+  clearInterval(_miyTimer);
+  _miyTimer=setInterval(()=>{
+    if(Date.now()-_miyStartMs>=10000&&_miyRecording)miyToggleRec();
+  },200);
+}
+
+async function miyCheck(heard){
+  const resultEl=document.getElementById('miy-result');
+  if(!heard||!heard.trim()){
+    _miyBusy=false;
+    const hint=document.getElementById('miy-voice-hint');
+    if(hint)hint.textContent='聞き取れなかった。もう一度';
+    const btn=document.getElementById('miy-mic-btn');
+    if(btn)btn.style.borderColor='';
+    return;
+  }
+  if(resultEl)resultEl.innerHTML=`<div style="text-align:center;padding:20px 0;color:var(--grey);font-size:13px;font-weight:700;letter-spacing:.08em">AI CHECKING...</div>`;
+  let check=null;
+  try{
+    const res=await fetch('/api/score',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'gpt-4o-mini',
+        max_tokens:200,
+        messages:[{role:'user',content:
+          `You are an English coach for a Japanese footballer. Template phrase: "${_miyBase.phrase}"\n`+
+          `The player made their own real-life sentence borrowing that pattern: "${heard}"\n`+
+          `Judge only whether it is natural, correct English (loosely reusing the pattern is fine).\n`+
+          `Reply with ONLY this JSON, no code block:\n`+
+          `{"ok":true|false,"corrected":"natural corrected version (same as input if already good)","ja":"correctedの自然な日本語訳","note":"日本語の一言アドバイス(20字以内)"}`
+        }]
+      })
+    });
+    const j=await res.json();
+    check=JSON.parse((j.choices?.[0]?.message?.content||'').replace(/```json|```/g,'').trim());
+  }catch(e){
+    check={ok:true,corrected:heard,ja:'',note:''};
+  }
+  miyShowResult(heard,check);
+}
+
+function miyShowResult(heard,check){
+  _miyBusy=false;
+  const corrected=check.corrected||heard;
+  _miyLast={heard,corrected,ja:check.ja||'',ok:!!check.ok};
+  const verdictColor=check.ok?'var(--green)':'#FFC400';
+  const verdict=check.ok?"IT'S YOURS":'もう一歩';
+  document.getElementById('miy-result').innerHTML=`
+    <div class="md-voice-result">
+      <div class="md-verdict-label" style="color:${verdictColor};font-size:28px">${verdict}</div>
+      <div class="md-heard-wrap"><div class="md-heard-label">あなたの声</div><div class="md-heard-text">"${heard}"</div></div>
+      <div class="md-best-wrap">
+        <div class="md-best-label">${check.ok?'この文はもう自分のもの':'こう直すと自然'}</div>
+        <div class="md-best-text">"${corrected}"</div>
+        ${check.ja?`<div style="font-size:12px;color:var(--grey);margin-top:6px">${check.ja}</div>`:''}
+        ${!check.ok&&check.note?`<div style="font-size:12px;color:#FFC400;margin-top:6px;font-weight:700">${check.note}</div>`:''}
+      </div>
+      <div style="display:flex;gap:10px;width:100%">
+        <button class="miy-listen-btn" onclick="miyPlayMyVoice()">自分の声を聞く</button>
+        <button class="miy-listen-btn" onclick="speakTTS(_miyLast.corrected)">お手本を聞く</button>
+      </div>
+      <div style="display:flex;gap:10px;width:100%;margin-top:2px">
+        <button class="rp-btn-retry" style="flex:1" onclick="renderMIY()">やり直す</button>
+        <button class="rp-btn-next" style="flex:1" onclick="miySave()">保存して完了</button>
+      </div>
+    </div>`;
+}
+
+let _miyLast=null;
+function miyPlayMyVoice(){
+  if(!_miyBlobUrl)return;
+  const a=new Audio(_miyBlobUrl);
+  a.play().catch(()=>{});
+}
+
+function miySave(){
+  if(_miyLast){
+    S.myPhrases=S.myPhrases||[];
+    if(!S.myPhrases.some(p=>p.en===_miyLast.corrected)){
+      S.myPhrases.push({c:_miyBase.cat,en:_miyLast.corrected,ja:_miyLast.ja,ex:_miyLast.corrected,exJa:_miyLast.ja,note:'MAKE IT YOURS — '+_miyBase.title});
+      save();
+      toast('マイフレーズに保存した。単語カードの「マイフレーズ」で復習できる');
+    }
+  }
+  renderRPDayComplete();
 }
 function checkDailyTicket(){
   const td=today();
