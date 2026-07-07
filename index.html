@@ -913,6 +913,10 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .miy-skip{background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;padding:8px;text-align:center}
 .miy-listen-btn{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:14px;color:var(--ink);font-size:12px;font-weight:900;padding:12px 8px;cursor:pointer;font-family:inherit}
 .miy-listen-btn:active{opacity:.7}
+/* 自分の声を聞く（全モード共通） */
+.myvoice-btn{background:none;border:1px solid rgba(255,255,255,.2);border-radius:16px;color:rgba(255,255,255,.6);font-size:12px;font-weight:900;padding:8px 16px;cursor:pointer;font-family:inherit;letter-spacing:.02em}
+.myvoice-btn:active{opacity:.7}
+.myvoice-btn.sm{font-size:10px;padding:5px 10px;border-radius:12px}
 .rp-topbar{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .rp-prog{flex:1}
 .rp-prog-track{height:4px;background:rgba(220,50,50,.18);border-radius:999px;overflow:hidden;margin-bottom:5px}
@@ -2669,6 +2673,23 @@ function maybeShowPosPicker(){
     renderHome();
   }
 }
+/* 自分の声の聞き直し（全録音モード共通）
+   録音Blobを端末内に保持しローカル再生する — API呼び出しゼロ・通信ゼロ。
+   直近1件のみ保持（録音は常に逐次なので十分）。 */
+let _lastRecUrl='';
+function keepRec(blob){
+  if(_lastRecUrl)URL.revokeObjectURL(_lastRecUrl);
+  _lastRecUrl=URL.createObjectURL(blob);
+}
+function playMyVoice(){
+  if(!_lastRecUrl)return;
+  const a=new Audio(_lastRecUrl);
+  a.play().catch(()=>{});
+}
+function myVoiceBtn(sm){
+  if(!_lastRecUrl)return'';
+  return `<button class="myvoice-btn${sm?' sm':''}" onclick="playMyVoice()"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.12em" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg> 自分の声を聞く</button>`;
+}
 function textToAudioSrc(text){
   return "audio/"+text.toLowerCase().replace(/[!?',.\/—–]/g,"").replace(/\s+/g,"_").replace(/_+/g,"_")+".mp3";
 }
@@ -3948,6 +3969,7 @@ async function toggleRec(){
   _spMediaRec.onstop=async()=>{
     const actualMime=_spMediaRec.mimeType||mimeType||'audio/webm';
     const blob=new Blob(_spChunks,{type:actualMime});
+    keepRec(blob);
     document.getElementById("sp-heard").textContent="認識中...";
     try{
       const heard=await _transcribeAudio(blob,actualMime);
@@ -3955,13 +3977,13 @@ async function toggleRec(){
       const got=heard.toLowerCase().replace(/[^a-z' ]/g,"").split(/\s+/);
       const hit=target.filter(w=>got.includes(w)).length;
       const score=Math.round(hit/target.length*100);
-      document.getElementById("sp-heard").textContent="あなた:『"+heard+"』";
+      document.getElementById("sp-heard").innerHTML="あなた:『"+heard+"』 "+myVoiceBtn(true);
       const sc=document.getElementById("sp-score");
       sc.textContent=score+"%";sc.style.color=score>=80?"var(--green)":score>=50?"var(--yellow)":"var(--red)";
       sfx(score>=80?"good":"bad");
       if(score>=80){S.speakCount++;if(S.speakCount>=20)awardOnce("poly","🗣️ 声出し職人！");save();}
     }catch(e){
-      document.getElementById("sp-heard").textContent="うまく聞き取れず。もう一度タップ";
+      document.getElementById("sp-heard").innerHTML="うまく聞き取れず。もう一度タップ "+myVoiceBtn(true);
     }
     showSpeakNext();
   };
@@ -4878,6 +4900,7 @@ async function startRPRec(){
     const elapsed=Date.now()-rpStartMs;
     const actualMime=_rpMediaRec.mimeType||mimeType||'audio/webm';
     const blob=new Blob(_rpChunks,{type:actualMime});
+    keepRec(blob);
     const btn=document.getElementById('rp-mic-btn');
     const hint=document.getElementById('rp-hint');
     if(btn){btn.textContent='⏳';btn.classList.remove('rec');btn.disabled=true;}
@@ -4937,6 +4960,7 @@ function showRPResult(heard,timeMs){
         <div style="font-size:10px;font-weight:900;color:var(--grey);letter-spacing:.08em;margin-bottom:4px">あなたが選んだ返答</div>
         <div style="font-size:16px;font-weight:900;color:var(--ink)">"${rpChosenKey}"</div>
         ${heard?`<div style="font-size:12px;color:var(--grey);margin-top:6px">認識: "${heard}"</div>`:'<div style="font-size:12px;color:var(--red);margin-top:6px">音声を認識できませんでした</div>'}
+        <div style="margin-top:10px">${myVoiceBtn()}</div>
       </div>
     </div>
     <div class="rp-actions">
@@ -4982,13 +5006,13 @@ function renderRPDayComplete(){
    自己関連付け効果＋生成効果でセンテンスを自分事として定着させる。
    ユーザー発話側のみなので事前生成mp3は不要（Whisper認識→AI品質チェックのみ）。 */
 let _rpDayAvg=0;
-let _miyBase=null,_miyBlobUrl='',_miyRec=null,_miyChunks=[],_miyRecording=false,_miyBusy=false,_miyTimer=null,_miyStartMs=0;
+let _miyBase=null,_miyRec=null,_miyChunks=[],_miyRecording=false,_miyBusy=false,_miyTimer=null,_miyStartMs=0;
 
 function miyStart(){
   // 今日の7シーンから返答フレーズを1つ選ぶ（keys[0]=ベストフレーズ）
   const scene=rpScenes[Math.floor(Math.random()*rpScenes.length)];
   _miyBase={phrase:scene.keys[0],audio:scene.keyAudio?scene.keyAudio[0]:null,cat:scene.cat,title:scene.title};
-  _miyBlobUrl='';_miyRecording=false;_miyBusy=false;
+  _miyRecording=false;_miyBusy=false;
   renderMIY();
 }
 
@@ -5050,8 +5074,7 @@ async function miyToggleRec(){
   _miyRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_miyChunks.push(e.data);};
   _miyRec.onstop=async()=>{
     const blob=new Blob(_miyChunks,{type:_miyRec.mimeType||'audio/webm'});
-    if(_miyBlobUrl)URL.revokeObjectURL(_miyBlobUrl);
-    _miyBlobUrl=URL.createObjectURL(blob);
+    keepRec(blob);
     const heard=await _transcribeAudio(blob,_miyRec.mimeType||'audio/webm').catch(()=>'');
     miyCheck(heard);
   };
@@ -5120,7 +5143,7 @@ function miyShowResult(heard,check){
         ${!check.ok&&check.note?`<div style="font-size:12px;color:#FFC400;margin-top:6px;font-weight:700">${check.note}</div>`:''}
       </div>
       <div style="display:flex;gap:10px;width:100%">
-        <button class="miy-listen-btn" onclick="miyPlayMyVoice()">自分の声を聞く</button>
+        <button class="miy-listen-btn" onclick="playMyVoice()">自分の声を聞く</button>
         <button class="miy-listen-btn" onclick="speakTTS(_miyLast.corrected)">お手本を聞く</button>
       </div>
       <div style="display:flex;gap:10px;width:100%;margin-top:2px">
@@ -5131,12 +5154,6 @@ function miyShowResult(heard,check){
 }
 
 let _miyLast=null;
-function miyPlayMyVoice(){
-  if(!_miyBlobUrl)return;
-  const a=new Audio(_miyBlobUrl);
-  a.play().catch(()=>{});
-}
-
 function miySave(){
   if(_miyLast){
     S.myPhrases=S.myPhrases||[];
@@ -5394,6 +5411,7 @@ async function startDrillRec(){
     const elapsed=Date.now()-drillStartMs;
     const actualMime=_drillMediaRec.mimeType||mimeType||'audio/webm';
     const blob=new Blob(_drillChunks,{type:actualMime});
+    keepRec(blob);
     _dbg(`録音停止: chunks=${_drillChunks.length} blob=${blob.size}B elapsed=${elapsed}ms mime=${actualMime}`);
     const h=document.getElementById('drill-mic-hint');
     if(h)h.textContent='認識中...';
@@ -5458,6 +5476,7 @@ function showDrillResult(heard,timeMs){
       <div class="drill-ja">${p.ja}</div>
       <div class="drill-en-reveal">${p.en}</div>
       ${heard?`<div class="drill-heard">あなた:「${heard}」</div>`:`<div class="drill-heard" style="color:rgba(255,90,90,.6)">聞き取れず — もう一回試せ</div>`}
+      <div style="margin-top:8px">${myVoiceBtn(true)}</div>
     </div>
     <div class="drill-score-area">
       <div class="drill-score-num">${total}</div>
@@ -5757,6 +5776,7 @@ async function mdStartRec(){
   _mdMediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_mdChunks.push(e.data);};
   _mdMediaRec.onstop=async()=>{
     const blob=new Blob(_mdChunks,{type:_mdMediaRec.mimeType||'audio/webm'});
+    keepRec(blob);
     const heard=await _transcribeAudio(blob,_mdMediaRec.mimeType||'audio/webm').catch(()=>'');
     mdShowResult(heard);
   };
@@ -5855,6 +5875,7 @@ async function mdShowResult(heard){
       <div class="md-verdict-label" style="color:${verdictColor}">${verdict}</div>
       <div class="md-verdict-ja" style="color:${verdictColor}">${verdictJa}</div>
       ${heard?`<div class="md-heard-wrap"><div class="md-heard-label">あなたの声</div><div class="md-heard-text">"${heard}"</div></div>`:''}
+      <div style="width:100%;text-align:center">${myVoiceBtn()}</div>
       <div class="md-best-wrap">
         <div class="md-best-label">ベストフレーズ</div>
         <div class="md-best-text">"${bestKey}"</div>
