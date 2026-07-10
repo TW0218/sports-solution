@@ -2495,7 +2495,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[]},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false},data.progress);
   }
 }
 
@@ -2547,6 +2547,45 @@ function experimentVariant(experimentName,variants){
   return variants[Math.abs(hash)%variants.length];
 }
 
+/* ================= プッシュ通知（復習期限リマインダー） =================
+   実際の送信トリガーはapi/send-review-notifications.js（Vercel Cron、1日1回）。
+   ここではブラウザの購読登録とSupabaseへの保存のみを行う。
+   許可リクエストは「Day 1完了直後」など価値を体験した直後にのみ行う
+   （インストール直後にいきなり求めると許可率が大きく落ちるため）。 */
+const VAPID_PUBLIC_KEY='BEZRD7opJlfHMj-FJ03VWIN95My6CtkGAw1q8QVJrgQ1pOfYWlaumLge8wmMXsRAm1iL1kaX0U37nrFQAI2M0n4';
+function _urlBase64ToUint8Array(base64String){
+  const padding='='.repeat((4-base64String.length%4)%4);
+  const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
+  const raw=atob(base64);
+  return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));
+}
+async function maybeAskPushPermission(){
+  if(!currentUser)return;
+  if(!('serviceWorker' in navigator)||!('PushManager' in window))return;
+  if(Notification.permission!=='default')return; // 既に許可/拒否済みなら何もしない
+  if(S.pushPromptShown)return; // 一度尋ねたら二度と自動では聞かない
+  S.pushPromptShown=true;save();
+  const perm=await Notification.requestPermission().catch(()=>'denied');
+  if(perm!=='granted')return;
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    const sub=await reg.pushManager.subscribe({
+      userVisibleOnly:true,
+      applicationServerKey:_urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+    const j=sub.toJSON();
+    await supa.from("push_subscriptions").upsert({
+      user_id:currentUser.id,
+      endpoint:j.endpoint,
+      p256dh:j.keys.p256dh,
+      auth:j.keys.auth,
+      updated_at:new Date().toISOString()
+    },{onConflict:"user_id"});
+  }catch(e){
+    // 購読失敗はユーザー体験に影響させない
+  }
+}
+
 /* セッション復元（リロード時） */
 (async()=>{
   const{data:{session}}=await supa.auth.getSession();
@@ -2589,7 +2628,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[]};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false};
 function save(){saveToSupabase();}
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function addDaysStr(dateStr,n){const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
@@ -5036,6 +5075,7 @@ function renderRPDayComplete(){
   const avg=_rpDayAvg;
   const grade=avg>=80?'EXCELLENT':avg>=60?'GREAT':avg>=40?'GOOD':'KEEP GOING';
   if(avg>=80)setTimeout(()=>showCelebration(avg,'現場英語、完璧だ。','ROLEPLAY!'),200);
+  if(rpDay===0)setTimeout(()=>maybeAskPushPermission(),1500); // Day1完了＝価値を体験した直後にだけ許可を尋ねる
   document.getElementById('rp-scene-top').innerHTML=`
     <div class="rp-topbar">
       <button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>

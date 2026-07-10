@@ -63,3 +63,32 @@ async function cacheFirst(req, cacheName) {
   if (fresh.ok) cache.put(req, fresh.clone());
   return fresh;
 }
+
+// 復習期限が来たシーンの再挑戦を促すプッシュ通知（api/send-review-notifications.jsから送信）
+self.addEventListener('push', event => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch (e) {}
+  const title = data.title || 'TOP BINS';
+  const body = data.body || '復習の時間だ。';
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: '/images/icon-192.png',
+      badge: '/images/icon-192.png',
+      data: { url: data.url || '/' },
+    })
+  );
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+      for (const client of clients) {
+        if ('focus' in client) return client.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(url);
+    })
+  );
+});

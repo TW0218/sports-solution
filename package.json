@@ -2,6 +2,10 @@
   "scripts": {
     "verify": "node scripts/verify.js"
   },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "web-push": "^3.6.7"
+  },
   "devDependencies": {
     "sharp": "^0.35.2"
   }
