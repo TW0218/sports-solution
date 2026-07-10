@@ -4836,6 +4836,16 @@ function rpDayMasteryTier(dayIdx){
   return Math.min(...scenes.map(s=>rpMasteryLevel(s)));
 }
 
+// スピード判定はフレーズの語数で可変にする（3語〜9語まで幅があり、固定秒数だと
+// 短いフレーズに緩すぎ・長いフレーズに厳しすぎるため）。
+// 基礎思考1.2秒＋1語につき0.35秒。Aランク（フルボーナス）とBランク（部分）で+2秒の幅を持たせる。
+function rpSpeedThresholds(text){
+  const words=(text||'').trim().split(/\s+/).filter(Boolean).length||1;
+  const fast=1200+words*350;
+  const ok=fast+2000;
+  return {fast,ok};
+}
+
 function openRoleplay(){
   renderRoleplayMenu();
   go('roleplay');
@@ -5084,12 +5094,13 @@ function stopRPRec(){
 async function showRPResult(heard,timeMs){
   const scene=rpScenes[rpIdx];
   const tier=rpAttemptTier;
-  const speedBonus=timeMs>0&&timeMs<2500?30:timeMs<4500?15:0;
-  const speedLabel=timeMs>0&&timeMs<2500?'A':timeMs<4500?'B':'C';
-  let pronScore,total,answerLabel,answerText;
+  let pronScore,total,answerLabel,answerText,speedBonus,speedLabel;
 
   if(tier===1){
     // BRONZE: 選んだ選択肢との単語一致スコア（既存フロー）
+    const{fast,ok}=rpSpeedThresholds(rpChosenKey);
+    speedBonus=timeMs>0&&timeMs<fast?30:timeMs<ok?15:0;
+    speedLabel=timeMs>0&&timeMs<fast?'A':timeMs<ok?'B':'C';
     const target=(rpChosenKey||'').toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/).filter(Boolean);
     const got=(heard||'').toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/).filter(Boolean);
     const hit=target.filter(w=>got.includes(w)).length;
@@ -5100,8 +5111,11 @@ async function showRPResult(heard,timeMs){
   }else{
     // SILVER/GOLD/TOP BINS: 自由回答をMATCHDAYと同じAI採点（scene.keysのどれかに近ければ良い）
     document.getElementById('rp-scene-body').innerHTML=`<div style="text-align:center;padding:60px 0;color:var(--grey);font-size:13px;font-weight:700;letter-spacing:.08em">AI SCORING...</div>`;
+    const{fast,ok}=rpSpeedThresholds(scene.keys[0]);
+    speedBonus=timeMs>0&&timeMs<fast?15:0;
+    speedLabel=timeMs>0&&timeMs<fast?'A':timeMs<ok?'B':'C';
     pronScore=await mdAiScore(heard,scene.keys);
-    total=Math.min(100,Math.round(pronScore*0.85+(timeMs>0&&timeMs<2500?15:0)));
+    total=Math.min(100,Math.round(pronScore*0.85+speedBonus));
     answerLabel='お手本の一例';
     answerText=scene.keys[0];
   }
