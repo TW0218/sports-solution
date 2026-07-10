@@ -28,6 +28,29 @@ if (syntaxOk) {
   hasError = true;
 }
 
+console.log('\n=== 絵文字チェック ===');
+// 「絵文字は一切使わない、アイコンは必ずSVG」ルールの機械的強制。
+// 過去にレビュー時点でも9箇所しか見つけられず、実際には18箇所あった実績があり、
+// 目視レビューだけでは見逃しをゼロにできないための対策。
+// 許可リストは「機能するボタン/状態アイコンとして使われている単色記号」のみ。
+// 新規コードでこれらの文字を装飾目的で使うのは禁止（あくまで既存箇所の例外）。
+const EMOJI_ALLOWLIST = new Set(['✓', '✕', '☆', '★', '⭐']);
+const EMOJI_RANGES = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]/gu;
+let emojiOk = true;
+html.split('\n').forEach((line, i) => {
+  const matches = line.match(EMOJI_RANGES) || [];
+  const banned = [...new Set(matches.filter(c => !EMOJI_ALLOWLIST.has(c)))];
+  if (banned.length) {
+    console.error(`  NG: line ${i + 1}: ${banned.join(' ')} - ${line.trim().slice(0, 80)}`);
+    emojiOk = false;
+  }
+});
+if (emojiOk) {
+  console.log(`  OK (許可リスト外の絵文字なし。許可リスト: ${[...EMOJI_ALLOWLIST].join(' ')})`);
+} else {
+  hasError = true;
+}
+
 console.log('\n=== 音声整合性チェック ===');
 try {
   execFileSync('node', [path.join(ROOT, 'scripts', 'validate_audio.js')], { stdio: 'inherit' });
