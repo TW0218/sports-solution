@@ -1233,7 +1233,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
       <div class="r-track"><div class="r-fill" id="rf-survival" style="width:0%"></div></div>
     </div>
   </div>
-  <div class="motm" id="res-motm">&#x2B50; MAN OF THE MATCH &#x2014; 全問正解！</div>
+  <div class="motm" id="res-motm"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> MAN OF THE MATCH &#x2014; 全問正解！</div>
   <div id="res-badges"></div>
   <div class="missed-card" id="missed-wrap" style="display:none">
     <div class="missed-header">
@@ -1417,7 +1417,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 <!-- ============ FAVOURITES ============ -->
 <section class="screen" id="scr-fav">
   <div class="quiz-top"><button class="btn-x" onclick="go('grow','pop')">&#x2715;</button>
-    <div style="font-weight:900;font-size:17px">⭐ お気に入り</div>
+    <div style="font-weight:900;font-size:17px">お気に入り</div>
     <div id="fav-count" style="font-size:12px;font-weight:800;color:var(--grey)"></div>
   </div>
   <div id="fav-list" style="padding-bottom:20px"></div>
@@ -1447,6 +1447,8 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 function svgI(name){
   const s='width:1em;height:1em;vertical-align:-.13em;display:inline-block';
   const icons={
+    star:`<svg viewBox="0 0 24 24" style="${s}" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
+    bolt:`<svg viewBox="0 0 24 24" style="${s}" fill="currentColor" stroke="none"><path d="M13 2L3 14h7l-1 8 11-14h-7l0-6z"/></svg>`,
     spk:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>`,
     mic:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>`,
     fire:`<svg viewBox="0 0 24 24" style="${s}" fill="currentColor" stroke="none"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-2.5-1.5-5-2-6.5C15 8 16 10 16 13a4 4 0 01-8 0c0-2.5 1.5-5.5 4-7z"/></svg>`,
@@ -2555,7 +2557,7 @@ const TIERS=[
 const TROPHIES=[
  {id:"first",ic:"ball",n:"初ゴール",d:"初めて正解する"},
  {id:"hat",ic:"hat",n:"ハットトリック",d:"3問連続正解"},
- {id:"motm",ic:"⭐",n:"MOTM",d:"1試合全問正解"},
+ {id:"motm",ic:"star",n:"MOTM",d:"1試合全問正解"},
  {id:"week",ic:"cal",n:"週間MVP",d:"7日連続出場"},
  {id:"month",ic:"trophy",n:"月間MVP",d:"30日連続出場"},
  {id:"fifty",ic:"book",n:"50語マスター",d:"カード50語を習得"},
@@ -3585,7 +3587,7 @@ function openCatPicker(mode){
   const list=document.getElementById("pick-list");list.innerHTML="";
   if(mode==="cards"&&(S.myPhrases||[]).length){
     const b=document.createElement("button");b.className="opt";b.style.borderColor="var(--yellow)";
-    b.innerHTML=`⭐ <b>マイフレーズ</b><br><span style="font-size:12px;color:var(--grey)">ケーススタディで保存した ${S.myPhrases.length} フレーズ</span>`;
+    b.innerHTML=`${svgI('star')} <b>マイフレーズ</b><br><span style="font-size:12px;color:var(--grey)">ケーススタディで保存した ${S.myPhrases.length} フレーズ</span>`;
     b.onclick=()=>startCards("my");
     list.appendChild(b);
   }
@@ -3782,7 +3784,7 @@ function checkBuild(){
 function answerResult(ok){
   if(curItem){if(curItem.c==="pitch"){S.pitchTotal++;if(ok)S.pitchRight++;}else if(curItem.c==="locker"){S.lockerTotal++;if(ok)S.lockerRight++;}}
   if(ok){goalsNow++;S.goals++;sfx("good");showXPPop();
-    awardOnce("first","⚽ 初ゴール！");
+    awardOnce("first","初ゴール！");
   }else{missNow++;sfx("bad");}
   const f=document.getElementById("feedback");
   f.className="feedback show "+(ok?"good":"bad");
@@ -3819,14 +3821,14 @@ function finishSession(){
     S.history=S.history.filter(d=>d!==t);
     S.history.push(t);
     if(S.history.length>30)S.history=S.history.slice(-30);
-    if(S.streak%7===0&&S.streak>prevStreak){S.tickets=(S.tickets||0)+1;toast("復活チケット獲得！🎫");}
+    if(S.streak%7===0&&S.streak>prevStreak){S.tickets=(S.tickets||0)+1;toast("復活チケット獲得！");}
   }
   checkMissionBonus();
-  if(S.streak>=7)awardOnce("week","📅 週間MVP！7日連続出場");
-  if(S.streak>=30)awardOnce("month","🏅 月間MVP！30日連続");
-  if(S.caps>=10)awardOnce("ten","🔟 通算10試合出場！");
-  if(S.min>=14400)awardOnce("cap","🦁 イングランド代表招集！");
-  if(goalsNow===Q.length)awardOnce("motm","⭐ MAN OF THE MATCH");
+  if(S.streak>=7)awardOnce("week","週間MVP！7日連続出場");
+  if(S.streak>=30)awardOnce("month","月間MVP！30日連続");
+  if(S.caps>=10)awardOnce("ten","通算10試合出場！");
+  if(S.min>=14400)awardOnce("cap","イングランド代表招集！");
+  if(goalsNow===Q.length)awardOnce("motm","MAN OF THE MATCH");
   if(lastCat==='locker') S.lastLockerQuizDate=today();
   else S.lastQuizDate=today();
   save();
@@ -3850,7 +3852,7 @@ function finishSession(){
   }
   sessionBadges.forEach(id=>{
     const tr=TROPHIES.find(x=>x.id===id);
-    rb.innerHTML+=`<div class="badge-pop"><span style="font-size:24px">${tr.ic}</span><span>新トロフィー獲得：${tr.n}</span></div>`;
+    rb.innerHTML+=`<div class="badge-pop"><span style="font-size:24px">${svgI(tr.ic)}</span><span>新トロフィー獲得：${tr.n}</span></div>`;
   });
   go("result");
   if(instPct>=80)setTimeout(()=>showCelebration(instPct,goalsNow===Q.length?'全問正解！完璧だ。':'現場で通用するレベルだ。','PERFECT!'),300);
@@ -3915,7 +3917,7 @@ function selectCardAnswer(idx){
   // スコア更新
   S.box[correct.en]=isCorrect?Math.min(3,(S.box[correct.en]||0)+1):0;
   const mastered=Object.values(S.box).filter(v=>v>=2).length;
-  if(mastered>=50)awardOnce("fifty","📖 50語マスター達成！");
+  if(mastered>=50)awardOnce("fifty","50語マスター達成！");
   if(isCorrect){
     S.cardsSinceTicket=(S.cardsSinceTicket||0)+1;
     if(S.cardsSinceTicket>=10){S.cardsSinceTicket=0;S.lastCardDate=today();checkMissionBonus();}
@@ -3931,7 +3933,7 @@ function cardNext(){
   ci++;
   if(ci>=cardDeck.length){
     const mastered=Object.values(S.box).filter(v=>v>=2).length;
-    toast("デッキ完了！💪 "+mastered+"語マスター中");
+    toast("デッキ完了！"+mastered+"語マスター中");
     go("home");renderHome();return;
   }
   renderCard();
@@ -4005,7 +4007,7 @@ async function toggleRec(){
       const sc=document.getElementById("sp-score");
       sc.textContent=score+"%";sc.style.color=score>=80?"var(--green)":score>=50?"var(--yellow)":"var(--red)";
       sfx(score>=80?"good":"bad");
-      if(score>=80){S.speakCount++;if(S.speakCount>=20)awardOnce("poly","🗣️ 声出し職人！");save();}
+      if(score>=80){S.speakCount++;if(S.speakCount>=20)awardOnce("poly","声出し職人！");save();}
     }catch(e){
       document.getElementById("sp-heard").innerHTML="うまく聞き取れず。もう一度タップ "+myVoiceBtn(true);
     }
@@ -4027,7 +4029,7 @@ function _stopSpRec(){
 function stopRec(){_stopSpRec();}
 function nextSpeak(){
   si++;
-  if(si>=spDeck.length){_releaseSpStream();S.lastSpeakDate=today();save();checkMissionBonus();toast("シャドーイング完了！🎙️");go("home");renderHome();return;}
+  if(si>=spDeck.length){_releaseSpStream();S.lastSpeakDate=today();save();checkMissionBonus();toast("シャドーイング完了！");go("home");renderHome();return;}
   renderSpeak();
 }
 
@@ -4129,7 +4131,7 @@ const COACH_DB=[
 {k:["マイナスに折り返せ","マイナス","折り返せ"],en:"Cut it back!",alt:["Pull it back!"],ja:"マイナスに折り返せ",note:""},
 {k:["キーパー","キーパーのボール","任せろ"],en:"Keeper's!",alt:["Mine!","Leave it!"],ja:"キーパーのボールだ／俺のだ",note:"mine! はフィールドプレーヤーも使う"},
 {k:["体を張れ","ブロックしろ","顔面でも止めろ"],en:"Get a block in!",alt:["Bodies on the line!"],ja:"体を張ってブロックしろ",note:""},
-{k:["ファウルで止めろ","戦術的ファウル","止めとけ"],en:"Take one for the team!",alt:["Bring him down!"],ja:"チームのためにファウルで止めろ",note:"⚠️ カード覚悟の現場表現。公式の推奨ではない"}
+{k:["ファウルで止めろ","戦術的ファウル","止めとけ"],en:"Take one for the team!",alt:["Bring him down!"],ja:"チームのためにファウルで止めろ",note:"カード覚悟の現場表現。公式の推奨ではない"}
 ];
 function openCoach(){
   go("coach");
@@ -4206,7 +4208,7 @@ async function askAI(situation){
     speak(parsed.calls[0].en,null,"pitch");
   }catch(e){
     res.innerHTML=`<div class="call-card" style="border-left-color:var(--red)">
-      <div class="src">⚠️ AIに接続できなかった</div>
+      <div class="src">${svgI('warn')} AIに接続できなかった</div>
       <div class="call-ja" style="font-size:14px;line-height:1.7">内蔵辞書にもヒットなし。AI問い合わせに失敗した。公開サイトの場合はVercelの環境変数 ANTHROPIC_API_KEY が設定されているか確認。<br><br>別の言い方で試す：「寄せろ」「裏を狙え」「中を切れ」など短い動詞形が当たりやすい。</div></div>`;
   }
 }
@@ -4372,7 +4374,7 @@ function toggleMyPhrase(i){
   S.myPhrases=S.myPhrases||[];
   const idx=S.myPhrases.findIndex(p=>p.en===o.en);
   if(idx>=0){S.myPhrases.splice(idx,1);toast("マイフレーズから削除");}
-  else{S.myPhrases.push({c:curScn.c,en:o.en,ja:o.ja,ex:o.en,exJa:o.ja,note:o.note});toast("⭐ マイフレーズに保存");}
+  else{S.myPhrases.push({c:curScn.c,en:o.en,ja:o.ja,ex:o.en,exJa:o.ja,note:o.note});toast("マイフレーズに保存");}
   save();
 }
 function practiceCase(){
@@ -4396,10 +4398,10 @@ async function askAICase(){
     const scn={id:"ai"+Date.now(),c:"locker",ic:"robot",t:p.t,scene:p.scene,ops:p.ops,ng:p.ng};
     SCENARIOS.unshift(scn);
     openCase(scn);
-    toast("🤖 AIケーススタディ完成");
+    toast("AIケーススタディ完成");
   }catch(e){
     openCases();
-    toast("⚠️ AI接続不可（公開時はAPIプロキシが必要）");
+    toast("AI接続不可（公開時はAPIプロキシが必要）");
   }
 }
 
@@ -5211,7 +5213,7 @@ function checkMissionBonus(){
   S.lastMissionBonusDate=td;
   S.matchTickets=Math.min(MD_TICKET_MAX,(S.matchTickets||0)+1);
   save();
-  toast(`🎟️ 全ミッション完了！MATCH TICKET +1（残り${S.matchTickets}枚）`);
+  toast(`全ミッション完了！MATCH TICKET +1（残り${S.matchTickets}枚）`);
 }
 function openQuizPicker(){renderQuizDaily();go('quiz-daily');}
 function renderQuizDaily(){
@@ -5562,7 +5564,7 @@ function toggleFav(en,ja,source){
   S.favs=S.favs||[];
   const idx=S.favs.findIndex(f=>f.en===en);
   if(idx>=0){S.favs.splice(idx,1);save();toast("お気に入りから削除");return false;}
-  else{S.favs.push({en,ja,source,savedAt:today()});save();toast("⭐ お気に入りに保存");return true;}
+  else{S.favs.push({en,ja,source,savedAt:today()});save();toast("お気に入りに保存");return true;}
 }
 function toggleFavCurrent(source){
   const en=curItem&&curItem.en;const ja=curItem&&curItem.ja;
@@ -6000,7 +6002,7 @@ function mdNext(){
       save();
       document.getElementById('md-scene-wrap').innerHTML=`
         <div class="md-complete">
-          <div class="md-complete-icon" style="font-size:40px">⚡</div>
+          <div class="md-complete-icon" style="font-size:40px">${svgI('bolt')}</div>
           <div class="md-complete-title">DEMO 完了！</div>
           <div class="md-complete-sub" style="text-align:center;max-width:280px;margin:0 auto 20px">
             どうだった？<br>ミッションをこなしてチケットを手に入れれば、毎日参戦できる。
