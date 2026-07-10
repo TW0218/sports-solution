@@ -2477,6 +2477,7 @@ async function doLogin(){
   currentUser=data.user;
   await loadFromSupabase();
   await checkEntitlement();
+  track('app_open');
   document.getElementById("scr-login").classList.add("hidden");
   maybeShowPosPicker();
 }
@@ -2524,6 +2525,28 @@ async function checkEntitlement(){
   }
 }
 
+/* ================= 行動計測（自前実装・外部SaaS不使用） =================
+   events テーブルへの書き込み専用。分析はSupabaseダッシュボードのSQL Editorで
+   行う（supabase/analytics_queries.sql参照）。計測の失敗が絶対にユーザー体験を
+   壊さないよう、track()は必ずfire-and-forget・エラーは握りつぶす。 */
+async function track(name,props){
+  if(!currentUser)return;
+  try{
+    await supa.from("events").insert({user_id:currentUser.id,name,props:props||{}});
+  }catch(e){
+    // 計測失敗はユーザー体験に影響させない
+  }
+}
+// 決定論的なA/Bバリアント振り分け（同一ユーザーは常に同じバリアントになる）。
+// 外部の実験基盤なしで再現するための最小実装。
+function experimentVariant(experimentName,variants){
+  if(!currentUser)return variants[0];
+  let hash=0;
+  const str=currentUser.id+':'+experimentName;
+  for(let i=0;i<str.length;i++)hash=(hash*31+str.charCodeAt(i))|0;
+  return variants[Math.abs(hash)%variants.length];
+}
+
 /* セッション復元（リロード時） */
 (async()=>{
   const{data:{session}}=await supa.auth.getSession();
@@ -2531,6 +2554,7 @@ async function checkEntitlement(){
     currentUser=session.user;
     await loadFromSupabase();
     await checkEntitlement();
+    track('app_open');
     // ?reset=missions でその日の完了フラグを消去
     if(new URLSearchParams(location.search).get('reset')==='missions'){
       S.doneToday='';S.lastSpeakDate='';S.lastQuizDate='';S.lastLockerQuizDate='';
@@ -3815,7 +3839,7 @@ function finishSession(){
   if(S.doneToday!==t){
     const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
     const prevStreak=S.streak;
-    if(S.last===y||S.last===t){S.streak++;}else if(S.tickets>0){S.tickets--;S.streak++;}else{S.streak=1;}
+    if(S.last===y||S.last===t){S.streak++;}else if(S.tickets>0){S.tickets--;S.streak++;}else{if(prevStreak>0)track('streak_broken',{previous_streak:prevStreak});S.streak=1;}
     S.last=t;S.doneToday=t;
     if(!S.history)S.history=[];
     S.history=S.history.filter(d=>d!==t);
@@ -3831,6 +3855,7 @@ function finishSession(){
   if(goalsNow===Q.length)awardOnce("motm","MAN OF THE MATCH");
   if(lastCat==='locker') S.lastLockerQuizDate=today();
   else S.lastQuizDate=today();
+  track('mission_complete',{mission:lastCat==='locker'?'locker_quiz':'pitch_quiz'});
   save();
   document.getElementById("res-goals").textContent=goalsNow;
   document.getElementById("res-miss").textContent=missNow;
@@ -3920,7 +3945,7 @@ function selectCardAnswer(idx){
   if(mastered>=50)awardOnce("fifty","50語マスター達成！");
   if(isCorrect){
     S.cardsSinceTicket=(S.cardsSinceTicket||0)+1;
-    if(S.cardsSinceTicket>=10){S.cardsSinceTicket=0;S.lastCardDate=today();checkMissionBonus();}
+    if(S.cardsSinceTicket>=10){S.cardsSinceTicket=0;S.lastCardDate=today();track('mission_complete',{mission:'cards'});checkMissionBonus();}
   }
   save();
   // 再生・次へボタン表示
@@ -4029,7 +4054,7 @@ function _stopSpRec(){
 function stopRec(){_stopSpRec();}
 function nextSpeak(){
   si++;
-  if(si>=spDeck.length){_releaseSpStream();S.lastSpeakDate=today();save();checkMissionBonus();toast("シャドーイング完了！");go("home");renderHome();return;}
+  if(si>=spDeck.length){_releaseSpStream();S.lastSpeakDate=today();save();track('mission_complete',{mission:'shadowing'});checkMissionBonus();toast("シャドーイング完了！");go("home");renderHome();return;}
   renderSpeak();
 }
 
@@ -5003,6 +5028,7 @@ function nextRP(){
 function finishRoleplay(){
   S.lastRpDate=today();save();
   _rpDayAvg=Math.round(rpTotalScore/rpScenes.length);
+  track('day_complete',{day:rpDay+1,avg_score:_rpDayAvg});
   miyStart();
 }
 
@@ -5068,7 +5094,7 @@ function renderMIY(){
         </button>
         <div class="md-voice-hint" id="miy-voice-hint">タップして話す</div>
       </div>
-      <button class="miy-skip" onclick="renderRPDayComplete()">今日はスキップ</button>
+      <button class="miy-skip" onclick="miySkip()">今日はスキップ</button>
       <div id="miy-result"></div>
     </div>`;
 }
@@ -5076,6 +5102,11 @@ function renderMIY(){
 function miyAbort(){
   if(_miyRec&&_miyRec.state!=='inactive'){try{_miyRec.stop();}catch(e){}}
   clearInterval(_miyTimer);
+  renderRPDayComplete();
+}
+
+function miySkip(){
+  track('make_it_yours_skip',{day:rpDay+1});
   renderRPDayComplete();
 }
 
@@ -5189,6 +5220,7 @@ function miySave(){
       toast('マイフレーズに保存した。単語カードの「マイフレーズ」で復習できる');
     }
   }
+  track('make_it_yours_complete',{day:rpDay+1,ok:_miyLast?_miyLast.ok:null});
   renderRPDayComplete();
 }
 function checkDailyTicket(){
@@ -5882,6 +5914,7 @@ async function mdShowResult(heard){
   // Mark scene as used in MATCHDAY
   const scKey=`${scene.cat}||${scene.title}`;
   if(!(S.mdUsedSceneKeys||[]).includes(scKey)){S.mdUsedSceneKeys=[...(S.mdUsedSceneKeys||[]),scKey];}
+  track('matchday_played',{score,verdict,scene_key:scKey,is_review:(S.mdReviewQueue||[]).some(r=>r.key===scKey)});
 
   // 失敗駆動復習: スコアが低ければ復習キューに登録（再挑戦で失敗するほど間隔を延ばす）。GOOD以上なら卒業として除去
   const rq=S.mdReviewQueue||[];
