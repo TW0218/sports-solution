@@ -901,6 +901,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .rp-day-num{font-size:20px;font-weight:900;color:var(--ink);font-family:Barlow,sans-serif}
 .rp-day-badge{position:absolute;top:4px;right:5px;width:14px;height:14px;color:var(--green)}
 .rp-day-badge.lock{color:var(--grey)}
+.rp-day-tier{font-size:7px;font-weight:900;letter-spacing:.05em;color:var(--yellow);margin-top:2px}
 .rp-scene-cat-tag{font-size:10px;font-weight:900;letter-spacing:.06em;color:var(--grey);text-transform:uppercase;margin-bottom:2px}
 /* MAKE IT YOURS */
 .miy-wrap{display:flex;flex-direction:column;gap:14px;padding:8px 2px 24px}
@@ -2495,7 +2496,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{}},data.progress);
   }
 }
 
@@ -2636,7 +2637,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{}};
 function save(){saveToSupabase();}
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function addDaysStr(dateStr,n){const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
@@ -4818,6 +4819,23 @@ function rpDayCompleted(dayIdx){
 }
 function rpDayUnlocked(dayIdx){return dayIdx===0||rpDayCompleted(dayIdx-1);}
 
+/* ================= MASTERY RANK =================
+   1回クリアで終わらせない仕組み。新規シーン・新規音声は一切追加せず、
+   既存175シーンを「難易度の違う挑戦」として繰り返し使い回す
+   （単語カードのS.boxパターンをROLEPLAYシーンに応用したもの）。
+   Tier1=BRONZE(3択・現行フロー) → Tier2=SILVER(自由回答+ヒント) →
+   Tier3=GOLD(自由回答・ヒントなし) → Tier4=TOP BINS(同+スピード必須)。
+   失敗しても習熟度は下がらない（優しめルール）。次に開いた時も同じTierに再挑戦できる。 */
+const RP_TIER_NAMES=['','BRONZE','SILVER','GOLD','TOP BINS'];
+let rpAttemptTier=1;
+function rpMasteryLevel(scene){return (S.rpMastery||{})[rpSceneKey(scene)]||0;}
+function rpNextTier(scene){return Math.min(4,rpMasteryLevel(scene)+1);}
+function rpDayMasteryTier(dayIdx){
+  const scenes=rpDayScenes(dayIdx);
+  if(scenes.length===0)return 0;
+  return Math.min(...scenes.map(s=>rpMasteryLevel(s)));
+}
+
 function openRoleplay(){
   renderRoleplayMenu();
   go('roleplay');
@@ -4829,13 +4847,14 @@ function renderRoleplayMenu(){
   const rpDoneToday=S.lastRpDate===today();
   const nextDay=[...Array(CAREER_DAY_COUNT).keys()].find(d=>!rpDayCompleted(d));
   const html=`
-    <p class="rp-intro">Day 1から、キャリアを進めろ。<br>1日ごとに7つの現場が待っている。</p>
-    ${rpDoneToday?`<div style="font-size:11px;font-weight:800;color:rgba(255,196,0,.7);text-align:center;margin-bottom:12px;letter-spacing:.05em">TODAY DONE — また明日新しいDayが解放される</div>`:''}
+    <p class="rp-intro">Day 1から、キャリアを進めろ。<br>クリア済みのDayは、次のランクに何度でも挑戦できる。</p>
+    ${rpDoneToday?`<div style="font-size:11px;font-weight:800;color:rgba(255,196,0,.7);text-align:center;margin-bottom:12px;letter-spacing:.05em">TODAY DONE — 明日も練習できる</div>`:''}
     <div class="rp-day-grid">
       ${[...Array(CAREER_DAY_COUNT).keys()].map(d=>{
         const completed=rpDayCompleted(d);
         const unlocked=rpDayUnlocked(d);
         const isCurrent=!completed&&d===nextDay;
+        const tier=rpDayMasteryTier(d);
         const cls=`rp-day-card${!unlocked?' locked':''}${completed?' completed':''}${isCurrent?' current':''}`;
         const badge=completed?'<svg class="rp-day-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>'
           :!unlocked?'<svg class="rp-day-badge lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>':'';
@@ -4843,6 +4862,7 @@ function renderRoleplayMenu(){
           ${badge}
           <div class="rp-day-label">DAY</div>
           <div class="rp-day-num">${d+1}</div>
+          ${completed&&tier>0?`<div class="rp-day-tier">${RP_TIER_NAMES[tier]}</div>`:''}
         </div>`;
       }).join('')}
     </div>`;
@@ -4861,18 +4881,49 @@ function startCareerDay(dayIdx){
 function renderRPScene(){
   const scene=rpScenes[rpIdx];
   const pct=Math.round(rpIdx/rpScenes.length*100);
+  rpAttemptTier=rpNextTier(scene);
   document.getElementById('rp-scene-top').innerHTML=`
     <div class="rp-topbar">
       <button class="btn-x" onclick="go('roleplay','pop');renderRoleplayMenu()">✕</button>
       <div class="rp-prog">
         <div class="rp-prog-track"><div class="rp-prog-fill" style="width:${pct}%"></div></div>
-        <div class="rp-prog-meta"><span>DAY ${rpDay+1}</span><span>${rpIdx+1} / ${rpScenes.length}</span></div>
+        <div class="rp-prog-meta"><span>DAY ${rpDay+1} · ${RP_TIER_NAMES[rpAttemptTier]}</span><span>${rpIdx+1} / ${rpScenes.length}</span></div>
       </div>
     </div>`;
   rpChosenKey='';
   rpCurrentKeys=scene.keys||[];
-  renderRPChoose();
+  if(rpAttemptTier===1)renderRPChoose();
+  else renderRPFreeResponse();
   rpPlayLine();
+}
+
+function renderRPFreeResponse(){
+  const scene=rpScenes[rpIdx];
+  const initials=scene.npc.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const sceneCat=RP_CATEGORIES.find(c=>c.id===scene.cat);
+  const showHint=rpAttemptTier===2&&scene.hint;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div style="text-align:center">
+      ${sceneCat?`<div class="rp-scene-cat-tag">${sceneCat.label}</div>`:''}
+      <span class="rp-situation-tag">${scene.situation}</span>
+    </div>
+    <div class="rp-chat-wrap">
+      <div class="rp-npc-row">
+        <div class="rp-npc-avatar">${initials}</div>
+        <div class="rp-npc-bubble-wrap">
+          <div class="rp-npc-name">${scene.npc.toUpperCase()}</div>
+          <div class="rp-npc-bubble">"${scene.line}"</div>
+          <button class="rp-play-bubble-btn" onclick="rpPlayLine()">▶ もう一度聞く</button>
+        </div>
+      </div>
+      <div class="rp-chat-divider">── ${RP_TIER_NAMES[rpAttemptTier]}挑戦：自分の言葉で返せ ──</div>
+      ${showHint?`<div class="md-hint-box" style="display:block"><div class="md-hint-label">ヒント</div><div class="md-hint-text">${scene.hint}</div></div>`:''}
+    </div>
+    <div class="rp-mic-section">
+      <div class="rp-timer" id="rp-timer">00.0</div>
+      <button class="rp-mic-big" id="rp-mic-btn" onclick="toggleRPRec()">${_rpMicSvg()}</button>
+      <div class="rp-hint" id="rp-hint">タップして録音開始</div>
+    </div>`;
 }
 
 function renderRPChoose(){
@@ -5030,33 +5081,66 @@ function stopRPRec(){
   if(_rpMediaRec&&_rpMediaRec.state!=='inactive')_rpMediaRec.stop();
 }
 
-function showRPResult(heard,timeMs){
+async function showRPResult(heard,timeMs){
   const scene=rpScenes[rpIdx];
-  const target=(rpChosenKey||'').toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/).filter(Boolean);
-  const got=(heard||'').toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/).filter(Boolean);
-  const hit=target.filter(w=>got.includes(w)).length;
-  const pronScore=target.length>0?Math.round(hit/target.length*100):0;
+  const tier=rpAttemptTier;
   const speedBonus=timeMs>0&&timeMs<2500?30:timeMs<4500?15:0;
   const speedLabel=timeMs>0&&timeMs<2500?'A':timeMs<4500?'B':'C';
-  const total=Math.min(100,Math.round(pronScore*0.7+speedBonus));
+  let pronScore,total,answerLabel,answerText;
+
+  if(tier===1){
+    // BRONZE: 選んだ選択肢との単語一致スコア（既存フロー）
+    const target=(rpChosenKey||'').toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/).filter(Boolean);
+    const got=(heard||'').toLowerCase().replace(/[^a-z' ]/g,'').split(/\s+/).filter(Boolean);
+    const hit=target.filter(w=>got.includes(w)).length;
+    pronScore=target.length>0?Math.round(hit/target.length*100):0;
+    total=Math.min(100,Math.round(pronScore*0.7+speedBonus));
+    answerLabel='あなたが選んだ返答';
+    answerText=rpChosenKey;
+  }else{
+    // SILVER/GOLD/TOP BINS: 自由回答をMATCHDAYと同じAI採点（scene.keysのどれかに近ければ良い）
+    document.getElementById('rp-scene-body').innerHTML=`<div style="text-align:center;padding:60px 0;color:var(--grey);font-size:13px;font-weight:700;letter-spacing:.08em">AI SCORING...</div>`;
+    pronScore=await mdAiScore(heard,scene.keys);
+    total=Math.min(100,Math.round(pronScore*0.85+(timeMs>0&&timeMs<2500?15:0)));
+    answerLabel='お手本の一例';
+    answerText=scene.keys[0];
+  }
+
   rpTotalScore+=total;
   const _scKey=rpSceneKey(scene);
-  if(!(S.rpCompletedSceneKeys||[]).includes(_scKey)){S.rpCompletedSceneKeys=[...(S.rpCompletedSceneKeys||[]),_scKey];save();}
+  if(!(S.rpCompletedSceneKeys||[]).includes(_scKey)){S.rpCompletedSceneKeys=[...(S.rpCompletedSceneKeys||[]),_scKey];}
+
+  // マスター判定: 合格点(50)以上、かつこのTierが現在の習熟度を上回る時だけ昇格。
+  // 失敗しても習熟度は下がらない（優しめルール）
+  const passThreshold=50;
+  let masteryUp=false;
+  if(total>=passThreshold&&tier>rpMasteryLevel(scene)){
+    S.rpMastery=S.rpMastery||{};
+    S.rpMastery[_scKey]=tier;
+    masteryUp=true;
+    track('scene_mastery_up',{key:_scKey,tier});
+  }
+  save();
+
   const grade=total>=80?'EXCELLENT':total>=50?'GOOD':'KEEP GOING';
   const isLast=rpIdx>=rpScenes.length-1;
   const scoreColor=total>=80?'var(--green)':total>=50?'#FFC400':'var(--red)';
+  const tierBadge=masteryUp
+    ?`<div style="text-align:center;font-weight:900;color:var(--yellow);letter-spacing:.08em;margin-bottom:6px">${RP_TIER_NAMES[tier]} 達成！</div>`
+    :(tier>1?`<div style="text-align:center;font-weight:800;color:var(--grey);letter-spacing:.05em;margin-bottom:6px;font-size:12px">${RP_TIER_NAMES[tier]}はまだ。焦らずもう一度</div>`:'');
   document.getElementById('rp-scene-body').innerHTML=`
     <div class="rp-result-wrap">
+      ${tierBadge}
       <div class="rp-score-num" style="color:${scoreColor}">${total}</div>
       <div class="rp-score-sub">SCORE</div>
       <div class="rp-metrics">
-        <div class="rp-metric"><div class="rp-metric-val">${pronScore}%</div><div class="rp-metric-lbl">PRONUNCIATION</div></div>
+        <div class="rp-metric"><div class="rp-metric-val">${pronScore}%</div><div class="rp-metric-lbl">${tier===1?'PRONUNCIATION':'AI SCORE'}</div></div>
         <div class="rp-metric"><div class="rp-metric-val">${speedLabel}</div><div class="rp-metric-lbl">SPEED</div></div>
         <div class="rp-metric"><div class="rp-metric-val">${grade}</div><div class="rp-metric-lbl">GRADE</div></div>
       </div>
       <div style="background:var(--card2);border:1px solid var(--border2);border-radius:14px;padding:12px 16px;margin:10px 0;width:100%;box-sizing:border-box">
-        <div style="font-size:10px;font-weight:900;color:var(--grey);letter-spacing:.08em;margin-bottom:4px">あなたが選んだ返答</div>
-        <div style="font-size:16px;font-weight:900;color:var(--ink)">"${rpChosenKey}"</div>
+        <div style="font-size:10px;font-weight:900;color:var(--grey);letter-spacing:.08em;margin-bottom:4px">${answerLabel}</div>
+        <div style="font-size:16px;font-weight:900;color:var(--ink)">"${answerText}"</div>
         ${heard?`<div style="font-size:12px;color:var(--grey);margin-top:6px">認識: "${heard}"</div>`:'<div style="font-size:12px;color:var(--red);margin-top:6px">音声を認識できませんでした</div>'}
         <div style="margin-top:10px">${myVoiceBtn()}</div>
       </div>
