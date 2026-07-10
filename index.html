@@ -2599,6 +2599,14 @@ async function maybeAskPushPermission(){
       S.doneToday='';S.lastSpeakDate='';S.lastQuizDate='';S.lastLockerQuizDate='';
       save();history.replaceState({},'',location.pathname);
     }
+    // ?notif=1&notif_variant=X&notif_exp=Y でプッシュ通知経由のオープンを計測
+    {
+      const qp=new URLSearchParams(location.search);
+      if(qp.get('notif')==='1'){
+        track('notification_clicked',{experiment:qp.get('notif_exp')||'',variant:qp.get('notif_variant')||''});
+        history.replaceState({},'',location.pathname);
+      }
+    }
     document.getElementById("scr-login").classList.add("hidden");
     maybeShowPosPicker();
   }else if(session&&loginExpired()){

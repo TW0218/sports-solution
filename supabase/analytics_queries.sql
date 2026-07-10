@@ -71,3 +71,21 @@ order by 1 desc;
 -- where props ? 'experiment'
 -- group by 1, 2, 3
 -- order by 1, 2, 3;
+
+-- ============ 8. 復習通知のバリアント別クリック率（CTR） ============
+-- notification_sent（サーバ側、api/send-review-notifications.js）と
+-- notification_clicked（クライアント側、?notif=1経由）を突き合わせる
+select
+  s.props->>'variant' as variant,
+  count(distinct s.id) as sent,
+  count(distinct c.id) as clicked,
+  round(count(distinct c.id)::numeric / nullif(count(distinct s.id), 0) * 100, 1) as ctr_pct
+from events s
+left join events c
+  on c.user_id = s.user_id
+  and c.name = 'notification_clicked'
+  and c.props->>'variant' = s.props->>'variant'
+  and c.created_at between s.created_at and s.created_at + interval '2 days'
+where s.name = 'notification_sent'
+group by 1
+order by 1;

@@ -84,9 +84,14 @@ self.addEventListener('notificationclick', event => {
   event.notification.close();
   const url = (event.notification.data && event.notification.data.url) || '/';
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async clients => {
+      // 既存タブがあっても素通りせず、必ずクリック計測用パラメータ付きURLへ遷移させる
       for (const client of clients) {
-        if ('focus' in client) return client.focus();
+        if ('navigate' in client) {
+          await client.navigate(url);
+          if ('focus' in client) return client.focus();
+          return;
+        }
       }
       if (self.clients.openWindow) return self.clients.openWindow(url);
     })
