@@ -2474,6 +2474,7 @@ async function doLogin(){
   stampLogin();
   currentUser=data.user;
   await loadFromSupabase();
+  await checkEntitlement();
   document.getElementById("scr-login").classList.add("hidden");
   maybeShowPosPicker();
 }
@@ -2500,12 +2501,34 @@ async function saveToSupabase(){
   await supa.from("user_progress").upsert({user_id:currentUser.id,progress:S,updated_at:new Date().toISOString()},{onConflict:"user_id"});
 }
 
+/* ================= ENTITLEMENT（Apple App版の無料権限） =================
+   PWA(topbins.vercel.app)はisNativePlatform()が常にfalseなので、この判定を
+   一切通らず常に無料のまま。Apple App版（Capacitorラップ後）でのみ意味を持つ。
+   entitledはSupabaseの`entitlements`テーブル（クライアントからは書き込み不可・
+   select onlyのRLS）から読むだけで、S（save()で同期される進捗データ）には
+   絶対に含めない — Sに含めるとユーザー自身が改ざんできてしまうため。 */
+function isNativePlatform(){
+  return !!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
+}
+let entitled=true; // PWAはデフォルト常時true。ネイティブのみ下記checkEntitlement()が上書きする
+async function checkEntitlement(){
+  if(!isNativePlatform()){entitled=true;return;}
+  if(!currentUser){entitled=false;return;}
+  try{
+    const{data}=await supa.from("entitlements").select("is_complimentary").eq("user_id",currentUser.id).single();
+    entitled=!!(data&&data.is_complimentary);
+  }catch(e){
+    entitled=false; // 行がない＝無料付与されていない選手/身内以外 → ネイティブでは要課金扱い
+  }
+}
+
 /* セッション復元（リロード時） */
 (async()=>{
   const{data:{session}}=await supa.auth.getSession();
   if(session&&!loginExpired()){
     currentUser=session.user;
     await loadFromSupabase();
+    await checkEntitlement();
     // ?reset=missions でその日の完了フラグを消去
     if(new URLSearchParams(location.search).get('reset')==='missions'){
       S.doneToday='';S.lastSpeakDate='';S.lastQuizDate='';S.lastLockerQuizDate='';

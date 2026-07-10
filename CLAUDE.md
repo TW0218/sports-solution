@@ -16,6 +16,17 @@
 
 ---
 
+## PWA / Apple App 併存方針
+
+PWA（topbins.vercel.app、常時無料）とApple App（審査・課金対応、将来Capacitorでラップ予定）を**同一の`index.html`で並行維持する**。PWAを残す理由は無料配布だけでなく、Vercel即時デプロイによる開発速度（Apple Appは更新のたび審査が挟まる）。
+
+- **entitlement（無料権限）はSの外に置く**: `entitlements`テーブル（`user_id`, `is_complimentary`）はRLSでselectのみ許可、insert/update/deleteはSupabaseダッシュボード（service_role）経由のみ。`S`に含めると`save()`経由でクライアントが自分の権限を改ざんできてしまうため、絶対にSに混ぜない。テーブル定義は`supabase/entitlements.sql`。
+- **選手・身内への無料付与は招待コード等の自己申告制にしない**: Supabaseダッシュボードで`is_complimentary=true`を手動セットする運用（非エンジニアにとって最も操作が少なく確実）。
+- **`isNativePlatform()`**（`window.Capacitor?.isNativePlatform?.()`）で実行環境を判定。PWAは常にfalseを返すため`entitled`は常時true（=常に無料のまま、分岐の影響を受けない）。ネイティブ判定時のみ`checkEntitlement()`が`entitlements`テーブルを参照する。
+- 現時点でペイウォールUIやIAPは未実装（土台のみ）。Apple提出前に必須の別対応（新規登録フロー・アカウント削除・プライバシーポリシー/利用規約・マイク使用の第三者送信開示）はまだ手つかず。
+
+---
+
 ## APIキー（最重要・鉄則）
 
 **外部APIキー（Anthropic・OpenAI等）は絶対にクライアント側コード（`index.html`）に書かない。** 過去に難読化ハードコードされたOpenAIキーがView Sourceから丸見えになる事故があった。
