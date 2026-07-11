@@ -5094,7 +5094,7 @@ function stopRPRec(){
 async function showRPResult(heard,timeMs){
   const scene=rpScenes[rpIdx];
   const tier=rpAttemptTier;
-  let pronScore,total,answerLabel,answerText,speedBonus,speedLabel;
+  let pronScore,total,answerLabel,answerText,speedBonus,speedLabel,meetsSpeedGate=true;
 
   if(tier===1){
     // BRONZE: 選んだ選択肢との単語一致スコア（既存フロー）
@@ -5118,17 +5118,20 @@ async function showRPResult(heard,timeMs){
     total=Math.min(100,Math.round(pronScore*0.85+speedBonus));
     answerLabel='お手本の一例';
     answerText=scene.keys[0];
+    // TOP BINS(Tier4)だけはスコアに加えてスピードも必須ゲート。SILVER/GOLDはスコアのみ（優しめのまま）
+    if(tier===4)meetsSpeedGate=timeMs>0&&timeMs<fast;
   }
 
   rpTotalScore+=total;
   const _scKey=rpSceneKey(scene);
   if(!(S.rpCompletedSceneKeys||[]).includes(_scKey)){S.rpCompletedSceneKeys=[...(S.rpCompletedSceneKeys||[]),_scKey];}
 
-  // マスター判定: 合格点(50)以上、かつこのTierが現在の習熟度を上回る時だけ昇格。
+  // マスター判定: 合格点(50)以上・スピードゲート通過（TOP BINSのみ）・
+  // このTierが現在の習熟度を上回る、の全てを満たす時だけ昇格。
   // 失敗しても習熟度は下がらない（優しめルール）
   const passThreshold=50;
   let masteryUp=false;
-  if(total>=passThreshold&&tier>rpMasteryLevel(scene)){
+  if(total>=passThreshold&&meetsSpeedGate&&tier>rpMasteryLevel(scene)){
     S.rpMastery=S.rpMastery||{};
     S.rpMastery[_scKey]=tier;
     masteryUp=true;
@@ -5139,9 +5142,12 @@ async function showRPResult(heard,timeMs){
   const grade=total>=80?'EXCELLENT':total>=50?'GOOD':'KEEP GOING';
   const isLast=rpIdx>=rpScenes.length-1;
   const scoreColor=total>=80?'var(--green)':total>=50?'#FFC400':'var(--red)';
+  const missedOnSpeed=tier===4&&!meetsSpeedGate&&total>=passThreshold;
   const tierBadge=masteryUp
     ?`<div style="text-align:center;font-weight:900;color:var(--yellow);letter-spacing:.08em;margin-bottom:6px">${RP_TIER_NAMES[tier]} 達成！</div>`
-    :(tier>1?`<div style="text-align:center;font-weight:800;color:var(--grey);letter-spacing:.05em;margin-bottom:6px;font-size:12px">${RP_TIER_NAMES[tier]}はまだ。焦らずもう一度</div>`:'');
+    :missedOnSpeed
+      ?`<div style="text-align:center;font-weight:800;color:var(--grey);letter-spacing:.05em;margin-bottom:6px;font-size:12px">正確だった、あとはスピードだけ。TOP BINSは速さも条件</div>`
+      :(tier>1?`<div style="text-align:center;font-weight:800;color:var(--grey);letter-spacing:.05em;margin-bottom:6px;font-size:12px">${RP_TIER_NAMES[tier]}はまだ。焦らずもう一度</div>`:'');
   document.getElementById('rp-scene-body').innerHTML=`
     <div class="rp-result-wrap">
       ${tierBadge}
