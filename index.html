@@ -626,6 +626,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .grow-fc-label{font-size:10px;font-weight:900;letter-spacing:.12em;color:rgba(255,215,0,.7);margin-bottom:3px}
 .grow-fc-title{font-size:17px;font-weight:900;color:var(--ink);margin-bottom:2px}
 .grow-fc-desc{font-size:12px;color:rgba(255,255,255,.45);line-height:1.4}
+.grow-full-card.downloading{pointer-events:none;opacity:.7}
 .grow-fc-arrow{width:18px;height:18px;flex-shrink:0;stroke:rgba(255,255,255,.3)}
 .grow-sm-card{display:flex;align-items:center;gap:14px;background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow)}
 .grow-sm-card:active{transform:scale(.985);border-color:var(--border2)}
@@ -969,6 +970,11 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .rp-finish-label{font-size:14px;font-weight:900;color:var(--ink);letter-spacing:.04em}
 .rp-finish-sub{font-size:13px;color:var(--grey);font-weight:600;line-height:1.6}
 .rp-finish-btn{background:#DC3232;color:#fff;border:none;border-radius:16px;padding:14px 40px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;margin-top:12px}
+.season-cta-stack{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-top:16px}
+.season-cta-btn{display:block;width:100%;text-align:left;background:var(--white);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;cursor:pointer;font-family:inherit}
+.season-cta-btn.primary{background:linear-gradient(135deg,#141008 0%,#1e1800 100%);border-color:rgba(255,196,0,.55)}
+.season-cta-title{font-size:14px;font-weight:900;color:var(--ink);display:flex;align-items:center;gap:6px}
+.season-cta-desc{font-size:11px;color:var(--grey);margin-top:3px;font-weight:600}
 /* ===== MATCH SCREEN — NIGHT STADIUM ===== */
 @keyframes md-flicker{0%,100%{opacity:1}92%{opacity:.96}94%{opacity:.88}96%{opacity:.97}}
 #scr-match{background:#040a06;padding:0}
@@ -1016,6 +1022,13 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .home-rp-card:active{filter:brightness(1.1);animation:none;box-shadow:0 0 48px rgba(255,196,0,.6)}
 .home-rp-card.locked{background:linear-gradient(135deg,#0e1219,#141b22);border-color:rgba(255,255,255,.08);animation:none;box-shadow:none;cursor:default}
 .home-rp-card.locked::after{display:none}
+.weak-report-card{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#1a0e0c 0%,#241210 100%);border:1px solid rgba(226,73,59,.35);border-radius:16px;padding:14px 16px;margin:0 0 10px;cursor:pointer}
+.weak-report-icon{flex-shrink:0;width:36px;height:36px;border-radius:10px;background:rgba(226,73,59,.14);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:18px}
+.weak-report-body{flex:1;min-width:0}
+.weak-report-eyebrow{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:900;color:var(--red);letter-spacing:.08em;margin-bottom:3px}
+.weak-report-title{font-size:15px;font-weight:900;color:var(--ink);margin-bottom:2px}
+.weak-report-sub{font-size:11px;color:var(--grey);font-weight:600}
+.weak-report-arrow{font-size:20px;color:rgba(255,255,255,.25);flex-shrink:0}
 /* TRAIN画面のROLEPLAYカード（後方互換） */
 .train-rp-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#141008 0%,#1e1800 45%,#100e04 100%);border:1.5px solid rgba(255,196,0,.45);border-radius:18px;padding:20px;cursor:pointer;margin-top:4px;box-shadow:0 0 20px rgba(255,196,0,.15)}
 .train-rp-card.locked{background:linear-gradient(135deg,#0e1219,#141b22);border-color:rgba(255,255,255,.08);cursor:default;box-shadow:none}
@@ -1145,6 +1158,7 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 
   <div id="home-hero-area"></div>
   <div id="home-rp-area"></div>
+  <div id="home-weak-area"></div>
   <div id="home-session-area"></div>
 </section>
 
@@ -1487,7 +1501,8 @@ function svgI(name){
     clipboard:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>`,
     slow:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
     pen:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>`,
-    plane:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>`
+    plane:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>`,
+    download:`<svg viewBox="0 0 24 24" style="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`
   };
   return icons[name]||'';
 }
@@ -2496,7 +2511,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{}},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0},data.progress);
   }
 }
 
@@ -2637,7 +2652,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{}};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0};
 function save(){saveToSupabase();}
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function addDaysStr(dateStr,n){const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
@@ -3432,6 +3447,8 @@ function renderHome(){
         <div class="train-rp-footer"><span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.25)">選んで → 声に出す</span><span class="train-rp-go">入る ›</span></div>
       </div>`;
   document.getElementById("home-rp-area").innerHTML=rpCardHtml;
+  const weak=weakestCategory();
+  document.getElementById("home-weak-area").innerHTML=weak?buildWeakReportCard(weak):'';
   document.getElementById("home-session-area").innerHTML=missionsHtml;
 
   const done=S.doneToday===today();
@@ -3453,7 +3470,7 @@ function renderHome(){
 function renderMatch(){
   const td=today();
   const ticketsEarned=S.matchTickets||0;
-  const hasTickets=ticketsEarned>0;
+  const hasTickets=entitled||ticketsEarned>0;
   const _mdDateSeed=parseInt(td.replace(/-/g,''))%MATCHDAY_SCENES.length;
   const scene=MATCHDAY_SCENES[_mdDateSeed];
   const d=new Date();
@@ -3490,7 +3507,7 @@ function renderMatch(){
   const arrowSvg=`<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9" fill="#060c06" fill-opacity=".1" stroke="#060c06" stroke-width="1.5"/><path d="M8 6.5 L13 10 L8 13.5" stroke="#060c06" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const lockSvg=`<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="8" width="12" height="9" rx="2" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/><path d="M6 8V5.5a3 3 0 0 1 6 0V8" stroke="rgba(255,255,255,.3)" stroke-width="1.5" stroke-linecap="round"/></svg>`;
   const trainArrowSvg=`<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 5.5 L11.5 9 L7 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const ticketBadgeInline=hasTickets?`<span class="match-ticket-inline">${ticketsEarned}</span>`:'';
+  const ticketBadgeInline=hasTickets?`<span class="match-ticket-inline">${entitled?'∞':ticketsEarned}</span>`:'';
   const btnHtml=hasTickets
     ?`<button class="match-cta-btn" onclick="openMatchday()">${arrowSvg}試合に出る${ticketBadgeInline}</button>`
     :!S.matchdayDemoDone
@@ -3602,8 +3619,57 @@ function renderGrow(){
       <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
 
+    ${entitled?`<div class="grow-full-card tap-fx" id="audio-dl-card" onclick="bulkDownloadAudio()">
+      <span class="grow-fc-ic" style="color:var(--green)">${svgI('download')}</span>
+      <div class="grow-fc-body">
+        <div class="grow-fc-label">OFFLINE</div>
+        <div class="grow-fc-title">音声を全部保存</div>
+        <div class="grow-fc-desc" id="audio-dl-status">電波が悪い場所でも全シーンを再生できるようにする</div>
+      </div>
+      <svg class="grow-fc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`:''}
+
     <button class="logout-row" onclick="doLogout()">ログアウト</button>
   `;
+}
+async function bulkDownloadAudio(){
+  const card=document.getElementById('audio-dl-card');
+  const statusEl=document.getElementById('audio-dl-status');
+  if(!card||card.classList.contains('downloading'))return;
+  card.classList.add('downloading');
+  track('audio_bulk_download_start',{});
+  try{
+    const files=await(await fetch('audio-manifest.json')).json();
+    let done=0,failed=0;
+    const CONCURRENCY=6;
+    let idx=0;
+    async function fetchWithRetry(f){
+      const url='audio/'+encodeURIComponent(f);
+      for(let attempt=0;attempt<3;attempt++){
+        try{
+          const r=await fetch(url);
+          if(r.ok)return true;
+        }catch(e){}
+      }
+      return false;
+    }
+    async function worker(){
+      while(idx<files.length){
+        const f=files[idx++];
+        if(!(await fetchWithRetry(f)))failed++;
+        done++;
+        if(statusEl)statusEl.textContent=`ダウンロード中… ${done}/${files.length}件`;
+      }
+    }
+    await Promise.all(Array.from({length:CONCURRENCY},worker));
+    if(statusEl)statusEl.textContent=failed>0
+      ?`完了（${files.length-failed}/${files.length}件、${failed}件は保存できず。もう一度タップで再試行）`
+      :`完了！全${files.length}件、オフラインでも再生できる`;
+    track('audio_bulk_download_complete',{count:files.length,failed});
+  }catch(e){
+    if(statusEl)statusEl.textContent='ダウンロードに失敗。通信環境を確認してもう一度タップ';
+  }
+  card.classList.remove('downloading');
 }
 function renderWeek(){
   const WEEKS=[
@@ -4264,8 +4330,18 @@ async function aiCall(body){
     return r.json();
   }
 }
+const AI_COACH_FREE_DAILY_MAX=3;
 async function askAI(situation){
   const res=document.getElementById("coach-result");
+  const td=today();
+  if(S.coachCallDate!==td){S.coachCallDate=td;S.coachCallCount=0;}
+  if(!entitled&&S.coachCallCount>=AI_COACH_FREE_DAILY_MAX){
+    res.innerHTML=`<div class="call-card">
+      <div class="src">${svgI('lock')} 今日の無料分は使い切った</div>
+      <div class="call-ja" style="font-size:14px;line-height:1.7">AIコーチは無料で1日${AI_COACH_FREE_DAILY_MAX}回まで。明日また使える。Proなら無制限。</div></div>`;
+    return;
+  }
+  S.coachCallCount=(S.coachCallCount||0)+1;save();
   res.innerHTML=`<div class="loading-pitch"><span class="ball"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2l3 6-3 2-3-2 3-6z"/><path d="M4.5 7.5L8 10l-1 5H6a10 10 0 01-1.5-7.5z"/><path d="M19.5 7.5L16 10l1 5h1a10 10 0 001.5-7.5z"/><path d="M7 15l2 5a10 10 0 006 0l2-5"/></svg></span><br>AIコーチが考え中… "${situation}"</div>`;
   try{
     const data=await aiCall({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:
@@ -4606,9 +4682,9 @@ const MD_LEVELS={1:{label:"BEGINNER",cls:"lv1"},2:{label:"INTERMEDIATE",cls:"lv2
 const MD_XP_TABLE={100:100,50:40,0:10};
 function mdXpFor(score){return 0;} // XP廃止 — 関数は互換のため残すが常に0を返す
 
-let mdQueue=[],mdQueueIdx=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null,mdDemoMode=false;
+let mdQueue=[],mdQueueIdx=0,mdAnswered=false,mdCurrentChoices=[],mdCurrentScene=null,mdDemoMode=false,mdWeakMode=false;
 
-const MD_TICKET_MAX=3;
+const MD_TICKET_MAX=1; // 無料版は1日1回（entitledはopenMatchday()側でこの上限自体をバイパスする）
 const MD_PREVIEW=7;
 const MD_UNLOCK=14;
 /* ================= ROLEPLAY DATA ================= */
@@ -4857,7 +4933,7 @@ function renderRoleplayMenu(){
   const rpDoneToday=S.lastRpDate===today();
   const nextDay=[...Array(CAREER_DAY_COUNT).keys()].find(d=>!rpDayCompleted(d));
   const html=`
-    <p class="rp-intro">Day 1から、キャリアを進めろ。<br>クリア済みのDayは、次のランクに何度でも挑戦できる。</p>
+    <p class="rp-intro">Day 1から、キャリアを進めろ。目指すは、トップチーム25人のスカッド入り。<br>クリア済みのDayは、次のランクに何度でも挑戦できる。</p>
     ${rpDoneToday?`<div style="font-size:11px;font-weight:800;color:rgba(255,196,0,.7);text-align:center;margin-bottom:12px;letter-spacing:.05em">TODAY DONE — 明日も練習できる</div>`:''}
     <div class="rp-day-grid">
       ${[...Array(CAREER_DAY_COUNT).keys()].map(d=>{
@@ -4892,6 +4968,10 @@ function renderRPScene(){
   const scene=rpScenes[rpIdx];
   const pct=Math.round(rpIdx/rpScenes.length*100);
   rpAttemptTier=rpNextTier(scene);
+  if(rpAttemptTier>=2&&!entitled&&S.rpTrialUsed){
+    renderRPLocked();
+    return;
+  }
   document.getElementById('rp-scene-top').innerHTML=`
     <div class="rp-topbar">
       <button class="btn-x" onclick="go('roleplay','pop');renderRoleplayMenu()">✕</button>
@@ -4907,6 +4987,19 @@ function renderRPScene(){
   rpPlayLine();
 }
 
+function renderRPLocked(){
+  document.getElementById('rp-scene-top').innerHTML=`
+    <div class="rp-topbar">
+      <button class="btn-x" onclick="go('roleplay','pop');renderRoleplayMenu()">✕</button>
+    </div>`;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div style="text-align:center;padding:60px 24px">
+      <div style="font-size:40px;color:var(--yellow);margin-bottom:16px">${svgI('lock')}</div>
+      <div style="font-size:18px;font-weight:900;color:var(--ink);margin-bottom:8px">SILVER以上は体験済み</div>
+      <div style="font-size:13px;color:var(--grey);line-height:1.7;margin-bottom:24px">無料では1回だけ上位ランクを試せる。<br>この先はProで無制限に挑戦できる。</div>
+      <button class="md-complete-btn" onclick="go('roleplay','pop');renderRoleplayMenu()">戻る</button>
+    </div>`;
+}
 function renderRPFreeResponse(){
   const scene=rpScenes[rpIdx];
   const initials=scene.npc.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
@@ -5110,6 +5203,8 @@ async function showRPResult(heard,timeMs){
     answerText=rpChosenKey;
   }else{
     // SILVER/GOLD/TOP BINS: 自由回答をMATCHDAYと同じAI採点（scene.keysのどれかに近ければ良い）
+    // 無料版は1回だけ体験できる。挑戦した時点（合否問わず）で使い切り扱いにする
+    if(!entitled)S.rpTrialUsed=true;
     document.getElementById('rp-scene-body').innerHTML=`<div style="text-align:center;padding:60px 0;color:var(--grey);font-size:13px;font-weight:700;letter-spacing:.08em">AI SCORING...</div>`;
     const{fast,ok}=rpSpeedThresholds(scene.keys[0]);
     speedBonus=timeMs>0&&timeMs<fast?15:0;
@@ -5188,6 +5283,7 @@ function renderRPDayComplete(){
   const grade=avg>=80?'EXCELLENT':avg>=60?'GREAT':avg>=40?'GOOD':'KEEP GOING';
   if(avg>=80)setTimeout(()=>showCelebration(avg,'現場英語、完璧だ。','ROLEPLAY!'),200);
   if(rpDay===0)setTimeout(()=>maybeAskPushPermission(),1500); // Day1完了＝価値を体験した直後にだけ許可を尋ねる
+  if(rpDay===CAREER_DAY_COUNT-1){renderSeasonComplete(avg,grade);return;}
   document.getElementById('rp-scene-top').innerHTML=`
     <div class="rp-topbar">
       <button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
@@ -5202,6 +5298,42 @@ function renderRPDayComplete(){
       <div style="font-size:22px;font-weight:900;color:#DC3232;margin:4px 0">${grade}</div>
       <div class="rp-finish-sub">${rpScenes.length}シーン完了。<br>声で現場を制す — 続けることが力になる。</div>
       <button class="rp-finish-btn" onclick="go('roleplay','pop');renderRoleplayMenu()">Dayを選ぶ</button>
+    </div>`;
+}
+// Day25完了 = キャリアモードの「ゴール」ではなく「Season 1クリア、まだ続く」の合流点。
+// 3つのCTA（弱点を潰す／Mastery Rankへ／実戦MATCHDAY）を並べたハブ画面にする。
+// rpDay===CAREER_DAY_COUNT-1が真になるたび（初回・Mastery Rank周回どちらも）表示される。
+function renderSeasonComplete(avg,grade){
+  track('season1_complete',{avg});
+  const weak=weakestCategory();
+  document.getElementById('rp-scene-top').innerHTML=`
+    <div class="rp-topbar">
+      <button class="btn-x" onclick="go('home','pop');renderHome()">✕</button>
+      <div style="font-weight:900;font-size:15px">SEASON 1 COMPLETE</div>
+    </div>`;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div class="rp-finish-wrap">
+      <div style="font-size:36px;color:var(--yellow)">${svgI('trophy')}</div>
+      <div class="rp-finish-label" style="color:var(--yellow)">SEASON 1 COMPLETE</div>
+      <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:.04em;margin-top:-4px">25人のトップチームスカッドに、入った。</div>
+      <div class="rp-finish-score">${avg}</div>
+      <div style="font-size:12px;font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.3)">AVERAGE SCORE</div>
+      <div style="font-size:22px;font-weight:900;color:#DC3232;margin:4px 0">${grade}</div>
+      <div class="rp-finish-sub">25 Day・175シーン。プレミアリーグの登録枠と同じ25人分、<br>現場で戦える言葉を積み上げた。ここからは、極める番だ。</div>
+      <div class="season-cta-stack">
+        ${weak?`<button class="season-cta-btn" onclick="startWeakFootMission()">
+          <div class="season-cta-title">${svgI('warn')} 弱点を潰す</div>
+          <div class="season-cta-desc">${weak.meta.label}の復習待ちが${weak.fails}件</div>
+        </button>`:''}
+        <button class="season-cta-btn primary" onclick="go('roleplay','pop');renderRoleplayMenu()">
+          <div class="season-cta-title">${svgI('star')} 次のSeasonへ</div>
+          <div class="season-cta-desc">同じシーンを高難度で挑み直す（Mastery Rank）</div>
+        </button>
+        <button class="season-cta-btn" onclick="openMatchday()">
+          <div class="season-cta-title">${svgI('ball')} 実戦MATCHDAY</div>
+          <div class="season-cta-desc">今日の1本で実力を試す</div>
+        </button>
+      </div>
     </div>`;
 }
 
@@ -5848,6 +5980,7 @@ function mdCelebrate(){
 
 function openMatchdayDemo(){
   mdDemoMode=true;
+  mdWeakMode=false;
   mdQueue=shuffleMd().slice(0,1);
   mdQueueIdx=0;
   go('matchday','push');
@@ -5855,8 +5988,9 @@ function openMatchdayDemo(){
 }
 function openMatchday(){
   mdDemoMode=false;
+  mdWeakMode=false;
   go('matchday','push');
-  if((S.matchTickets||0)<=0){
+  if(!entitled&&(S.matchTickets||0)<=0){
     document.getElementById('md-scene-wrap').innerHTML=`
       <div class="md-complete">
         <div class="md-complete-icon"><svg viewBox="0 0 24 24" style="width:1em;height:1em;vertical-align:-.13em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a2 2 0 000 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a2 2 0 000-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2v2z"/><line x1="12" y1="7" x2="12" y2="17" stroke-dasharray="2 2"/></svg></div>
@@ -5872,7 +6006,7 @@ function openMatchday(){
     document.getElementById('md-dots').innerHTML='';
     return;
   }
-  S.matchTickets--;save();
+  if(!entitled){S.matchTickets--;save();}
   const _mdPool=shuffleMd();
   if(_mdPool.length===0){
     const pendingReview=(S.mdReviewQueue||[]).length>0;
@@ -5923,6 +6057,56 @@ function shuffleMd(){
   const arr=[...pool];
   for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
   return arr;
+}
+
+// 弱点レポート＋Weak Foot Missions: mdReviewQueue（失敗駆動復習キュー）をカテゴリ別に集計して弱点を可視化する
+function weakCategoryStats(){
+  const rq=S.mdReviewQueue||[];
+  if(rq.length===0)return [];
+  const byCat={};
+  rq.forEach(r=>{
+    const cat=r.key.split('||')[0];
+    byCat[cat]=(byCat[cat]||0)+(r.fails||1);
+  });
+  return Object.entries(byCat)
+    .map(([cat,fails])=>({cat,fails,meta:RP_CATEGORIES.find(c=>c.id===cat)}))
+    .filter(x=>x.meta)
+    .sort((a,b)=>b.fails-a.fails);
+}
+function weakestCategory(){
+  const stats=weakCategoryStats();
+  return stats.length>0?stats[0]:null;
+}
+function weakFootScenes(cat){
+  const keys=(S.mdReviewQueue||[]).filter(r=>r.key.split('||')[0]===cat).map(r=>r.key);
+  return ROLEPLAY_SCENES.filter(s=>keys.includes(`${s.cat}||${s.title}`));
+}
+function buildWeakReportCard(weak){
+  const meta=weak.meta;
+  return `<div class="weak-report-card tap-fx" onclick="startWeakFootMission()">
+    <div class="weak-report-icon">${svgI(meta.icon)}</div>
+    <div class="weak-report-body">
+      <div class="weak-report-eyebrow">${svgI('warn')} 弱点レポート</div>
+      <div class="weak-report-title">${meta.label}が苦手</div>
+      <div class="weak-report-sub">復習待ちが${weak.fails}件。${entitled?'今のうちに潰しておこう。':'Proで今すぐ特訓できる。'}</div>
+    </div>
+    <div class="weak-report-arrow">${entitled?'›':svgI('lock')}</div>
+  </div>`;
+}
+// チケット消費なしで弱点カテゴリの復習シーンだけを1問出題する（期限日を待たずに自主特訓できる）。Pro専用機能
+function startWeakFootMission(){
+  if(!entitled){toast('弱点特訓はProで無制限に使える。通常の復習期限が来ればMATCHDAYで自動的に出題される。');return;}
+  const w=weakestCategory();
+  if(!w)return;
+  const pool=weakFootScenes(w.cat);
+  if(pool.length===0)return;
+  mdDemoMode=false;
+  mdWeakMode=true;
+  mdQueue=[pool[Math.floor(Math.random()*pool.length)]];
+  mdQueueIdx=0;
+  track('weak_foot_mission_start',{cat:w.cat,pending:pool.length});
+  go('matchday','push');
+  renderMdScene();
 }
 
 function renderMdScene(){
@@ -6199,6 +6383,25 @@ function mdNext(){
           </div>
           <button class="md-complete-btn" onclick="go('home','pop');renderHome()" style="background:var(--green)">ミッションをやる →</button>
           <button onclick="go('match','pop');renderMatch()" style="background:transparent;border:none;color:rgba(255,255,255,.35);font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:14px">MATCHに戻る</button>
+        </div>`;
+      renderMdDots();
+      return;
+    }
+    if(mdWeakMode){
+      mdWeakMode=false;
+      const cat=mdCurrentScene.cat;
+      const remaining=weakFootScenes(cat).length;
+      const meta=RP_CATEGORIES.find(c=>c.id===cat);
+      const catLabel=meta?meta.label:'';
+      document.getElementById('md-scene-wrap').innerHTML=`
+        <div class="md-complete">
+          <div class="md-complete-icon">${svgI('warn')}</div>
+          <div class="md-complete-title">弱点特訓 完了！</div>
+          <div class="md-complete-sub">${remaining>0?`${catLabel}はあと${remaining}シーン残ってる。`:`${catLabel}、克服できたかも。`}</div>
+          ${remaining>0
+            ?`<button class="md-complete-btn" onclick="startWeakFootMission()">もう1問潰す →</button>
+              <button onclick="go('home','pop');renderHome()" style="background:transparent;border:none;color:rgba(255,255,255,.35);font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:14px">ホームに戻る</button>`
+            :`<button class="md-complete-btn" onclick="go('home','pop');renderHome()">ホームに戻る</button>`}
         </div>`;
       renderMdDots();
       return;

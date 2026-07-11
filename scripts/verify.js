@@ -58,5 +58,12 @@ try {
   hasError = true;
 }
 
+console.log('\n=== audio-manifest.json 再生成（音声一括DL機能が参照）===');
+try {
+  execFileSync('node', [path.join(ROOT, 'scripts', 'generate_audio_manifest.js')], { stdio: 'inherit' });
+} catch (e) {
+  hasError = true;
+}
+
 console.log('\n' + (hasError ? 'NG: 上記のエラーを修正してから commit/push すること' : 'OK: push前チェックすべて合格'));
 process.exit(hasError ? 1 : 0);
