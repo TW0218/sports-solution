@@ -917,7 +917,18 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .miy-base-en{font-size:17px;font-weight:900;color:var(--ink);line-height:1.5}
 .miy-base-play{background:none;border:1px solid rgba(255,255,255,.2);border-radius:16px;color:rgba(255,255,255,.6);font-size:11px;font-weight:900;padding:6px 14px;margin-top:10px;cursor:pointer;font-family:inherit}
 .miy-hint-txt{font-size:11px;font-weight:700;color:var(--grey);text-align:center;line-height:1.6}
+.miy-example-card{background:var(--green-lt);border:1px solid var(--border2);border-radius:14px;padding:12px 16px;text-align:center}
+.miy-example-label{font-size:11px;font-weight:700;color:var(--green);margin-bottom:5px}
+.miy-example-en{font-size:14px;font-weight:800;color:var(--ink)}
 .miy-skip{background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;padding:8px;text-align:center}
+.miy-draft-input{width:100%;border:1.5px solid var(--border2);border-radius:16px;padding:14px 16px;font-size:15px;font-family:inherit;font-weight:700;background:var(--white);color:var(--ink);outline:none;resize:none;-webkit-user-select:text;user-select:text}
+.miy-draft-input:focus{border-color:var(--green)}
+.miy-draft-btn{background:var(--green);color:#fff;border:none;border-radius:16px;padding:14px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;width:100%}
+.miy-draft-btn:disabled{opacity:.35;cursor:default}
+.miy-speak-target{background:var(--white);border:1px solid var(--border2);border-radius:16px;padding:18px;text-align:center}
+.miy-speak-target-label{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--grey);margin-bottom:8px;text-transform:uppercase}
+.miy-speak-target-text{font-size:18px;font-weight:900;color:var(--ink);line-height:1.5}
+.miy-edit-link{background:none;border:none;color:rgba(255,255,255,.4);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;text-decoration:underline;text-align:center;padding:4px}
 .miy-listen-btn{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:14px;color:var(--ink);font-size:12px;font-weight:900;padding:12px 8px;cursor:pointer;font-family:inherit}
 .miy-listen-btn:active{opacity:.7}
 /* 自分の声を聞く（全モード共通） */
@@ -5361,17 +5372,35 @@ function renderSeasonComplete(avg,grade){
    自己関連付け効果＋生成効果でセンテンスを自分事として定着させる。
    ユーザー発話側のみなので事前生成mp3は不要（Whisper認識→AI品質チェックのみ）。 */
 let _rpDayAvg=0;
-let _miyBase=null,_miyRec=null,_miyChunks=[],_miyRecording=false,_miyBusy=false,_miyTimer=null,_miyStartMs=0;
+let _miyBase=null,_miyRec=null,_miyChunks=[],_miyRecording=false,_miyBusy=false,_miyTimer=null,_miyStartMs=0,_miyDraft='';
 
+// カテゴリごとに1つずつ「埋め込み例」を用意する（175シーン個別ではなく7カテゴリ分だけ手動用意し、
+// 低コストで「形を借りる」を具体例として見せる。scene.hintのような発話内容の指示ではなく、
+// あくまで文型の見本として機能させる）
+// sample: は静的な参考テキストとして表示するだけで音声再生はしない（意図的にキー名を en: にしない —
+// validate_audio.jsはenキー（コロン付き）を全ファイル横断でスキャンして音声必須と判定するため、
+// 混同するとpush前チェックが誤って「mp3が存在しない」と警告する）
+const MIY_EXAMPLES={
+  pitch:{ja:'例えば「最近パスの精度を練習してる」なら', sample:"Yeah, I've been working on my passing!"},
+  manager:{ja:'例えば「居残りで自主練してる」なら', sample:"Coach, I've been staying back for extra reps!"},
+  medical:{ja:'例えば「筋肉痛がひどい」なら', sample:"Honestly, my legs are killing me from squats!"},
+  locker:{ja:'例えば「最近ジムに通ってる」なら', sample:"Nah mate, I've been grinding at the gym!"},
+  media:{ja:'例えば「放課後も居残り練習してる」なら', sample:"Honestly, I've been putting in extra hours after school!"},
+  agent:{ja:'例えば「もっと上手くなりたい」なら', sample:"Yeah, I just want to keep improving!"},
+  daily:{ja:'例えば「練習前にコンビニに寄った」なら', sample:"Cheers, I grabbed a drink before training!"}
+};
 function miyStart(){
   // 今日の7シーンから返答フレーズを1つ選ぶ（keys[0]=ベストフレーズ）
   const scene=rpScenes[Math.floor(Math.random()*rpScenes.length)];
   _miyBase={phrase:scene.keys[0],audio:scene.keyAudio?scene.keyAudio[0]:null,cat:scene.cat,title:scene.title};
-  _miyRecording=false;_miyBusy=false;
+  _miyRecording=false;_miyBusy=false;_miyDraft='';
   renderMIY();
 }
 
+// Step1: まずテキストで文章を組み立てる（いきなり声に出すのはハードルが高いという指摘への対応・2026-07-12）。
+// 作った文はStep2でそのまま「読み上げる対象」になるので、作文と発話を同時に要求しない。
 function renderMIY(){
+  const ex=MIY_EXAMPLES[_miyBase.cat]||MIY_EXAMPLES.pitch;
   document.getElementById('rp-scene-top').innerHTML=`
     <div class="rp-topbar">
       <button class="btn-x" onclick="miyAbort()">✕</button>
@@ -5380,13 +5409,46 @@ function renderMIY(){
   document.getElementById('rp-scene-body').innerHTML=`
     <div class="miy-wrap">
       <div class="miy-eyebrow">DAY ${rpDay+1} 締めの一言</div>
-      <div class="miy-lead">この文の「形」を借りて、<br><b>自分の本当のこと</b>を声にしろ。</div>
+      <div class="miy-lead">同じ「短く言い切る」形のまま、<br>話す中身だけ<b>自分の本当のこと</b>に変えよう。</div>
       <div class="miy-base-card">
         <div class="miy-base-label">今日のフレーズ</div>
         <div class="miy-base-en">"${_miyBase.phrase}"</div>
         ${_miyBase.audio?`<button class="miy-base-play" onclick="mdPlaySrc('audio/${_miyBase.audio}.mp3')">▶ 聞く</button>`:''}
       </div>
-      <div class="miy-hint-txt">例: 練習・学校・バイト・推しクラブ — ウソじゃない自分の話ならなんでもいい</div>
+      <div class="miy-example-card">
+        <div class="miy-example-label">${ex.ja}</div>
+        <div class="miy-example-en">"${ex.sample}"</div>
+      </div>
+      <div class="miy-hint-txt">練習・学校・バイト・推しクラブ — ウソじゃない自分の話ならなんでもいい</div>
+      <textarea class="miy-draft-input" id="miy-draft-input" rows="2" maxlength="120" placeholder="まず英語で書いてみよう" oninput="document.getElementById('miy-draft-btn').disabled=!this.value.trim()">${_miyDraft}</textarea>
+      <button class="miy-draft-btn" id="miy-draft-btn" onclick="miyDraftNext()" ${_miyDraft.trim()?'':'disabled'}>書けた、声に出す →</button>
+      <button class="miy-skip" onclick="miySkip()">今日はスキップ</button>
+    </div>`;
+}
+
+function miyDraftNext(){
+  const val=(document.getElementById('miy-draft-input').value||'').trim();
+  if(!val)return;
+  _miyDraft=val;
+  renderMIYSpeak();
+}
+
+// Step2: Step1で書いた文をそのまま声に出す。作文済みなので、ここではWhisperでの聞き取りすら不要
+// （書いた文をそのままAI文法チェックに送る）。録音は「自分の声を聞く」ための保存のみに使う。
+function renderMIYSpeak(){
+  document.getElementById('rp-scene-top').innerHTML=`
+    <div class="rp-topbar">
+      <button class="btn-x" onclick="miyAbort()">✕</button>
+      <div style="font-weight:900;font-size:15px">MAKE IT YOURS</div>
+    </div>`;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div class="miy-wrap">
+      <div class="miy-eyebrow">声に出してみよう</div>
+      <div class="miy-speak-target">
+        <div class="miy-speak-target-label">あなたが書いた文</div>
+        <div class="miy-speak-target-text">"${_miyDraft}"</div>
+      </div>
+      <button class="miy-edit-link" onclick="renderMIY()">書き直す</button>
       <div class="md-voice-area" style="padding-top:12px">
         <button class="md-mic-btn" id="miy-mic-btn" onclick="miyToggleRec()">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -5395,7 +5457,7 @@ function renderMIY(){
             <line x1="16" y1="26" x2="16" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
-        <div class="md-voice-hint" id="miy-voice-hint">タップして話す</div>
+        <div class="md-voice-hint" id="miy-voice-hint">タップして読み上げる</div>
       </div>
       <button class="miy-skip" onclick="miySkip()">今日はスキップ</button>
       <div id="miy-result"></div>
@@ -5408,9 +5470,23 @@ function miyAbort(){
   renderRPDayComplete();
 }
 
+// スキップしても、書いた文があれば無駄にしない（発話まで到達しなくても作文の努力は保存する）。
+// Step1で下書き入力中にスキップした場合はまだ_miyDraftが確定していないのでtextareaを直接見る。
 function miySkip(){
-  track('make_it_yours_skip',{day:rpDay+1});
+  const draftText=_miyDraft||(document.getElementById('miy-draft-input')?.value||'').trim();
+  if(draftText)saveDraftPhrase(draftText);
+  track('make_it_yours_skip',{day:rpDay+1,hadDraft:!!draftText});
   renderRPDayComplete();
+}
+async function saveDraftPhrase(text){
+  const check=await miyGrammarCheck(text);
+  const corrected=check.corrected||text;
+  S.myPhrases=S.myPhrases||[];
+  if(!S.myPhrases.some(p=>p.en===corrected)){
+    S.myPhrases.push({c:_miyBase.cat,en:corrected,ja:check.ja||'',ex:corrected,exJa:check.ja||'',note:'MAKE IT YOURS（下書き）— '+_miyBase.title});
+    save();
+    toast('書いた文をマイフレーズに保存したよ');
+  }
 }
 
 async function miyToggleRec(){
@@ -5434,9 +5510,8 @@ async function miyToggleRec(){
   _miyRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_miyChunks.push(e.data);};
   _miyRec.onstop=async()=>{
     const blob=new Blob(_miyChunks,{type:_miyRec.mimeType||'audio/webm'});
-    keepRec(blob);
-    const heard=await _transcribeAudio(blob,_miyRec.mimeType||'audio/webm').catch(()=>'');
-    miyCheck(heard);
+    keepRec(blob); // 自分の声の聞き直し用に保存するだけ。文法チェックはStep1で書いたテキストを使う（Whisper不要）
+    miyCheck(_miyDraft);
   };
   _miyRec.start();
   _miyRecording=true;_miyStartMs=Date.now();
@@ -5450,6 +5525,29 @@ async function miyToggleRec(){
   },200);
 }
 
+async function miyGrammarCheck(text){
+  try{
+    const res=await fetch('/api/score',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'gpt-4o-mini',
+        max_tokens:200,
+        messages:[{role:'user',content:
+          `You are an English coach for a Japanese footballer. Template phrase: "${_miyBase.phrase}"\n`+
+          `The player made their own real-life sentence borrowing that pattern: "${text}"\n`+
+          `Judge only whether it is natural, correct English (loosely reusing the pattern is fine).\n`+
+          `Reply with ONLY this JSON, no code block:\n`+
+          `{"ok":true|false,"corrected":"natural corrected version (same as input if already good)","ja":"correctedの自然な日本語訳","note":"日本語の一言アドバイス(20字以内)"}`
+        }]
+      })
+    });
+    const j=await res.json();
+    return JSON.parse((j.choices?.[0]?.message?.content||'').replace(/```json|```/g,'').trim());
+  }catch(e){
+    return {ok:true,corrected:text,ja:'',note:''};
+  }
+}
 async function miyCheck(heard){
   const resultEl=document.getElementById('miy-result');
   if(!heard||!heard.trim()){
@@ -5461,28 +5559,7 @@ async function miyCheck(heard){
     return;
   }
   if(resultEl)resultEl.innerHTML=`<div style="text-align:center;padding:20px 0;color:var(--grey);font-size:13px;font-weight:700;letter-spacing:.08em">AI CHECKING...</div>`;
-  let check=null;
-  try{
-    const res=await fetch('/api/score',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'gpt-4o-mini',
-        max_tokens:200,
-        messages:[{role:'user',content:
-          `You are an English coach for a Japanese footballer. Template phrase: "${_miyBase.phrase}"\n`+
-          `The player made their own real-life sentence borrowing that pattern: "${heard}"\n`+
-          `Judge only whether it is natural, correct English (loosely reusing the pattern is fine).\n`+
-          `Reply with ONLY this JSON, no code block:\n`+
-          `{"ok":true|false,"corrected":"natural corrected version (same as input if already good)","ja":"correctedの自然な日本語訳","note":"日本語の一言アドバイス(20字以内)"}`
-        }]
-      })
-    });
-    const j=await res.json();
-    check=JSON.parse((j.choices?.[0]?.message?.content||'').replace(/```json|```/g,'').trim());
-  }catch(e){
-    check={ok:true,corrected:heard,ja:'',note:''};
-  }
+  const check=await miyGrammarCheck(heard);
   miyShowResult(heard,check);
 }
 
@@ -5495,7 +5572,7 @@ function miyShowResult(heard,check){
   document.getElementById('miy-result').innerHTML=`
     <div class="md-voice-result">
       <div class="md-verdict-label" style="color:${verdictColor};font-size:28px">${verdict}</div>
-      <div class="md-heard-wrap"><div class="md-heard-label">あなたの声</div><div class="md-heard-text">"${heard}"</div></div>
+      <div class="md-heard-wrap"><div class="md-heard-label">あなたが書いた文</div><div class="md-heard-text">"${heard}"</div></div>
       <div class="md-best-wrap">
         <div class="md-best-label">${check.ok?'この文はもう自分のもの':'こう直すと自然'}</div>
         <div class="md-best-text">"${corrected}"</div>
