@@ -300,6 +300,9 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 /* toast */
 #toast{position:fixed;bottom:calc(86px + var(--safe-b));left:50%;transform:translateX(-50%) translateY(20px);background:#1a2b21;color:#fff;font-size:13px;font-weight:800;padding:11px 20px;border-radius:999px;transition:transform .3s,opacity .3s;z-index:99;white-space:nowrap;opacity:0;pointer-events:none}
 #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.onehint-card{display:flex;align-items:center;gap:10px;background:var(--green-lt);border:1px solid var(--border2);border-radius:14px;padding:12px 14px;margin:0 0 10px}
+.onehint-text{flex:1;font-size:12px;color:var(--ink);font-weight:700;line-height:1.5}
+.onehint-x{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.5);font-size:12px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit}
 .note-banner{background:rgba(255,196,0,.08);border:1px solid rgba(255,196,0,.3);border-radius:14px;padding:10px 14px;font-size:12px;line-height:1.6;color:rgba(255,215,0,.8);margin-bottom:14px}
 
 /* ---------- coach's call (ピッチ翻訳) ---------- */
@@ -2511,7 +2514,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0,seenHints:{}},data.progress);
   }
 }
 
@@ -2652,7 +2655,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0,seenHints:{}};
 function save(){saveToSupabase();}
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function addDaysStr(dateStr,n){const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
@@ -3248,6 +3251,19 @@ function toast(msg){
   const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"),2200);
 }
+// 初回タブ訪問時だけ出す一言ヒント（Zhuo指摘: モード同士の繋がりが初見だと分かりにくい）。
+// 大きなチュートリアル画面は既存の速いオンボーディングを壊すので、文脈に応じた1行バナーに留める。
+function hintBanner(id,text){
+  if((S.seenHints||{})[id])return '';
+  return `<div class="onehint-card" id="hint-${id}"><div class="onehint-text">${text}</div><button class="onehint-x" onclick="dismissHint('${id}')">✕</button></div>`;
+}
+function dismissHint(id){
+  S.seenHints=S.seenHints||{};
+  S.seenHints[id]=true;
+  save();
+  const el=document.getElementById('hint-'+id);
+  if(el)el.remove();
+}
 const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
 const pick=(a,n)=>shuffle(a).slice(0,n);
 
@@ -3370,7 +3386,7 @@ function renderHome(){
   const r=readiness();
   const calls=Object.values(S.box).filter(v=>v>=2).length;
 
-  document.getElementById("home-hero-area").innerHTML=buildUnifiedHeroCard();
+  document.getElementById("home-hero-area").innerHTML=hintBanner('home','ここが毎日の基地。ROLEPLAYで今日のシーンに挑戦→ミッションでMATCH TICKETを稼ぐ→MATCHで実戦、の繰り返しが力になる。')+buildUnifiedHeroCard();
   requestAnimationFrame(animateStreakCount);
 
   /* Today's Session card */
@@ -3521,6 +3537,7 @@ function renderMatch(){
         <div class="match-meta-countdown">あと <span id="md-card-countdown">--:--:--</span> でリセット</div>`)
     :'';
   document.getElementById('match-area').innerHTML=`
+    ${hintBanner('match','MATCH TICKETを消費して実戦に挑む1日1本のモード。ミッションを全部こなすとチケットが増える。')}
     <div class="match-pitch-wrap">
       <div class="match-pitch-bg">${pitchSvg}</div>
       <div class="match-floodlight"></div>
@@ -3544,6 +3561,7 @@ function renderGrow(){
   const mastered=Object.values(S.box).filter(v=>v>=2).length;
   const streak=S.streak||0;
   document.getElementById('grow-area').innerHTML=`
+    ${hintBanner('grow','TRAINで学んだ表現を、ここでさらに深掘りできる。週間プログラム・単語カード強化・キャリア記録など。')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
       <div style="background:var(--white);border-radius:16px;padding:16px;border:1px solid var(--border2);text-align:center">
         <div style="font-size:38px;font-weight:900;color:var(--green);line-height:1">${mastered}</div>
