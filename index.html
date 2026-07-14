@@ -845,6 +845,18 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .md-best-text{font-size:16px;font-weight:900;color:var(--green);font-family:Barlow,sans-serif}
 .md-next-btn{width:100%;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:Barlow,sans-serif;cursor:pointer;letter-spacing:.04em;scroll-margin-bottom:calc(100px + var(--safe-b))}
 .md-next-btn:active{background:rgba(255,255,255,.14)}
+.md-nudge{background:rgba(255,196,0,.08);border:1px solid rgba(255,196,0,.3);border-radius:18px;padding:20px;margin:16px 0 12px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.md-nudge-title{font-size:15px;font-weight:900;color:var(--ink)}
+.md-nudge-hint{font-size:12px;color:var(--grey);font-weight:700}
+.md-nudge-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.md-nudge-chip{background:rgba(255,196,0,.16);border:1px solid rgba(255,196,0,.4);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:900;color:var(--yellow)}
+.md-nudge-btns{display:flex;gap:10px;width:100%;margin-top:4px}
+.md-nudge-retry{flex:1;background:var(--yellow);color:#1a1300;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer}
+.md-nudge-go{flex:1;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:13px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer}
+.md-combo-badge{background:rgba(255,196,0,.14);color:var(--yellow);font-size:11px;font-weight:900;letter-spacing:.08em;padding:5px 14px;border-radius:20px}
+.md-vocab-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.md-vocab-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:800;color:rgba(255,255,255,.35)}
+.md-vocab-chip.hit{background:rgba(29,158,117,.16);border-color:rgba(29,158,117,.5);color:var(--green)}
 .md-choice{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:15px 16px;font-size:15px;font-weight:700;color:var(--ink);text-align:left;cursor:pointer;font-family:inherit;transition:border-color .15s,background .15s;width:100%}
 .md-choice:active{background:var(--card2)}
 .md-choice.selected-good{background:rgba(29,158,117,.12);border-color:var(--green)}
@@ -2526,7 +2538,7 @@ async function loadFromSupabase(){
   if(!currentUser)return;
   const{data}=await supa.from("user_progress").select("progress").eq("user_id",currentUser.id).single();
   if(data&&data.progress){
-    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0,seenHints:{}},data.progress);
+    S=Object.assign({min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0,seenHints:{},mdCombo:0},data.progress);
   }
 }
 
@@ -2667,7 +2679,7 @@ const TROPHIES=[
  {id:"ten",ic:"trophy",n:"10試合出場",d:"セッション10回"},
  {id:"poly",ic:"say",n:"声出し職人",d:"シャドーイング20回"}
 ];
-let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0,seenHints:{}};
+let S={min:0,caps:0,goals:0,streak:0,last:"",box:{},trophies:[],speakCount:0,doneToday:"",myPhrases:[],pitchRight:0,pitchTotal:0,lockerRight:0,lockerTotal:0,history:[],tickets:0,lastQuizDate:"",lastLockerQuizDate:"",lastSpeakDate:"",position:"",name:"",matchdayDate:"",matchdayCount:0,matchTickets:0,cardsSinceTicket:0,favs:[],matchdayTotal:0,lastTicketDate:"",firstRunDone:false,drillHistory:[],lastCardDate:"",lastMissionBonusDate:"",matchdayDemoDone:false,lastRpDate:"",rpCompletedSceneKeys:[],mdUsedSceneKeys:[],mdReviewQueue:[],pushPromptShown:false,rpMastery:{},rpTrialUsed:false,coachCallDate:"",coachCallCount:0,seenHints:{},mdCombo:0};
 function save(){saveToSupabase();}
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function addDaysStr(dateStr,n){const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
@@ -4907,7 +4919,7 @@ const ROLEPLAY_SCENES=[
 
 /* ================= ROLEPLAY LOGIC ================= */
 let rpDay=0,rpScenes=[],rpIdx=0,rpTotalScore=0;
-let _mdRecording=false,_mdStarting=false,_mdProcessing=false;
+let _mdRecording=false,_mdStarting=false,_mdProcessing=false,_mdNudged=false,_mdNudgeHeard='';
 let _mdStream=null,_mdMediaRec=null,_mdChunks=[],_mdStartMs=0;
 let rpTimerInterval=null,rpStartMs=0,rpRecording=false,_rpStarting=false;
 let _rpStream=null,_rpMediaRec=null,_rpChunks=[],_rpProcessing=false;
@@ -4995,6 +5007,8 @@ function startCareerDay(dayIdx){
 }
 
 function renderRPScene(){
+  // 前のシーンの録音状態が万一残っていても新しいシーンでは必ず操作可能にする安全網
+  rpRecording=false;_rpProcessing=false;_rpStarting=false;
   const scene=rpScenes[rpIdx];
   const pct=Math.round(rpIdx/rpScenes.length*100);
   rpAttemptTier=rpNextTier(scene);
@@ -5147,7 +5161,7 @@ function _rpMimeType(){
   return '';
 }
 async function _ensureRPStream(){
-  if(_rpStream&&_rpStream.active)return _rpStream;
+  if(_rpStream&&_rpStream.active&&!_rpStream.getTracks().some(t=>t.readyState==='ended'))return _rpStream;
   _rpStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
   return _rpStream;
 }
@@ -5209,9 +5223,21 @@ async function startRPRec(){
 
 function stopRPRec(){
   if(!rpRecording)return;
-  rpRecording=false;_rpProcessing=true;
+  rpRecording=false;
   clearInterval(rpTimerInterval);
-  if(_rpMediaRec&&_rpMediaRec.state!=='inactive')_rpMediaRec.stop();
+  if(_rpMediaRec&&_rpMediaRec.state!=='inactive'){
+    _rpProcessing=true;
+    _rpMediaRec.stop();
+  }else{
+    // 録音機が既に停止していた場合はonstopが発火せず_rpProcessingが永久にtrueのまま
+    // 固まる事故があったため、ここで直接失敗扱いにして復帰する（2026-07-12）
+    _rpProcessing=false;
+    const btn=document.getElementById('rp-mic-btn');
+    const hint=document.getElementById('rp-hint');
+    if(btn){btn.innerHTML=_rpMicSvg();btn.disabled=false;}
+    if(hint)hint.textContent='タップして返答 → もう一度タップで停止';
+    showRPResult('',Date.now()-rpStartMs);
+  }
 }
 
 async function showRPResult(heard,timeMs){
@@ -5774,6 +5800,8 @@ function _drillTopHtml(){
 }
 
 function renderDrillPhrase(){
+  // 前の問題の録音状態が万一残っていても新しい問題では必ず操作可能にする安全網
+  _drillRecording=false;_drillProcessing=false;
   const p=drillDeck[drillIdx];
   const catName=CATS[p.c]?CATS[p.c].name:p.c.toUpperCase();
   document.getElementById('drill-top').innerHTML=_drillTopHtml();
@@ -5805,6 +5833,7 @@ function playDrillPhrase(){
 }
 
 function showDrillSpeak(){
+  _drillRecording=false;_drillProcessing=false;
   const p=drillDeck[drillIdx];
   const catName=CATS[p.c]?CATS[p.c].name:p.c.toUpperCase();
   document.getElementById('drill-body').innerHTML=`
@@ -5834,12 +5863,19 @@ function toggleDrillRec(){
 function _stopDrillRec(){
   if(!_drillRecording)return;
   _drillRecording=false;
-  _drillProcessing=true; // 認識完了まで新規録音ブロック
   if(_drillVADCancel){_drillVADCancel();_drillVADCancel=null;}
   clearInterval(drillTimerInterval);
   const micBtn=document.getElementById('drill-mic-btn');
-  if(micBtn){micBtn.textContent='⏳';micBtn.classList.remove('rec');micBtn.disabled=true;}
-  if(_drillMediaRec&&_drillMediaRec.state!=='inactive'){_drillMediaRec.stop();}
+  if(_drillMediaRec&&_drillMediaRec.state!=='inactive'){
+    _drillProcessing=true; // 認識完了まで新規録音ブロック（onstopで解除）
+    if(micBtn){micBtn.textContent='⏳';micBtn.classList.remove('rec');micBtn.disabled=true;}
+    _drillMediaRec.stop();
+  }else{
+    // 録音機が既に停止していた場合はonstopが発火せず_drillProcessingが永久にtrueのまま
+    // 固まる事故があったため、ここで直接失敗扱いにして復帰する（2026-07-12）
+    _drillProcessing=false;
+    showDrillResult('',Date.now()-drillStartMs);
+  }
 }
 function _warmUpMic(){}
 function _drillMimeType(){
@@ -5859,10 +5895,19 @@ async function _transcribeAudio(blob,mimeType){
   form.append('file',new File([blob],'audio.'+ext,{type:blob.type||mimeType}));
   form.append('model','whisper-1');
   form.append('language','en');
-  const res=await fetch('/api/transcribe',{
-    method:'POST',
-    body:form
-  });
+  // 通信が不安定な時にfetchが無期限にハングし、呼び出し元の「認識中...」ロックが永久に解除
+  // されない事故があったため、20秒でタイムアウトさせる（2026-07-12）
+  const controller=new AbortController();
+  const timeoutId=setTimeout(()=>controller.abort(),20000);
+  let res;
+  try{
+    res=await fetch('/api/transcribe',{method:'POST',body:form,signal:controller.signal});
+  }catch(e){
+    _dbg(`Whisper通信エラー: ${e.name} ${e.message}`);
+    throw e.name==='AbortError'?new Error('タイムアウト（通信が遅い）'):e;
+  }finally{
+    clearTimeout(timeoutId);
+  }
   if(!res.ok){
     const errText=await res.text().catch(()=>'');
     _dbg(`Whisperエラー: ${res.status} ${errText.slice(0,120)}`);
@@ -5873,7 +5918,7 @@ async function _transcribeAudio(blob,mimeType){
   return d.text||'';
 }
 async function _ensureDrillStream(){
-  if(_drillStream&&_drillStream.active)return _drillStream;
+  if(_drillStream&&_drillStream.active&&!_drillStream.getTracks().some(t=>t.readyState==='ended'))return _drillStream;
   _drillStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
   return _drillStream;
 }
@@ -6256,7 +6301,7 @@ function startWeakFootMission(){
 }
 
 function renderMdScene(){
-  mdAnswered=false;_mdRecording=false;_mdProcessing=false;
+  mdAnswered=false;_mdRecording=false;_mdProcessing=false;_mdNudged=false;
   mdCurrentScene=mdQueue[mdQueueIdx];
   const scene=mdCurrentScene;
   const scKey=`${scene.cat}||${scene.title}`;
@@ -6318,7 +6363,14 @@ async function mdStartRec(){
     const blob=new Blob(_mdChunks,{type:_mdMediaRec.mimeType||'audio/webm'});
     keepRec(blob);
     const heard=await _transcribeAudio(blob,_mdMediaRec.mimeType||'audio/webm').catch(()=>'');
-    mdShowResult(heard);
+    // 相槌だけで終われてしまう命令文・宣言文シーン対策: 鍵語彙を一切使っていない短い返答は
+    // 採点前に一度だけ「もう一言足せる？」を挟む（ローカル判定のみ、API費用ゼロ、1シーン1回まで）
+    if(!_mdNudged&&mdIsShallow(heard,mdCurrentScene.keys)){
+      _mdNudged=true;
+      mdShowNudge(heard);
+    }else{
+      mdShowResult(heard);
+    }
   };
   _mdMediaRec.start();
   _mdStartMs=Date.now();
@@ -6329,12 +6381,67 @@ async function mdStartRec(){
 
 function mdStopRec(){
   if(!_mdRecording||_mdProcessing)return;
-  _mdRecording=false;_mdProcessing=true;
-  if(_mdMediaRec&&_mdMediaRec.state!=='inactive')_mdMediaRec.stop();
+  _mdRecording=false;
   const btn=document.getElementById('md-mic-btn');
   const hint=document.getElementById('md-voice-hint');
-  if(btn){btn.disabled=true;btn.style.opacity='.4';}
-  if(hint)hint.textContent='判定中…';
+  if(_mdMediaRec&&_mdMediaRec.state!=='inactive'){
+    _mdProcessing=true;
+    if(btn){btn.disabled=true;btn.style.opacity='.4';}
+    if(hint)hint.textContent='判定中…';
+    _mdMediaRec.stop();
+  }else{
+    // 録音機が既に停止していた場合はonstopが発火せず_mdProcessingが永久にtrueのまま
+    // 固まる事故があったため、ここで直接失敗扱いにして復帰する（2026-07-12）
+    _mdProcessing=false;
+    if(btn){btn.disabled=false;btn.style.opacity='';}
+    mdShowResult('');
+  }
+}
+
+// MATCHDAYの語彙判定エンジン。keys（お手本回答）からストップワードを除いた内容語を抽出する。
+// ナッジの単語ヒント・結果画面の語彙チップ・VOCAB COMBOの3箇所で同じ抽出結果を使い回す
+// （命令文・宣言文シーンで「Got it」だけでも通ってしまう問題への対応、2026-07-12）。
+const MD_STOPWORDS=new Set(['i',"i'm",'im',"i'll",'ill',"i've",'ive',"i'd",'the','a','an','to','of','and','my','me','it','is','are','was','were','be','been','on','in','at','for','with','yes','no','ok','okay','got','boss','gaffer','sir','yeah','sorry','now','just','will','this','that','so','well','up','out','right','not','going','gonna','do','did','done','you','your','we','us','our','all','can','could','would','get','got']);
+function mdKeyVocab(keys){
+  const words=(keys||[]).join(' ').toLowerCase().replace(/[^a-z' ]/g,' ').split(/\s+/).filter(Boolean);
+  const uniq=[...new Set(words)].filter(w=>w.length>=3&&!MD_STOPWORDS.has(w));
+  return uniq.sort((a,b)=>b.length-a.length).slice(0,4);
+}
+function mdWordsOf(text){
+  return new Set((text||'').toLowerCase().replace(/[^a-z' ]/g,' ').split(/\s+/).filter(Boolean));
+}
+function mdIsShallow(heard,keys){
+  const vocab=mdKeyVocab(keys);
+  if(vocab.length===0)return false;
+  const gotWords=mdWordsOf(heard);
+  const hitAny=vocab.some(w=>gotWords.has(w));
+  const wordCount=(heard||'').trim().split(/\s+/).filter(Boolean).length;
+  return !hitAny&&wordCount>0&&wordCount<=5;
+}
+
+function mdShowNudge(heard){
+  _mdProcessing=false;
+  _mdNudgeHeard=heard;
+  const scene=mdCurrentScene;
+  const vocab=mdKeyVocab(scene.keys);
+  const resultEl=document.getElementById('md-result');
+  resultEl.innerHTML=`
+    <div class="md-nudge">
+      <div class="md-nudge-title">通じてる。でも、もう一言足せる？</div>
+      ${scene.hint?`<div class="md-nudge-hint">ヒント: ${scene.hint}</div>`:''}
+      ${vocab.length?`<div class="md-nudge-chips">${vocab.slice(0,2).map(w=>`<span class="md-nudge-chip">${w}</span>`).join('')}</div>`:''}
+      <div class="md-nudge-btns">
+        <button class="md-nudge-retry" onclick="mdNudgeRetry()">もう一言足す</button>
+        <button class="md-nudge-go" onclick="mdShowResult(_mdNudgeHeard)">これで勝負</button>
+      </div>
+    </div>`;
+  const btn=document.getElementById('md-mic-btn');
+  if(btn){btn.disabled=false;btn.style.opacity='';}
+  const vh=document.getElementById('md-voice-hint');
+  if(vh)vh.textContent='タップして話す';
+}
+function mdNudgeRetry(){
+  document.getElementById('md-result').innerHTML='';
 }
 
 async function mdAiScore(heard,keys){
@@ -6393,6 +6500,17 @@ async function mdShowResult(heard){
 
   const bestKey=scene.keys[0];
 
+  // VOCAB COMBO（Chou案）: 合格かつ鍵語彙を1つ以上使えたらコンボ+1。
+  // 相槌だけの合格（鍵語彙0）はコンボを切らないが伸ばしもしない。不合格でリセット
+  const vocab=mdKeyVocab(scene.keys);
+  const gotWords=mdWordsOf(heard);
+  const usedVocab=vocab.filter(w=>gotWords.has(w));
+  if(score<50)S.mdCombo=0;
+  else if(usedVocab.length>0){
+    S.mdCombo=(S.mdCombo||0)+1;
+    if(S.mdCombo===5||S.mdCombo===10)toast(`VOCAB COMBO ${S.mdCombo}！語彙の引き出しが増えてる`);
+  }
+
   // Mark scene as used in MATCHDAY
   const scKey=`${scene.cat}||${scene.title}`;
   if(!(S.mdUsedSceneKeys||[]).includes(scKey)){S.mdUsedSceneKeys=[...(S.mdUsedSceneKeys||[]),scKey];}
@@ -6415,7 +6533,9 @@ async function mdShowResult(heard){
     <div class="md-voice-result">
       <div class="md-verdict-label" style="color:${verdictColor}">${verdict}</div>
       <div class="md-verdict-ja" style="color:${verdictColor}">${verdictJa}</div>
+      ${S.mdCombo>=2?`<div class="md-combo-badge">VOCAB COMBO x${S.mdCombo}</div>`:''}
       ${heard?`<div class="md-heard-wrap"><div class="md-heard-label">あなたの声</div><div class="md-heard-text">"${heard}"</div></div>`:''}
+      ${vocab.length?`<div class="md-vocab-row">${vocab.map(w=>`<span class="md-vocab-chip${gotWords.has(w)?' hit':''}">${w}</span>`).join('')}</div>`:''}
       <div style="width:100%;text-align:center">${myVoiceBtn()}</div>
       <div class="md-best-wrap">
         <div class="md-best-label">ベストフレーズ</div>
