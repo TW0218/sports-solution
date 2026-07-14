@@ -5312,13 +5312,17 @@ async function showRPResult(heard,timeMs){
   // マスター判定: 合格点(50)以上・スピードゲート通過（TOP BINSのみ）・
   // このTierが現在の習熟度を上回る、の全てを満たす時だけ昇格。
   // 失敗しても習熟度は下がらない（優しめルール）
+  // ヒント使用は昇格をブロックしない（8人視点レビューの収束点・2026-07-14）。
+  // Tier階段自体が足場の漸減装置（SILVER=指示文+単語→GOLD=単語のみ→TOP BINS=支援なし）なので、
+  // 独立した習熟はTOP BINSまで登れば構造的に検証される。ヒント使用はイベントに記録して
+  // 将来のルール再検討の材料にし、ノーヒント昇格には名誉表示だけ添える（罰でなく誇りで促す）。
   const passThreshold=50;
   let masteryUp=false;
   if(total>=passThreshold&&meetsSpeedGate&&tier>rpMasteryLevel(scene)){
     S.rpMastery=S.rpMastery||{};
     S.rpMastery[_scKey]=tier;
     masteryUp=true;
-    track('scene_mastery_up',{key:_scKey,tier});
+    track('scene_mastery_up',{key:_scKey,tier,hint:_rpHintUsed});
   }
   save();
 
@@ -5326,8 +5330,11 @@ async function showRPResult(heard,timeMs){
   const isLast=rpIdx>=rpScenes.length-1;
   const scoreColor=total>=80?'var(--green)':total>=50?'#FFC400':'var(--red)';
   const missedOnSpeed=tier===4&&!meetsSpeedGate&&total>=passThreshold;
+  // NO HINTフレアはヒントが存在するTier(2/3)で使わず昇格した時だけ（Tier4はヒント自体が無いので表示しない）
+  const noHintFlair=masteryUp&&!_rpHintUsed&&(tier===2||tier===3)
+    ?`<div style="text-align:center;font-size:10px;font-weight:900;letter-spacing:.14em;color:var(--green);margin-bottom:4px">NO HINT — 自力で決めた</div>`:'';
   const tierBadge=masteryUp
-    ?`<div style="text-align:center;font-weight:900;color:var(--yellow);letter-spacing:.08em;margin-bottom:6px">${RP_TIER_NAMES[tier]} 達成！</div>`
+    ?`${noHintFlair}<div style="text-align:center;font-weight:900;color:var(--yellow);letter-spacing:.08em;margin-bottom:6px">${RP_TIER_NAMES[tier]} 達成！</div>`
     :missedOnSpeed
       ?`<div style="text-align:center;font-weight:800;color:var(--grey);letter-spacing:.05em;margin-bottom:6px;font-size:12px">正確だった、あとはスピードだけ。TOP BINSは速さも条件</div>`
       :(tier>1?`<div style="text-align:center;font-weight:800;color:var(--grey);letter-spacing:.05em;margin-bottom:6px;font-size:12px">${RP_TIER_NAMES[tier]}はまだ。焦らずもう一度</div>`:'');
