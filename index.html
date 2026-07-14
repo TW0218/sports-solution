@@ -849,6 +849,8 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .md-nudge-title{font-size:15px;font-weight:900;color:var(--ink)}
 .md-nudge-hint{font-size:12px;color:var(--grey);font-weight:700}
 .md-nudge-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.hintword-chip{display:inline-block;background:rgba(255,196,0,.16);border:1px solid rgba(255,196,0,.4);border-radius:20px;padding:6px 14px;font-size:14px;font-weight:900;color:var(--yellow);margin-top:10px;font-family:Barlow,sans-serif;letter-spacing:.02em}
+.hintword-ja{font-size:11px;color:var(--grey);font-weight:700;margin-top:6px}
 .md-nudge-chip{background:rgba(255,196,0,.16);border:1px solid rgba(255,196,0,.4);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:900;color:var(--yellow)}
 .md-nudge-btns{display:flex;gap:10px;width:100%;margin-top:4px}
 .md-nudge-retry{flex:1;background:var(--yellow);color:#1a1300;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer}
@@ -5054,7 +5056,12 @@ function renderRPFreeResponse(){
   const scene=rpScenes[rpIdx];
   const initials=scene.npc.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
   const sceneCat=RP_CATEGORIES.find(c=>c.id===scene.cat);
-  const showHintBtn=rpAttemptTier===2&&scene.hint;
+  // 段階的な足場かけ（SLA視点）: Tier2=指示文＋単語＋用例、Tier3=単語のみ、Tier4=支援なし。
+  // ランクが上がるほどヒントを弱める
+  const hintInner=rpAttemptTier===2
+    ?`${scene.hint?`<div class="md-hint-text">${scene.hint}</div>`:''}${scene.hintWord?`<div class="hintword-chip">${scene.hintWord}</div><div class="hintword-ja">${scene.hintWordJa||''}</div>`:''}`
+    :(rpAttemptTier===3&&scene.hintWord?`<div class="hintword-chip">${scene.hintWord}</div>`:'');
+  const showHintBtn=!!hintInner;
   _rpHintUsed=false;
   document.getElementById('rp-scene-body').innerHTML=`
     <div style="text-align:center">
@@ -5071,7 +5078,7 @@ function renderRPFreeResponse(){
         </div>
       </div>
       <div class="rp-chat-divider">── ${RP_TIER_NAMES[rpAttemptTier]}挑戦：自分の言葉で返せ ──</div>
-      ${showHintBtn?`<button class="md-hint-btn" id="rp-hint-btn" onclick="rpToggleHint()">HINT</button><div class="md-hint-box" id="rp-hint-box" style="display:none"><div class="md-hint-label">ヒント</div><div class="md-hint-text">${scene.hint}</div></div>`:''}
+      ${showHintBtn?`<button class="md-hint-btn" id="rp-hint-btn" onclick="rpToggleHint()">HINT</button><div class="md-hint-box" id="rp-hint-box" style="display:none"><div class="md-hint-label">ヒント</div>${hintInner}</div>`:''}
     </div>
     <div class="rp-mic-section">
       <div class="rp-timer" id="rp-timer">00.0</div>
@@ -6357,7 +6364,7 @@ function renderMdScene(){
         </svg>
       </button>
       <div class="md-voice-hint" id="md-voice-hint">タップして話す</div>
-      ${scene.hint?`<button class="md-hint-btn" id="md-hint-btn" onclick="mdToggleHint()">HINT</button><div class="md-hint-box" id="md-hint-box" style="display:none"><div class="md-hint-label">ヒント</div><div class="md-hint-text">${scene.hint}</div></div>`:''}
+      ${scene.hint?`<button class="md-hint-btn" id="md-hint-btn" onclick="mdToggleHint()">HINT</button><div class="md-hint-box" id="md-hint-box" style="display:none"><div class="md-hint-label">ヒント</div><div class="md-hint-text">${scene.hint}</div>${scene.hintWord?`<div class="hintword-chip">${scene.hintWord}</div><div class="hintword-ja">${scene.hintWordJa||''}</div>`:''}</div>`:''}
     </div>
     <div id="md-result"></div>
   `;
@@ -6451,13 +6458,18 @@ function mdShowNudge(heard){
   _mdProcessing=false;
   _mdNudgeHeard=heard;
   const scene=mdCurrentScene;
+  // 単語ヒントは人手で選定したhintWordを最優先（コーチ視点: 語の精度が価値を決める）。
+  // 無いシーンだけmdKeyVocabの機械抽出にフォールバック
   const vocab=mdKeyVocab(scene.keys);
+  const chipsHtml=scene.hintWord
+    ?`<div class="md-nudge-chips"><span class="md-nudge-chip">${scene.hintWord}</span></div>${scene.hintWordJa?`<div class="hintword-ja">${scene.hintWordJa}</div>`:''}`
+    :(vocab.length?`<div class="md-nudge-chips">${vocab.slice(0,2).map(w=>`<span class="md-nudge-chip">${w}</span>`).join('')}</div>`:'');
   const resultEl=document.getElementById('md-result');
   resultEl.innerHTML=`
     <div class="md-nudge">
       <div class="md-nudge-title">通じてる。でも、もう一言足せる？</div>
       ${scene.hint?`<div class="md-nudge-hint">ヒント: ${scene.hint}</div>`:''}
-      ${vocab.length?`<div class="md-nudge-chips">${vocab.slice(0,2).map(w=>`<span class="md-nudge-chip">${w}</span>`).join('')}</div>`:''}
+      ${chipsHtml}
       <div class="md-nudge-btns">
         <button class="md-nudge-retry" onclick="mdNudgeRetry()">もう一言足す</button>
         <button class="md-nudge-go" onclick="mdShowResult(_mdNudgeHeard)">これで勝負</button>
