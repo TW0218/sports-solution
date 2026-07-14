@@ -917,9 +917,9 @@ nav button:active{color:var(--green);transform:scale(.9);transition:transform .0
 .miy-base-en{font-size:17px;font-weight:900;color:var(--ink);line-height:1.5}
 .miy-base-play{background:none;border:1px solid rgba(255,255,255,.2);border-radius:16px;color:rgba(255,255,255,.6);font-size:11px;font-weight:900;padding:6px 14px;margin-top:10px;cursor:pointer;font-family:inherit}
 .miy-hint-txt{font-size:11px;font-weight:700;color:var(--grey);text-align:center;line-height:1.6}
-.miy-example-card{background:var(--green-lt);border:1px solid var(--border2);border-radius:14px;padding:12px 16px;text-align:center}
-.miy-example-label{font-size:11px;font-weight:700;color:var(--green);margin-bottom:5px}
-.miy-example-en{font-size:14px;font-weight:800;color:var(--ink)}
+.miy-chip-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.miy-chip{background:rgba(29,158,117,.14);border:1px solid var(--border2);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--green);cursor:pointer;font-family:inherit}
+.miy-chip:active{background:rgba(29,158,117,.28)}
 .miy-skip{background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;padding:8px;text-align:center}
 .miy-draft-input{width:100%;border:1.5px solid var(--border2);border-radius:16px;padding:14px 16px;font-size:15px;font-family:inherit;font-weight:700;background:var(--white);color:var(--ink);outline:none;resize:none;-webkit-user-select:text;user-select:text}
 .miy-draft-input:focus{border-color:var(--green)}
@@ -5372,35 +5372,65 @@ function renderSeasonComplete(avg,grade){
    自己関連付け効果＋生成効果でセンテンスを自分事として定着させる。
    ユーザー発話側のみなので事前生成mp3は不要（Whisper認識→AI品質チェックのみ）。 */
 let _rpDayAvg=0;
-let _miyBase=null,_miyRec=null,_miyChunks=[],_miyRecording=false,_miyBusy=false,_miyTimer=null,_miyStartMs=0,_miyDraft='';
+let _miyBase=null,_miyRec=null,_miyChunks=[],_miyRecording=false,_miyBusy=false,_miyTimer=null,_miyStartMs=0,_miyDraft='',_miyConverted=null;
 
-// カテゴリごとに1つずつ「埋め込み例」を用意する（175シーン個別ではなく7カテゴリ分だけ手動用意し、
-// 低コストで「形を借りる」を具体例として見せる。scene.hintのような発話内容の指示ではなく、
-// あくまで文型の見本として機能させる）
-// sample: は静的な参考テキストとして表示するだけで音声再生はしない（意図的にキー名を en: にしない —
-// validate_audio.jsはenキー（コロン付き）を全ファイル横断でスキャンして音声必須と判定するため、
-// 混同するとpush前チェックが誤って「mp3が存在しない」と警告する）
-const MIY_EXAMPLES={
-  pitch:{ja:'例えば「最近パスの精度を練習してる」なら', sample:"Yeah, I've been working on my passing!"},
-  manager:{ja:'例えば「居残りで自主練してる」なら', sample:"Coach, I've been staying back for extra reps!"},
-  medical:{ja:'例えば「筋肉痛がひどい」なら', sample:"Honestly, my legs are killing me from squats!"},
-  locker:{ja:'例えば「最近ジムに通ってる」なら', sample:"Nah mate, I've been grinding at the gym!"},
-  media:{ja:'例えば「放課後も居残り練習してる」なら', sample:"Honestly, I've been putting in extra hours after school!"},
-  agent:{ja:'例えば「もっと上手くなりたい」なら', sample:"Yeah, I just want to keep improving!"},
-  daily:{ja:'例えば「練習前にコンビニに寄った」なら', sample:"Cheers, I grabbed a drink before training!"}
+// カテゴリごとに「質問＋今日の型（穴埋め1箇所）＋ヒントチップ」を用意する（7カテゴリ分のみ手動用意、
+// 175シーン個別のデータは持たない）。旧版は「今日のフレーズ」と「例文」が同居して
+// 「どっちを真似すればいいの？」と混乱を招いたため廃止し、質問に答えて型の穴を埋めるだけで
+// 文が組み上がる設計に変更した（2026-07-12、ユーザーからの2度のフィードバックを受けて）。
+// chipsのキー名はeng:（en:ではない）— validate_audio.jsがen:を全ファイル横断でスキャンして
+// 音声必須と判定するため、音声を持たないチップのテキストにen:を使うとnpm run verifyが誤検知する。
+const MIY_FRAMES={
+  pitch:{q:'最近、続けてる練習は？',frame:"I've been ____!",frameJa:'最近ずっと〜してるんだ',chips:[
+    {ja:'シュート練習',eng:'practicing my shooting'},
+    {ja:'走り込み',eng:'working on my stamina'},
+    {ja:'逆足の練習',eng:'training my weak foot'}
+  ]},
+  manager:{q:'今週、一番がんばったことは？',frame:'I worked on ____ this week!',frameJa:'今週は〜に取り組みました',chips:[
+    {ja:'ヘディング',eng:'my heading'},
+    {ja:'パスの精度',eng:'my passing'},
+    {ja:'1対1の守備',eng:'my one-on-one defending'}
+  ]},
+  medical:{q:'今、体の調子はどう？',frame:'I feel ____ today.',frameJa:'今日は〜な感じです',chips:[
+    {ja:'絶好調',eng:'brilliant'},
+    {ja:'ちょっと疲れ気味',eng:'a bit tired'},
+    {ja:'だいぶ回復した',eng:'much better'}
+  ]},
+  locker:{q:'最近ハマってることは？',frame:"I've been into ____ lately!",frameJa:'最近〜にハマってるんだ',chips:[
+    {ja:'ゲーム',eng:'gaming'},
+    {ja:'音楽',eng:'music'},
+    {ja:'プレミア観戦',eng:'watching the Prem'}
+  ]},
+  media:{q:'今シーズンの目標は？',frame:'I want to ____ this season!',frameJa:'今シーズンは〜したい',chips:[
+    {ja:'レギュラー獲得',eng:'be a regular starter'},
+    {ja:'10ゴール',eng:'score ten goals'},
+    {ja:'チームの勝利に貢献',eng:'help the team win'}
+  ]},
+  agent:{q:'将来、どこでプレーしたい？',frame:'My dream is to play ____.',frameJa:'夢は〜でプレーすること',chips:[
+    {ja:'プレミアで',eng:'in the Premier League'},
+    {ja:'スペインで',eng:'in Spain'},
+    {ja:'海外で',eng:'abroad'}
+  ]},
+  daily:{q:'練習のあと、何する？',frame:"I'm going to ____ after training.",frameJa:'練習後は〜するつもり',chips:[
+    {ja:'飯を食べる',eng:'grab some food'},
+    {ja:'ストレッチ',eng:'stretch'},
+    {ja:'自分のプレー動画を見る',eng:'review my clips'}
+  ]}
 };
+function miyFrame(){return MIY_FRAMES[_miyBase.cat]||MIY_FRAMES.pitch;}
+
 function miyStart(){
-  // 今日の7シーンから返答フレーズを1つ選ぶ（keys[0]=ベストフレーズ）
+  // シーンはカテゴリ判定（MIY_FRAMESの参照キー）とマイフレーズのnote用タイトルにのみ使う
   const scene=rpScenes[Math.floor(Math.random()*rpScenes.length)];
-  _miyBase={phrase:scene.keys[0],audio:scene.keyAudio?scene.keyAudio[0]:null,cat:scene.cat,title:scene.title};
-  _miyRecording=false;_miyBusy=false;_miyDraft='';
+  _miyBase={cat:scene.cat,title:scene.title};
+  _miyRecording=false;_miyBusy=false;_miyDraft='';_miyConverted=null;
   renderMIY();
 }
 
-// Step1: まずテキストで文章を組み立てる（いきなり声に出すのはハードルが高いという指摘への対応・2026-07-12）。
-// 作った文はStep2でそのまま「読み上げる対象」になるので、作文と発話を同時に要求しない。
+// Step1: 日本語の質問に、今日の型（穴埋め1箇所）で答える。ヒントチップをタップすれば
+// 穴が埋まる（最低ラインはタップ1回で完走できる）。自分の言葉で書きたい人は日本語でもOK。
 function renderMIY(){
-  const ex=MIY_EXAMPLES[_miyBase.cat]||MIY_EXAMPLES.pitch;
+  const f=miyFrame();
   document.getElementById('rp-scene-top').innerHTML=`
     <div class="rp-topbar">
       <button class="btn-x" onclick="miyAbort()">✕</button>
@@ -5409,32 +5439,77 @@ function renderMIY(){
   document.getElementById('rp-scene-body').innerHTML=`
     <div class="miy-wrap">
       <div class="miy-eyebrow">DAY ${rpDay+1} 締めの一言</div>
-      <div class="miy-lead">同じ「短く言い切る」形のまま、<br>話す中身だけ<b>自分の本当のこと</b>に変えよう。</div>
+      <div class="miy-lead">${f.q}</div>
       <div class="miy-base-card">
-        <div class="miy-base-label">今日のフレーズ</div>
-        <div class="miy-base-en">"${_miyBase.phrase}"</div>
-        ${_miyBase.audio?`<button class="miy-base-play" onclick="mdPlaySrc('audio/${_miyBase.audio}.mp3')">▶ 聞く</button>`:''}
+        <div class="miy-base-label">今日の型</div>
+        <div class="miy-base-en">"${f.frame.replace('____','<span style="color:var(--yellow)">____</span>')}"</div>
+        <div style="font-size:11px;color:var(--grey);margin-top:6px">${f.frameJa}</div>
       </div>
-      <div class="miy-example-card">
-        <div class="miy-example-label">${ex.ja}</div>
-        <div class="miy-example-en">"${ex.sample}"</div>
+      <div class="miy-hint-txt">ヒント：タップで穴に入る</div>
+      <div class="miy-chip-row">
+        ${f.chips.map((c,i)=>`<button class="miy-chip" onclick="miyChipFill(${i})">${c.ja}</button>`).join('')}
       </div>
-      <div class="miy-hint-txt">練習・学校・バイト・推しクラブ — ウソじゃない自分の話ならなんでもいい</div>
-      <textarea class="miy-draft-input" id="miy-draft-input" rows="2" maxlength="120" placeholder="まず英語で書いてみよう" oninput="document.getElementById('miy-draft-btn').disabled=!this.value.trim()">${_miyDraft}</textarea>
-      <button class="miy-draft-btn" id="miy-draft-btn" onclick="miyDraftNext()" ${_miyDraft.trim()?'':'disabled'}>書けた、声に出す →</button>
+      <textarea class="miy-draft-input" id="miy-draft-input" rows="2" maxlength="120" placeholder="自分の言葉でもOK（日本語可）" oninput="document.getElementById('miy-draft-btn').disabled=!this.value.trim()">${_miyDraft}</textarea>
+      <button class="miy-draft-btn" id="miy-draft-btn" onclick="miyDraftNext()" ${_miyDraft.trim()?'':'disabled'}>できた →</button>
       <button class="miy-skip" onclick="miySkip()">今日はスキップ</button>
     </div>`;
+}
+
+function miyChipFill(i){
+  const chip=miyFrame().chips[i];
+  if(!chip)return;
+  const ta=document.getElementById('miy-draft-input');
+  ta.value=chip.ja;
+  ta.dispatchEvent(new Event('input'));
 }
 
 function miyDraftNext(){
   const val=(document.getElementById('miy-draft-input').value||'').trim();
   if(!val)return;
   _miyDraft=val;
-  renderMIYSpeak();
+  renderMIYConfirm();
 }
 
-// Step2: Step1で書いた文をそのまま声に出す。作文済みなので、ここではWhisperでの聞き取りすら不要
-// （書いた文をそのままAI文法チェックに送る）。録音は「自分の声を聞く」ための保存のみに使う。
+// 新設ステップ: 穴に入れた自分の答え（日本語 or 英語）を、今日の型に沿った完成文にAIが変換する。
+// ヒントで見せたチップの語彙と変換結果がズレると「どっちが正解？」になるため、プロンプトに
+// チップの語彙リストを渡し、内容が近ければチップの表現をそのまま使うよう指示する
+// （現場語彙の一貫性を担保。ユーザー指摘: 「逆足の練習」→"training my weak foot"を一致させること）。
+function renderMIYConfirm(){
+  document.getElementById('rp-scene-top').innerHTML=`
+    <div class="rp-topbar">
+      <button class="btn-x" onclick="miyAbort()">✕</button>
+      <div style="font-weight:900;font-size:15px">MAKE IT YOURS</div>
+    </div>`;
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div class="miy-wrap">
+      <div class="miy-eyebrow">英語だとこうなる</div>
+      <div style="text-align:center;padding:30px 0;color:var(--grey);font-size:13px;font-weight:700;letter-spacing:.08em">AI CHECKING...</div>
+    </div>`;
+  miyBuildSentence();
+}
+
+async function miyBuildSentence(){
+  _miyConverted=await miyGrammarCheck(_miyDraft);
+  document.getElementById('rp-scene-body').innerHTML=`
+    <div class="miy-wrap">
+      <div class="miy-eyebrow">英語だとこうなる</div>
+      <div class="miy-base-card">
+        <div class="miy-base-label">あなたが書いた文</div>
+        <div style="font-size:13px;color:var(--grey)">"${_miyDraft}"</div>
+      </div>
+      <div class="miy-speak-target">
+        <div class="miy-speak-target-label">これを声に出そう</div>
+        <div class="miy-speak-target-text">"${_miyConverted.corrected}"</div>
+        ${_miyConverted.ja?`<div style="font-size:12px;color:var(--grey);margin-top:6px">${_miyConverted.ja}</div>`:''}
+      </div>
+      <button class="miy-draft-btn" onclick="renderMIYSpeak()">これで声に出す →</button>
+      <button class="miy-edit-link" onclick="renderMIY()">書き直す</button>
+      <button class="miy-skip" onclick="miySkip()">今日はスキップ</button>
+    </div>`;
+}
+
+// Step2: 変換済みの完成文を読み上げるだけ。文法チェックはStep1→変換ステップで完了済みなので
+// ここではWhisper文字起こしも再チェックも不要（録音は「自分の声を聞く」用の保存のみ）。
 function renderMIYSpeak(){
   document.getElementById('rp-scene-top').innerHTML=`
     <div class="rp-topbar">
@@ -5445,10 +5520,10 @@ function renderMIYSpeak(){
     <div class="miy-wrap">
       <div class="miy-eyebrow">声に出してみよう</div>
       <div class="miy-speak-target">
-        <div class="miy-speak-target-label">あなたが書いた文</div>
-        <div class="miy-speak-target-text">"${_miyDraft}"</div>
+        <div class="miy-speak-target-label">あなたの文</div>
+        <div class="miy-speak-target-text">"${_miyConverted.corrected}"</div>
+        <button class="miy-base-play" onclick="speakTTS(_miyConverted.corrected)">▶ お手本を聞く</button>
       </div>
-      <button class="miy-edit-link" onclick="renderMIY()">書き直す</button>
       <div class="md-voice-area" style="padding-top:12px">
         <button class="md-mic-btn" id="miy-mic-btn" onclick="miyToggleRec()">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -5471,21 +5546,30 @@ function miyAbort(){
 }
 
 // スキップしても、書いた文があれば無駄にしない（発話まで到達しなくても作文の努力は保存する）。
-// Step1で下書き入力中にスキップした場合はまだ_miyDraftが確定していないのでtextareaを直接見る。
+// 既に変換済み(_miyConverted)ならAI呼び出しを再度せず、そのまま保存する。
 function miySkip(){
-  const draftText=_miyDraft||(document.getElementById('miy-draft-input')?.value||'').trim();
-  if(draftText)saveDraftPhrase(draftText);
-  track('make_it_yours_skip',{day:rpDay+1,hadDraft:!!draftText});
+  if(_miyConverted){
+    saveMiyPhrase(_miyConverted,false);
+    toast('マイフレーズに保存したよ');
+  }else{
+    const draftText=_miyDraft||(document.getElementById('miy-draft-input')?.value||'').trim();
+    if(draftText)saveDraftPhrase(draftText);
+  }
+  track('make_it_yours_skip',{day:rpDay+1,hadDraft:!!(_miyConverted||_miyDraft)});
   renderRPDayComplete();
 }
 async function saveDraftPhrase(text){
   const check=await miyGrammarCheck(text);
-  const corrected=check.corrected||text;
+  saveMiyPhrase(check,true);
+  toast('書いた文をマイフレーズに保存したよ');
+}
+function saveMiyPhrase(check,isDraft){
+  if(!check||!check.corrected)return;
+  const corrected=check.corrected;
   S.myPhrases=S.myPhrases||[];
   if(!S.myPhrases.some(p=>p.en===corrected)){
-    S.myPhrases.push({c:_miyBase.cat,en:corrected,ja:check.ja||'',ex:corrected,exJa:check.ja||'',note:'MAKE IT YOURS（下書き）— '+_miyBase.title});
+    S.myPhrases.push({c:_miyBase.cat,en:corrected,ja:check.ja||'',ex:corrected,exJa:check.ja||'',note:(isDraft?'MAKE IT YOURS（下書き）— ':'MAKE IT YOURS — ')+_miyBase.title});
     save();
-    toast('書いた文をマイフレーズに保存したよ');
   }
 }
 
@@ -5510,8 +5594,8 @@ async function miyToggleRec(){
   _miyRec.ondataavailable=e=>{if(e.data&&e.data.size>0)_miyChunks.push(e.data);};
   _miyRec.onstop=async()=>{
     const blob=new Blob(_miyChunks,{type:_miyRec.mimeType||'audio/webm'});
-    keepRec(blob); // 自分の声の聞き直し用に保存するだけ。文法チェックはStep1で書いたテキストを使う（Whisper不要）
-    miyCheck(_miyDraft);
+    keepRec(blob); // 自分の声の聞き直し用に保存するだけ。文法チェックは変換ステップで完了済み
+    miyFinish();
   };
   _miyRec.start();
   _miyRecording=true;_miyStartMs=Date.now();
@@ -5525,7 +5609,25 @@ async function miyToggleRec(){
   },200);
 }
 
+function miyFinish(){
+  _miyBusy=false;
+  saveMiyPhrase(_miyConverted,false);
+  track('make_it_yours_complete',{day:rpDay+1});
+  document.getElementById('miy-result').innerHTML=`
+    <div class="md-voice-result">
+      <div class="md-verdict-label" style="color:var(--green);font-size:28px">IT'S YOURS</div>
+      <div style="display:flex;gap:10px;width:100%">
+        <button class="miy-listen-btn" onclick="playMyVoice()">自分の声を聞く</button>
+      </div>
+      <button class="rp-btn-next" style="width:100%;margin-top:8px" onclick="renderRPDayComplete()">完了</button>
+    </div>`;
+}
+
+// 今日の型・ヒントチップの語彙を文脈として渡し、穴に入れた自分の答え（日本語/英語/混在）を
+// 型に沿った1つの完成文に変換する。合否判定はしない（判定ではなく変換が役割）。
 async function miyGrammarCheck(text){
+  const f=miyFrame();
+  const chipList=f.chips.map(c=>`"${c.ja}" = "${c.eng}"`).join(', ');
   try{
     const res=await fetch('/api/score',{
       method:'POST',
@@ -5534,74 +5636,22 @@ async function miyGrammarCheck(text){
         model:'gpt-4o-mini',
         max_tokens:200,
         messages:[{role:'user',content:
-          `You are an English coach for a Japanese footballer. Template phrase: "${_miyBase.phrase}"\n`+
-          `The player made their own real-life sentence borrowing that pattern: "${text}"\n`+
-          `Judge only whether it is natural, correct English (loosely reusing the pattern is fine).\n`+
+          `You are an English coach for a Japanese footballer. Today's sentence frame: "${f.frame}" (meaning: ${f.frameJa}).\n`+
+          `Hint vocabulary already shown to the player: ${chipList}.\n`+
+          `The player's answer for the blank (may be in Japanese, English, or mixed): "${text}"\n`+
+          `Write ONE natural, correct English sentence that follows the frame, using the player's answer as the content. `+
+          `If the player's answer closely matches one of the hint vocabulary items, use that exact English wording for consistency. `+
+          `Prefer real football dressing-room vocabulary over textbook English.\n`+
           `Reply with ONLY this JSON, no code block:\n`+
-          `{"ok":true|false,"corrected":"natural corrected version (same as input if already good)","ja":"correctedの自然な日本語訳","note":"日本語の一言アドバイス(20字以内)"}`
+          `{"corrected":"the finished English sentence","ja":"correctedの自然な日本語訳"}`
         }]
       })
     });
     const j=await res.json();
     return JSON.parse((j.choices?.[0]?.message?.content||'').replace(/```json|```/g,'').trim());
   }catch(e){
-    return {ok:true,corrected:text,ja:'',note:''};
+    return {corrected:text,ja:''};
   }
-}
-async function miyCheck(heard){
-  const resultEl=document.getElementById('miy-result');
-  if(!heard||!heard.trim()){
-    _miyBusy=false;
-    const hint=document.getElementById('miy-voice-hint');
-    if(hint)hint.textContent='聞き取れなかった。もう一度';
-    const btn=document.getElementById('miy-mic-btn');
-    if(btn)btn.style.borderColor='';
-    return;
-  }
-  if(resultEl)resultEl.innerHTML=`<div style="text-align:center;padding:20px 0;color:var(--grey);font-size:13px;font-weight:700;letter-spacing:.08em">AI CHECKING...</div>`;
-  const check=await miyGrammarCheck(heard);
-  miyShowResult(heard,check);
-}
-
-function miyShowResult(heard,check){
-  _miyBusy=false;
-  const corrected=check.corrected||heard;
-  _miyLast={heard,corrected,ja:check.ja||'',ok:!!check.ok};
-  const verdictColor=check.ok?'var(--green)':'#FFC400';
-  const verdict=check.ok?"IT'S YOURS":'もう一歩';
-  document.getElementById('miy-result').innerHTML=`
-    <div class="md-voice-result">
-      <div class="md-verdict-label" style="color:${verdictColor};font-size:28px">${verdict}</div>
-      <div class="md-heard-wrap"><div class="md-heard-label">あなたが書いた文</div><div class="md-heard-text">"${heard}"</div></div>
-      <div class="md-best-wrap">
-        <div class="md-best-label">${check.ok?'この文はもう自分のもの':'こう直すと自然'}</div>
-        <div class="md-best-text">"${corrected}"</div>
-        ${check.ja?`<div style="font-size:12px;color:var(--grey);margin-top:6px">${check.ja}</div>`:''}
-        ${!check.ok&&check.note?`<div style="font-size:12px;color:#FFC400;margin-top:6px;font-weight:700">${check.note}</div>`:''}
-      </div>
-      <div style="display:flex;gap:10px;width:100%">
-        <button class="miy-listen-btn" onclick="playMyVoice()">自分の声を聞く</button>
-        <button class="miy-listen-btn" onclick="speakTTS(_miyLast.corrected)">お手本を聞く</button>
-      </div>
-      <div style="display:flex;gap:10px;width:100%;margin-top:2px">
-        <button class="rp-btn-retry" style="flex:1" onclick="renderMIY()">やり直す</button>
-        <button class="rp-btn-next" style="flex:1" onclick="miySave()">保存して完了</button>
-      </div>
-    </div>`;
-}
-
-let _miyLast=null;
-function miySave(){
-  if(_miyLast){
-    S.myPhrases=S.myPhrases||[];
-    if(!S.myPhrases.some(p=>p.en===_miyLast.corrected)){
-      S.myPhrases.push({c:_miyBase.cat,en:_miyLast.corrected,ja:_miyLast.ja,ex:_miyLast.corrected,exJa:_miyLast.ja,note:'MAKE IT YOURS — '+_miyBase.title});
-      save();
-      toast('マイフレーズに保存した。単語カードの「マイフレーズ」で復習できる');
-    }
-  }
-  track('make_it_yours_complete',{day:rpDay+1,ok:_miyLast?_miyLast.ok:null});
-  renderRPDayComplete();
 }
 function checkDailyTicket(){
   const td=today();
