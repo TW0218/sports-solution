@@ -2917,7 +2917,13 @@ document.addEventListener('visibilitychange',()=>{
   }
 });
 let AC=null;
+// iOS Safari（PWA含む）はnavigator.vibrateに非対応なので、対応端末（主にAndroid）だけ振動する
+function _vibrate(pattern){
+  try{if(navigator.vibrate)navigator.vibrate(pattern);}catch(e){}
+}
 function sfx(type){
+  if(type==="good")_vibrate(30);
+  else if(type==="bad")_vibrate([40,60,40]);
   try{
     AC=AC||new (window.AudioContext||window.webkitAudioContext)();
     const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();
@@ -4921,7 +4927,7 @@ const ROLEPLAY_SCENES=[
 let rpDay=0,rpScenes=[],rpIdx=0,rpTotalScore=0;
 let _mdRecording=false,_mdStarting=false,_mdProcessing=false,_mdNudged=false,_mdNudgeHeard='';
 let _mdStream=null,_mdMediaRec=null,_mdChunks=[],_mdStartMs=0;
-let rpTimerInterval=null,rpStartMs=0,rpRecording=false,_rpStarting=false;
+let rpTimerInterval=null,rpStartMs=0,rpRecording=false,_rpStarting=false,_rpHintUsed=false;
 let _rpStream=null,_rpMediaRec=null,_rpChunks=[],_rpProcessing=false;
 let rpChosenKey='',rpCurrentKeys=[];
 
@@ -5048,7 +5054,8 @@ function renderRPFreeResponse(){
   const scene=rpScenes[rpIdx];
   const initials=scene.npc.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
   const sceneCat=RP_CATEGORIES.find(c=>c.id===scene.cat);
-  const showHint=rpAttemptTier===2&&scene.hint;
+  const showHintBtn=rpAttemptTier===2&&scene.hint;
+  _rpHintUsed=false;
   document.getElementById('rp-scene-body').innerHTML=`
     <div style="text-align:center">
       ${sceneCat?`<div class="rp-scene-cat-tag">${sceneCat.label}</div>`:''}
@@ -5064,13 +5071,29 @@ function renderRPFreeResponse(){
         </div>
       </div>
       <div class="rp-chat-divider">── ${RP_TIER_NAMES[rpAttemptTier]}挑戦：自分の言葉で返せ ──</div>
-      ${showHint?`<div class="md-hint-box" style="display:block"><div class="md-hint-label">ヒント</div><div class="md-hint-text">${scene.hint}</div></div>`:''}
+      ${showHintBtn?`<button class="md-hint-btn" id="rp-hint-btn" onclick="rpToggleHint()">HINT</button><div class="md-hint-box" id="rp-hint-box" style="display:none"><div class="md-hint-label">ヒント</div><div class="md-hint-text">${scene.hint}</div></div>`:''}
     </div>
     <div class="rp-mic-section">
       <div class="rp-timer" id="rp-timer">00.0</div>
       <button class="rp-mic-big" id="rp-mic-btn" onclick="toggleRPRec()">${_rpMicSvg()}</button>
       <div class="rp-hint" id="rp-hint">タップして録音開始</div>
     </div>`;
+}
+// タップ開閉式ヒント（2026-07-12、SLA専門家視点レビュー対応）。常時表示だと「ヒントを見たか」が
+// 判定できず、Mastery Rankの真の定着判定に使えなかった。タップした瞬間だけhint_usedを記録する
+// （閉じる操作や複数回タップでは重複記録しない）。
+function rpToggleHint(){
+  const box=document.getElementById('rp-hint-box');
+  const btn=document.getElementById('rp-hint-btn');
+  if(!box)return;
+  const showing=box.style.display!=='none';
+  box.style.display=showing?'none':'block';
+  if(btn)btn.textContent=showing?'HINT':'HIDE';
+  if(!showing&&!_rpHintUsed){
+    _rpHintUsed=true;
+    const scene=rpScenes[rpIdx];
+    track('hint_used',{key:rpSceneKey(scene),tier:rpAttemptTier});
+  }
 }
 
 function renderRPChoose(){
@@ -5273,6 +5296,8 @@ async function showRPResult(heard,timeMs){
     if(tier===4)meetsSpeedGate=timeMs>0&&timeMs<fast;
   }
 
+  // 基本の正解/不正解フィードバック（音+振動）。他モードと共通の合否ライン(50点)を採用
+  sfx(total>=50?'good':'bad');
   rpTotalScore+=total;
   const _scKey=rpSceneKey(scene);
   if(!(S.rpCompletedSceneKeys||[]).includes(_scKey)){S.rpCompletedSceneKeys=[...(S.rpCompletedSceneKeys||[]),_scKey];}
@@ -5639,6 +5664,7 @@ function miyFinish(){
   _miyBusy=false;
   saveMiyPhrase(_miyConverted,false);
   track('make_it_yours_complete',{day:rpDay+1});
+  sfx('good'); // MIYに合否はないため完了フィードバックとして常にgoodを鳴らす
   document.getElementById('miy-result').innerHTML=`
     <div class="md-voice-result">
       <div class="md-verdict-label" style="color:var(--green);font-size:28px">IT'S YOURS</div>
@@ -6000,6 +6026,8 @@ function showDrillResult(heard,timeMs){
   const msg=pool[Math.floor(Math.random()*pool.length)];
   const isLast=drillIdx>=drillDeck.length-1;
 
+  // 基本の正解/不正解フィードバック（音+振動）。他モードと共通の合否ライン(50点)を採用
+  sfx(total>=50?'good':'bad');
   // 高得点演出
   if(total>=80)showCelebration(total,msg);
 
@@ -6497,6 +6525,10 @@ async function mdShowResult(heard){
   else if(score>=50){verdict='GOOD';verdictJa='通じた！';verdictColor='#1D9E75';}
   else if(score>=30){verdict='NOT BAD';verdictJa='惜しい';verdictColor='#FFC400';}
   else{verdict='TRY AGAIN';verdictJa='もう一度';verdictColor='#E2493B';}
+
+  // 基本の正解/不正解フィードバック（音+振動）。50-79点の「GOOD」は視覚演出(mdGoodCelebrate)は
+  // あったが音の呼び出しが漏れていた（2026-07-12発見）。80点以上はmdCelebrateの勝利音と重ねて鳴る
+  sfx(score>=50?'good':'bad');
 
   const bestKey=scene.keys[0];
 
