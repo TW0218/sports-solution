@@ -674,3 +674,124 @@ Away! Don't risk it.
 Keeper's ball, leave it.
 Hold, don't dive in.
 Receive on the half turn.
+
+Who are you picking up?
+I've got the tall one!
+Taking the near post!
+I'm on their nine!
+Legs alright? Can you keep pressing for ten more?
+Yeah, I'm good for it!
+A bit tired, but I'll push!
+Legs are heavy, need a breather!
+Far or near post, which one you got?
+I've got the far post!
+Taking the near post!
+I'm covering far side!
+You've been quiet about your minutes — what's actually on your mind?
+Honestly, I want more minutes!
+I just want a fair chance!
+I'm frustrated, but staying ready!
+Talk me through what you'll do differently in that role.
+I'll drop deeper to build play!
+I'll press higher up the pitch!
+I'll link the midfield and attack!
+I'm thinking who leads the dressing room next season, interested?
+Yes, I'd be honoured to!
+I'm ready for that role!
+I'd love the chance, gaffer!
+There's interest from abroad. Where's your head at with all this?
+My focus is right here, gaffer!
+Honestly, it's flattering, but I'm focused!
+I haven't thought about it much!
+First game back, how are you feeling about it?
+A bit rusty, but excited!
+Nervous, but ready to go!
+Can't wait to be back out there!
+On a scale of one to ten, how much does that hurt?
+It's about a six!
+Maybe a seven, pretty sharp!
+Only a three, it's manageable!
+Be honest, are you rushing back too soon?
+Maybe a little, I want to play!
+No, I feel ready!
+Honestly, yes, I'm anxious to return!
+Have you had anything like this before?
+Yes, two years ago!
+No, this is the first time!
+Similar, but on the other side!
+Any allergies or conditions I should know about?
+No allergies, all clear!
+I'm allergic to penicillin!
+I have mild asthma!
+Where exactly does it hurt? Show me.
+Right here, on the side!
+It's my lower back!
+Just above the ankle!
+We're both after the same spot, how do you feel about that?
+It pushes us both to improve!
+Healthy competition, no hard feelings!
+May the best man win!
+Big move for you, what's been the hardest part?
+Being away from family!
+Adjusting to the language!
+Getting used to the weather!
+The fans have been on your back lately, how do you deal with that?
+I just block it out!
+I use it as motivation!
+I focus on my performance, not the noise!
+You've picked up English fast, how'd you manage that?
+I watch a lot of English TV!
+I just talk to everyone, no fear!
+I practice every single day!
+Was there ever a point you thought about hanging up the boots?
+Honestly, yes, during my injury!
+Never, I always believed!
+Once, but my family kept me going!
+What made you choose this club over the other offers?
+The project convinced me!
+I felt wanted here!
+This club matches my ambitions!
+How would you describe your relationship with the manager?
+We have great trust in each other!
+Honest, and always improving!
+He pushes me to be better!
+What's the one thing missing from your career so far?
+A major trophy, for sure!
+International recognition!
+Consistency across a full season!
+If we push for an extension, what matters most? Money or playing time?
+Playing time matters more to me!
+Honestly, I need to be playing!
+Both matter, but minutes first!
+If this move happens, what are your must-haves?
+Regular first-team football!
+A clear path to playing time!
+Champions League football!
+We've got three brand offers, how do you want me to pick?
+Go with the highest paying one!
+Pick the one that fits my image!
+Choose the brand I actually use!
+The club wants you as captain, is that something you actually want?
+Yes, I'd be proud to lead!
+Honestly, I'm ready for it!
+I've thought about it, and yes!
+Your family's opinion matters here. Have you talked to them about the move?
+Yes, they're fully behind me!
+We talked, they're still unsure!
+Not yet, but I will tonight!
+Do you want an interpreter with you for the first few weeks?
+Yes please, that would help!
+No, I think I'll manage!
+Just for the first week maybe!
+What are you looking for in a place? How many bedrooms?
+Two bedrooms would be perfect!
+Just one, somewhere quiet!
+Three, my family's joining me!
+Which plan works best for you? Pay monthly or pay as you go?
+Pay monthly is easier for me!
+Pay as you go, I prefer that!
+Monthly please, with unlimited data!
+First time here? What are you training for today?
+Just some light recovery work!
+Building strength today!
+Cardio, I need to build fitness!
