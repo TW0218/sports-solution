@@ -3,6 +3,11 @@
 !.claude/skills
 .claude/skills/*
 !.claude/skills/roleplay-scene-edit
+!.claude/skills/app-test-drive
+!.claude/skills/audio-generate
+!.claude/skills/panel-review
+!.claude/skills/player-onboarding
+!.claude/skills/ship
 .env
 .vercel
 node_modules/
